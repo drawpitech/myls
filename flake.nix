@@ -48,6 +48,7 @@
             python311Packages.compiledb
             man-pages
             man-pages-posix
+            gdb
           ] ++ deps;
         };
 
