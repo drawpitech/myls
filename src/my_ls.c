@@ -62,6 +62,7 @@ int my_ls(int argc, char **argv)
         clear_ls(&ls);
         return ERR_RETURN;
     }
+    sort_files(&ls);
     print_files(&ls);
     clear_ls(&ls);
     return 0;
