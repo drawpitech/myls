@@ -13,17 +13,30 @@
     #include <stdint.h>
 
 typedef struct {
-    const char *path;
+    char *path;
     DIR *dirp;
-    bool show_hidden;
-    struct dirent *files;
     uint32_t n_files;
+    struct dirent *files;
+    struct {
+        bool all;
+        bool recursive;
+        bool time_sorted;
+        bool long_format;
+        bool directories;
+        bool reverse;
+    } params;
 } ls_t;
+
+typedef struct {
+    char c;
+    bool *b;
+} arg_t;
 
 int my_ls(int argc, char **argv);
 int return_ls_error(char *str);
 void clear_ls(ls_t *ls);
 int get_files_in_dir(ls_t *ls);
 void sort_files(ls_t *ls);
+void get_params(ls_t *ls, int argc, char **argv);
 
 #endif /* MY_LS */

@@ -40,6 +40,7 @@ VPATH := src
 SRC := my_ls.c
 SRC += get_files.c
 SRC += sort_files.c
+SRC += params.c
 
 # Tests files
 VPATH += tests

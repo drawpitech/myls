@@ -39,7 +39,7 @@ uint32_t get_dir_size(ls_t *ls)
         directory = readdir(ls->dirp);
         if (directory == NULL)
             continue;
-        if (!ls->show_hidden && my_str_startswith(directory->d_name, "."))
+        if (!ls->params.all && my_str_startswith(directory->d_name, "."))
             continue;
         size++;
     } while (directory != NULL);
@@ -60,7 +60,7 @@ int get_files_in_dir(ls_t *ls)
         return ERR_RETURN;
     for (uint32_t i = 0; i < ls->n_files; i++) {
         directory = readdir(ls->dirp);
-        if (!ls->show_hidden && my_str_startswith(directory->d_name, ".")) {
+        if (!ls->params.all && my_str_startswith(directory->d_name, ".")) {
             i--;
             continue;
         }

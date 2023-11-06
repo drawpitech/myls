@@ -49,15 +49,17 @@ void clear_ls(ls_t *ls)
 
 int my_ls(int argc, char **argv)
 {
-    const char *path = (argc < 2) ? "." : argv[1];
     ls_t ls = {
-        .path = path,
+        .path = NULL,
         .dirp = NULL,
-        .show_hidden = false,
         .files = NULL,
         .n_files = 0,
+        .params = { 0 },
     };
 
+    get_params(&ls, argc, argv);
+    if (ls.path == NULL)
+        ls.path = ".";
     if (get_files_in_dir(&ls) == ERR_RETURN) {
         clear_ls(&ls);
         return ERR_RETURN;
