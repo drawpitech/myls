@@ -2,6 +2,7 @@
 *.out
 unit_tests
 asan
+my_ls
 
 # Compilation
 .build/
