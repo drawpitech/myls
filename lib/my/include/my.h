@@ -8,6 +8,8 @@
 #ifndef LIBMY
     #define LIBMY
 
+    #include <stdbool.h>
+
     #include "my_printf.h"
 
     #define IS_LOWERCASE(c) ((c) >= 'a' && (c) <= 'z')
@@ -80,5 +82,6 @@ int my_put_double(double n, int precison);
 int my_put_double_base(double n, const char *base, int precision);
 int my_putnchar(char c, int n);
 int return_err(char *str);
+bool my_str_startswith(const char *big, const char *little);
 
 #endif /* LIBMY */
