@@ -9,5 +9,6 @@
     #define MY_LS
 
 int my_ls(int argc, char **argv);
+int return_ls_error(void);
 
 #endif /* MY_LS */
