@@ -2,7 +2,7 @@
 ** EPITECH PROJECT, 2023
 ** my_ls
 ** File description:
-** my_printf
+** my_ls
 */
 
 #ifndef MY_LS

@@ -28,6 +28,8 @@
     #define BASE_HEX_MIN "0123456789abcdef"
     #define BASE_HEX_MAJ "0123456789ABCDEF"
 
+    #define ERR_RETURN (84)
+
 char **my_str_to_word_array(char const *str);
 char *concat_params(int argc, char **argv);
 char *convert_base(char const *, char const *, char const *);
@@ -77,5 +79,6 @@ int my_put_long_base(unsigned long, const char *);
 int my_put_double(double n, int precison);
 int my_put_double_base(double n, const char *base, int precision);
 int my_putnchar(char c, int n);
+int return_err(char *str);
 
 #endif /* LIBMY */
