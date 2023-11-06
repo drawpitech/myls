@@ -38,6 +38,7 @@ CFLAGS += -L./$(dir $(LIBMY)) -lmy
 # Source files
 VPATH := src
 SRC := my_ls.c
+SRC += get_files.c
 
 # Tests files
 VPATH += tests

@@ -23,5 +23,6 @@ typedef struct {
 int my_ls(int argc, char **argv);
 int return_ls_error(char *str);
 void clear_ls(ls_t *ls);
+int get_files_in_dir(ls_t *ls);
 
 #endif /* MY_LS */
