@@ -13,10 +13,15 @@
     #include <stdint.h>
 
 typedef struct {
-    char *path;
+    char path[256];
     DIR *dirp;
     uint32_t n_files;
     struct dirent *files;
+} directory_t;
+
+typedef struct {
+    directory_t *directories;
+    uint32_t dir_count;
     struct {
         bool all;
         bool recursive;
@@ -35,8 +40,8 @@ typedef struct {
 int my_ls(int argc, char **argv);
 int return_ls_error(char *str);
 void clear_ls(ls_t *ls);
-int get_files_in_dir(ls_t *ls);
-void sort_files(ls_t *ls);
-void get_params(ls_t *ls, int argc, char **argv);
+void get_files(ls_t *ls);
+void sort_files(directory_t *dir);
+void get_params(ls_t *ls, uint32_t argc, char **argv);
 
 #endif /* MY_LS */

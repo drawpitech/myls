@@ -5,6 +5,7 @@
 ** bob
 */
 
+#include <stdint.h>
 #include <stdlib.h>
 
 #include "my.h"
@@ -43,17 +44,38 @@ void get_flags(ls_t *ls, char *str)
     }
 }
 
-void get_params(ls_t *ls, int argc, char **argv)
+static
+void init_directories(ls_t *ls, char **paths, uint32_t size)
 {
+    ls->directories = malloc(size * sizeof(directory_t));
+    if (ls->directories == NULL) {
+        clear_ls(ls);
+        exit(return_ls_error("malloc failed"));
+    }
+    ls->dir_count = size;
+    for (uint32_t i = 0; i < size; i++) {
+        ls->directories[i] = (directory_t){ 0 };
+        my_strcpy(ls->directories[i].path, paths[i]);
+    }
+}
+
+void get_params(ls_t *ls, uint32_t argc, char **argv)
+{
+    char *paths[argc + 1];
+    uint32_t index = 0;
+
     if (ls == NULL || argv == NULL)
         return;
-    for (int i = 1; i < argc; i++) {
+    for (uint32_t i = 1; i < argc; i++) {
         if (argv[i] == NULL)
             return;
         if (argv[i][0] == '-') {
             get_flags(ls, argv[i] + 1);
             continue;
         }
-        ls->path = argv[i];
+        paths[index++] = argv[i];
     }
+    if (index == 0)
+        paths[index++] = ".";
+    init_directories(ls, paths, index);
 }

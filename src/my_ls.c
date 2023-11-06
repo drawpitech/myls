@@ -24,47 +24,60 @@ int return_ls_error(char *str)
 }
 
 static
+void print_dir(directory_t *dir, bool print_path, uint32_t index)
+{
+    if (print_path) {
+        if (index != 0)
+            my_printf("\n");
+        my_printf("%s:\n", dir->path);
+    }
+    for (uint32_t i = 0; i < dir->n_files; i++)
+        my_printf("%s\n", dir->files[i].d_name);
+}
+
+static
 void print_files(ls_t *ls)
 {
-    if (ls == NULL || ls->files == NULL)
+    if (ls->dir_count == 1) {
+        print_dir(ls->directories, false, 0);
         return;
-    for (uint32_t i = 0; i < ls->n_files; i++) {
-        my_printf("%s\n", ls->files[i].d_name);
     }
+    for (uint32_t i = 0; i < ls->dir_count; i++)
+        print_dir(ls->directories + i, true, i);
 }
 
 void clear_ls(ls_t *ls)
 {
     if (ls == NULL)
         return;
-    if (ls->dirp != NULL) {
-        closedir(ls->dirp);
-        ls->dirp = NULL;
+    for (uint32_t i = 0; i < ls->dir_count; i++) {
+        if (ls->directories[i].dirp != NULL) {
+            closedir(ls->directories[i].dirp);
+            ls->directories[i].dirp = NULL;
+        }
+        if (ls->directories[i].files != NULL) {
+            free(ls->directories[i].files);
+            ls->directories[i].files = NULL;
+        }
     }
-    if (ls->files != NULL) {
-        free(ls->files);
-        ls->files = NULL;
-    }
+    if (ls->directories != NULL)
+        free(ls->directories);
 }
 
 int my_ls(int argc, char **argv)
 {
     ls_t ls = {
-        .path = NULL,
-        .dirp = NULL,
-        .files = NULL,
-        .n_files = 0,
+        .directories = NULL,
+        .dir_count = 0,
         .params = { 0 },
     };
 
-    get_params(&ls, argc, argv);
-    if (ls.path == NULL)
-        ls.path = ".";
-    if (get_files_in_dir(&ls) == ERR_RETURN) {
-        clear_ls(&ls);
-        return ERR_RETURN;
-    }
-    sort_files(&ls);
+    if (argc < 1 || argv == NULL)
+        return return_ls_error("invalid args\n");
+    get_params(&ls, (uint32_t)argc, argv);
+    get_files(&ls);
+    for (uint32_t i = 0; i < ls.dir_count; i++)
+        sort_files(ls.directories + i);
     print_files(&ls);
     clear_ls(&ls);
     return 0;

@@ -15,28 +15,28 @@
 #include "my_ls.h"
 
 static
-int get_dirp(ls_t *ls)
+int get_dirp(directory_t *dir)
 {
-    if (ls == NULL || ls->path == NULL)
+    if (dir == NULL)
         return return_ls_error("null pointer");
-    if (ls->dirp != NULL)
-        closedir(ls->dirp);
-    ls->dirp = opendir(ls->path);
-    if (ls->dirp == NULL)
+    if (dir->dirp != NULL)
+        closedir(dir->dirp);
+    dir->dirp = opendir(dir->path);
+    if (dir->dirp == NULL)
         return return_ls_error(NULL);
     return 0;
 }
 
 static
-uint32_t get_dir_size(ls_t *ls)
+uint32_t get_dir_size(ls_t *ls, directory_t *dir)
 {
     struct dirent *directory = NULL;
     uint32_t size = 0;
 
-    if (get_dirp(ls) == ERR_RETURN)
+    if (get_dirp(dir) == ERR_RETURN)
         return UINT32_MAX;
     do {
-        directory = readdir(ls->dirp);
+        directory = readdir(dir->dirp);
         if (directory == NULL)
             continue;
         if (!ls->params.all && my_str_startswith(directory->d_name, "."))
@@ -46,26 +46,37 @@ uint32_t get_dir_size(ls_t *ls)
     return size;
 }
 
-int get_files_in_dir(ls_t *ls)
+static
+int get_files_in_dir(ls_t *ls, directory_t *dir)
 {
     struct dirent *directory = NULL;
 
-    if (ls == NULL)
+    dir->n_files = get_dir_size(ls, dir);
+    if (dir->n_files == UINT32_MAX)
         return ERR_RETURN;
-    ls->n_files = get_dir_size(ls);
-    if (ls->n_files == UINT32_MAX)
+    dir->files = malloc(dir->n_files * sizeof(struct dirent));
+    if (get_dirp(dir) == ERR_RETURN)
         return ERR_RETURN;
-    ls->files = malloc(ls->n_files * sizeof(struct dirent));
-    if (get_dirp(ls) == ERR_RETURN)
-        return ERR_RETURN;
-    for (uint32_t i = 0; i < ls->n_files; i++) {
-        directory = readdir(ls->dirp);
+    for (uint32_t i = 0; i < dir->n_files; i++) {
+        directory = readdir(dir->dirp);
         if (!ls->params.all && my_str_startswith(directory->d_name, ".")) {
             i--;
             continue;
         }
-        ls->files[i] = *directory;
-        my_strcpy(ls->files[i].d_name, directory->d_name);
+        dir->files[i] = *directory;
+        my_strcpy(dir->files[i].d_name, directory->d_name);
     }
     return 0;
+}
+
+void get_files(ls_t *ls)
+{
+    if (ls == NULL)
+        return;
+    for (uint32_t i = 0; i < ls->dir_count; i++) {
+        if (get_files_in_dir(ls, ls->directories + i) == 0)
+            continue;
+        clear_ls(ls);
+        exit(ERR_RETURN);
+    }
 }
