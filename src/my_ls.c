@@ -23,24 +23,6 @@ int return_ls_error(char *str)
     return ERR_RETURN;
 }
 
-static
-void print_dir(ls_t *ls, bool print_path, uint32_t index)
-{
-    directory_t *dir = &ls->directories;
-
-    my_strcpy(dir->path, ls->paths[index]);
-    get_files_in_dir(ls);
-    sort_files(dir);
-    if (print_path) {
-        if (index != 0)
-            my_printf("\n");
-        my_printf("%s:\n", dir->path);
-    }
-    for (uint32_t i = 0; i < dir->n_files; i++)
-        my_printf("%s\n", dir->files[i].d_name);
-    clear_dir(dir);
-}
-
 int my_ls(int argc, char **argv)
 {
     uint32_t uargc = (uint32_t)argc;
@@ -51,16 +33,16 @@ int my_ls(int argc, char **argv)
         .nbr_paths = 0,
         .params = { 0 },
     };
-    bool ret = false;
+    bool success = true;
 
     if (argc < 1 || argv == NULL)
         return return_ls_error("invalid args\n");
     get_params(&ls, uargc, argv);
     if (ls.nbr_paths == 1)
-        print_dir(&ls, false, 0);
+        success = (print_dir(&ls, false, 0) == 0) && success;
     else
         for (uint32_t i = 0; i < ls.nbr_paths; i++)
-            print_dir(&ls, true, i);
+            success = (print_dir(&ls, true, i) == 0) && success;
     clear_ls(&ls);
-    return (ret) ? ERR_RETURN : 0;
+    return (success) ? 0 : ERR_RETURN;
 }

@@ -42,6 +42,7 @@ SRC += get_files.c
 SRC += sort_files.c
 SRC += params.c
 SRC += clear.c
+SRC += print.c
 
 # Tests files
 VPATH += tests
