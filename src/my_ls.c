@@ -27,6 +27,22 @@ int return_ls_error(char *str)
 }
 
 static
+void ls_output(ls_t *ls, bool print_path, uint32_t index)
+{
+    directory_t *dir = &ls->directories;
+
+    if (print_path)
+        my_printf("%s%s:\n", (index != 0) ? "\n" : "", dir->path);
+    if (dir->n_files == 0)
+        return;
+    sort_files(dir);
+    if (ls->params.long_format)
+        ls_output_long(ls);
+    else
+        ls_output_normal(ls);
+}
+
+static
 int print_dir(ls_t *ls, bool print_path, uint32_t index)
 {
     directory_t *dir;
@@ -39,13 +55,7 @@ int print_dir(ls_t *ls, bool print_path, uint32_t index)
         clear_dir(dir);
         return ERR_RETURN;
     }
-    sort_files(dir);
-    if (print_path)
-        my_printf("%s%s:\n", (index != 0) ? "\n" : "", dir->path);
-    if (ls->params.long_format)
-        ls_output_long(ls);
-    else
-        ls_output_normal(ls);
+    ls_output(ls, print_path, index);
     clear_dir(dir);
     return 0;
 }

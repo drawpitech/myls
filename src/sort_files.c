@@ -60,7 +60,7 @@ void sort_files(directory_t *dir)
     uint32_t size;
     uint32_t x;
 
-    if (dir == NULL || dir->files == NULL)
+    if (dir == NULL || dir->files == NULL || dir->n_files == 0)
         return;
     size = dir->n_files - 1;
     for (uint32_t i = 0; i < size * size; i++) {
