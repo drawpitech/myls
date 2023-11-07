@@ -38,15 +38,60 @@ typedef struct {
     bool *b;
 } arg_t;
 
+/**
+ * Main function of the program. Mimic the ls command in the shell.
+ */
 int my_ls(int argc, char **argv);
+
+/**
+ * Return 84 and print an error message. If the error message is NULL,
+ * perror() is called.
+ */
 int return_ls_error(char *str);
+
+/**
+ * Clear all the allocated memory in the ls_t structure.
+ */
 void clear_ls(ls_t *ls);
+
+/**
+ * Clear all the allocated memory in the directory_t structure.
+ */
 void clear_dir(directory_t *dir);
+
+/**
+ * Fetch all files in the ls->dir.path directory and store them in the
+ * directory_t structure.
+ */
 int get_files_in_dir(ls_t *ls);
+
+/**
+ * Sort all files in the directory_t structure according to the ls->params.
+ *  - By default, the files are sorted alphabetically.
+ *  - If ls->params.time_sorted is true, the files are sorted by time.
+ */
 void sort_files(directory_t *dir);
+
+/**
+ * Sort all paths in the ls->paths array according to the ls->params, excluding
+ * the '.' from the start of the paths.
+ */
 void sort_paths(char **paths, uint32_t n);
+
+/**
+ * Set the ls structure parameters according to the arguments passed to the
+ * program. Get the paths ("." if none are provided), and the parameters.
+ */
 void get_params(ls_t *ls, uint32_t argc, char **argv);
+
+/**
+ * Print the files of the ls->dir structure with the long format.
+ */
 void ls_output_long(ls_t *ls);
+
+/**
+ * Print the files of the ls->dir structure with the normal format.
+ */
 void ls_output_normal(ls_t *ls);
 
 #endif /* MY_LS */
