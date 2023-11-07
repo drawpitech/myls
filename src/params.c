@@ -59,4 +59,5 @@ void get_params(ls_t *ls, uint32_t argc, char **argv)
     }
     if (ls->nbr_paths == 0)
         ls->paths[ls->nbr_paths++] = ".";
+    sort_paths(ls->paths, ls->nbr_paths);
 }
