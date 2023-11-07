@@ -66,6 +66,7 @@ SRC += my_put_double.c
 SRC += my_put_double_base.c
 SRC += my_nbr_len.c
 SRC += my_str_startswith.c
+SRC += return_err.c
 SRC += my_printf/my_printf.c
 SRC += my_printf/flag_parser.c
 SRC += my_printf/flag_utils.c

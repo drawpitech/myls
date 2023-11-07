@@ -16,10 +16,13 @@
 
 int return_ls_error(char *str)
 {
-    if (str == NULL)
+    if (str == NULL) {
         perror("my_ls");
-    else
-        my_printf("my_ls: %s", str);
+    } else {
+        return_err("my_ls: ");
+        return_err(str);
+        return_err("\n");
+    }
     return ERR_RETURN;
 }
 

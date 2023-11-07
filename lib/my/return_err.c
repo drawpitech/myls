@@ -12,5 +12,5 @@
 int return_err(char *str)
 {
     write(STDERR_FILENO, str, my_strlen(str));
-    return EXIT_ERR;
+    return ERR_RETURN;
 }
