@@ -44,26 +44,8 @@ void get_flags(ls_t *ls, char *str)
     }
 }
 
-static
-void init_directories(ls_t *ls, char **paths, uint32_t size)
-{
-    ls->directories = malloc(size * sizeof(directory_t));
-    if (ls->directories == NULL) {
-        clear_ls(ls);
-        exit(return_ls_error("malloc failed"));
-    }
-    ls->dir_count = size;
-    for (uint32_t i = 0; i < size; i++) {
-        ls->directories[i] = (directory_t){ 0 };
-        my_strcpy(ls->directories[i].path, paths[i]);
-    }
-}
-
 void get_params(ls_t *ls, uint32_t argc, char **argv)
 {
-    char *paths[argc + 1];
-    uint32_t index = 0;
-
     if (ls == NULL || argv == NULL)
         return;
     for (uint32_t i = 1; i < argc; i++) {
@@ -73,9 +55,8 @@ void get_params(ls_t *ls, uint32_t argc, char **argv)
             get_flags(ls, argv[i] + 1);
             continue;
         }
-        paths[index++] = argv[i];
+        ls->paths[ls->nbr_paths++] = argv[i];
     }
-    if (index == 0)
-        paths[index++] = ".";
-    init_directories(ls, paths, index);
+    if (ls->nbr_paths == 0)
+        ls->paths[ls->nbr_paths++] = ".";
 }

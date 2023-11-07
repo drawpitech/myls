@@ -46,10 +46,10 @@ uint32_t get_dir_size(ls_t *ls, directory_t *dir)
     return size;
 }
 
-static
-int get_files_in_dir(ls_t *ls, directory_t *dir)
+int get_files_in_dir(ls_t *ls)
 {
     struct dirent *directory = NULL;
+    directory_t *dir = &ls->directories;
 
     dir->n_files = get_dir_size(ls, dir);
     if (dir->n_files == UINT32_MAX)
@@ -67,16 +67,4 @@ int get_files_in_dir(ls_t *ls, directory_t *dir)
         my_strcpy(dir->files[i].d_name, directory->d_name);
     }
     return 0;
-}
-
-void get_files(ls_t *ls)
-{
-    if (ls == NULL)
-        return;
-    for (uint32_t i = 0; i < ls->dir_count; i++) {
-        if (get_files_in_dir(ls, ls->directories + i) == 0)
-            continue;
-        clear_ls(ls);
-        exit(ERR_RETURN);
-    }
 }

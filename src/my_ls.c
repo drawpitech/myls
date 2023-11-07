@@ -24,8 +24,13 @@ int return_ls_error(char *str)
 }
 
 static
-void print_dir(directory_t *dir, bool print_path, uint32_t index)
+void print_dir(ls_t *ls, bool print_path, uint32_t index)
 {
+    directory_t *dir = &ls->directories;
+
+    my_strcpy(dir->path, ls->paths[index]);
+    get_files_in_dir(ls);
+    sort_files(dir);
     if (print_path) {
         if (index != 0)
             my_printf("\n");
@@ -33,52 +38,29 @@ void print_dir(directory_t *dir, bool print_path, uint32_t index)
     }
     for (uint32_t i = 0; i < dir->n_files; i++)
         my_printf("%s\n", dir->files[i].d_name);
-}
-
-static
-void print_files(ls_t *ls)
-{
-    if (ls->dir_count == 1) {
-        print_dir(ls->directories, false, 0);
-        return;
-    }
-    for (uint32_t i = 0; i < ls->dir_count; i++)
-        print_dir(ls->directories + i, true, i);
-}
-
-void clear_ls(ls_t *ls)
-{
-    if (ls == NULL)
-        return;
-    for (uint32_t i = 0; i < ls->dir_count; i++) {
-        if (ls->directories[i].dirp != NULL) {
-            closedir(ls->directories[i].dirp);
-            ls->directories[i].dirp = NULL;
-        }
-        if (ls->directories[i].files != NULL) {
-            free(ls->directories[i].files);
-            ls->directories[i].files = NULL;
-        }
-    }
-    if (ls->directories != NULL)
-        free(ls->directories);
+    clear_dir(dir);
 }
 
 int my_ls(int argc, char **argv)
 {
+    uint32_t uargc = (uint32_t)argc;
+    char *paths[uargc + 1];
     ls_t ls = {
-        .directories = NULL,
-        .dir_count = 0,
+        .directories = { .path = { 0 }, 0 },
+        .paths = paths,
+        .nbr_paths = 0,
         .params = { 0 },
     };
+    bool ret = false;
 
     if (argc < 1 || argv == NULL)
         return return_ls_error("invalid args\n");
-    get_params(&ls, (uint32_t)argc, argv);
-    get_files(&ls);
-    for (uint32_t i = 0; i < ls.dir_count; i++)
-        sort_files(ls.directories + i);
-    print_files(&ls);
+    get_params(&ls, uargc, argv);
+    if (ls.nbr_paths == 1)
+        print_dir(&ls, false, 0);
+    else
+        for (uint32_t i = 0; i < ls.nbr_paths; i++)
+            print_dir(&ls, true, i);
     clear_ls(&ls);
-    return 0;
+    return (ret) ? ERR_RETURN : 0;
 }
