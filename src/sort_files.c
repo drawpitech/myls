@@ -15,9 +15,9 @@
 #include "my_ls.h"
 
 static
-void swap_files(struct dirent *file1, struct dirent *file2)
+void swap_files(struct dirent **file1, struct dirent **file2)
 {
-    struct dirent tmp = *file1;
+    struct dirent *tmp = *file1;
 
     *file1 = *file2;
     *file2 = tmp;
@@ -65,8 +65,8 @@ void sort_files(directory_t *dir)
     size = dir->n_files - 1;
     for (uint32_t i = 0; i < size * size; i++) {
         x = i % size;
-        if (my_strcmp_cases(dir->files[x].d_name, dir->files[x + 1].d_name))
-            swap_files(dir->files + x, dir->files + x + 1);
+        if (my_strcmp_cases(dir->files[x]->d_name, dir->files[x + 1]->d_name))
+            swap_files(&dir->files[x], &dir->files[x + 1]);
     }
 }
 

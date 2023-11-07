@@ -50,21 +50,20 @@ int get_files_in_dir(ls_t *ls)
 {
     struct dirent *directory = NULL;
     directory_t *dir = &ls->directories;
+    uint32_t i = 0;
 
     dir->n_files = get_dir_size(ls, dir);
     if (dir->n_files == UINT32_MAX)
         return ERR_RETURN;
-    dir->files = malloc(dir->n_files * sizeof(struct dirent));
+    dir->files = malloc(dir->n_files * sizeof(struct dirent *));
     if (get_dirp(dir) == ERR_RETURN)
         return ERR_RETURN;
-    for (uint32_t i = 0; i < dir->n_files; i++) {
+    while (i < dir->n_files) {
         directory = readdir(dir->dirp);
-        if (!ls->params.all && my_str_startswith(directory->d_name, ".")) {
-            i--;
+        if (!ls->params.all && my_str_startswith(directory->d_name, "."))
             continue;
-        }
-        dir->files[i] = *directory;
-        my_strcpy(dir->files[i].d_name, directory->d_name);
+        dir->files[i] = directory;
+        i++;
     }
     return 0;
 }

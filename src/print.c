@@ -16,7 +16,7 @@ void ouput_files(ls_t *ls)
     directory_t *dir = &ls->directories;
 
     for (uint32_t i = 0; i < dir->n_files; i++)
-        my_printf("%s\n", dir->files[i].d_name);
+        my_printf("%s\n", dir->files[i]->d_name);
 }
 
 int print_dir(ls_t *ls, bool print_path, uint32_t index)

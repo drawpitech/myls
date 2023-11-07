@@ -16,7 +16,7 @@ typedef struct {
     char path[256];
     DIR *dirp;
     uint32_t n_files;
-    struct dirent *files;
+    struct dirent **files;
 } directory_t;
 
 typedef struct {
