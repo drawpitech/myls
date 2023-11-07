@@ -1,8 +1,8 @@
 /*
 ** EPITECH PROJECT, 2023
-** bob
+** my_ls
 ** File description:
-** bob
+** clear
 */
 
 #include <stdlib.h>
