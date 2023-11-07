@@ -48,6 +48,9 @@ SRC += print_format/normal.c
 # Tests files
 VPATH += tests
 TEST_SRC := $(SRC)
+TEST_SRC += test_sort_paths.c
+TEST_SRC += test_params.c
+TEST_SRC += test_clear.c
 
 SRC += main.c
 
@@ -110,7 +113,7 @@ $(TEST_NAME): $(LIBMY) $(TEST_OBJ)
 	@ $(ECHO) "[${C_BOLD}${C_YELLOW}CC${C_RESET}] ${C_GREEN}$@${C_RESET}"
 	@ $(CC) -o $@ $(TEST_OBJ) $(CFLAGS) || $(DIE)
 
-tests_run: fclean $(TEST_NAME)
+tests_run: $(TEST_NAME)
 	@ ./$(TEST_NAME)
 
 .PHONY: $(TEST_NAME) tests_run
@@ -126,10 +129,16 @@ $(ASAN_NAME): $(LIBMY) $(ASAN_OBJ)
 	@ $(ECHO) "[${C_BOLD}${C_YELLOW}CC${C_RESET}] ${C_GREEN}$@${C_RESET}"
 	@ $(CC) -o $@ $(ASAN_OBJ) $(CFLAGS) || $(DIE)
 
-tests_asan: fclean $(ASAN_NAME)
-	@ ./$(ASAN_NAME)
+.PHONY: $(ASAN_NAME)
 
-.PHONY: tests_asan
+# ↓ Coverage
+cov: GCOVR_FLAGS := --exclude bonus/
+cov: GCOVR_FLAGS += --exclude tests/
+cov:
+	@ gcovr $(GCOVR_FLAGS)
+	@ gcovr $(GCOVR_FLAGS) --branches
+
+.PHONY: cov
 
 # ↓ Cleaning
 clean:

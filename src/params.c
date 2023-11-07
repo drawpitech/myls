@@ -46,7 +46,7 @@ void get_flags(ls_t *ls, char *str)
 
 void get_params(ls_t *ls, uint32_t argc, char **argv)
 {
-    if (ls == NULL || argv == NULL)
+    if (ls == NULL || argv == NULL || ls->paths == NULL)
         return;
     for (uint32_t i = 1; i < argc; i++) {
         if (argv[i] == NULL)

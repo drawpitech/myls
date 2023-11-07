@@ -23,7 +23,7 @@ typedef struct {
     directory_t directories;
     char **paths;
     uint32_t nbr_paths;
-    struct {
+    struct params_s {
         bool all;
         bool recursive;
         bool time_sorted;
