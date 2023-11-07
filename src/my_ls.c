@@ -26,6 +26,30 @@ int return_ls_error(char *str)
     return ERR_RETURN;
 }
 
+static
+int print_dir(ls_t *ls, bool print_path, uint32_t index)
+{
+    directory_t *dir;
+
+    if (ls == NULL)
+        return return_ls_error("invalid ptr");
+    dir = &ls->directories;
+    my_strcpy(dir->path, ls->paths[index]);
+    if (get_files_in_dir(ls) == ERR_RETURN) {
+        clear_dir(dir);
+        return ERR_RETURN;
+    }
+    sort_files(dir);
+    if (print_path)
+        my_printf("%s%s:\n", (index != 0) ? "\n" : "", dir->path);
+    if (ls->params.long_format)
+        ls_output_long(ls);
+    else
+        ls_output_normal(ls);
+    clear_dir(dir);
+    return 0;
+}
+
 int my_ls(int argc, char **argv)
 {
     uint32_t uargc = (uint32_t)argc;

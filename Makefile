@@ -42,7 +42,8 @@ SRC += get_files.c
 SRC += sort_files.c
 SRC += params.c
 SRC += clear.c
-SRC += print.c
+SRC += print_format/long.c
+SRC += print_format/normal.c
 
 # Tests files
 VPATH += tests

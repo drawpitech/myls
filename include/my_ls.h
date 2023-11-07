@@ -46,6 +46,7 @@ int get_files_in_dir(ls_t *ls);
 void sort_files(directory_t *dir);
 void sort_paths(char **paths, uint32_t n);
 void get_params(ls_t *ls, uint32_t argc, char **argv);
-int print_dir(ls_t *ls, bool print_path, uint32_t index);
+void ls_output_long(ls_t *ls);
+void ls_output_normal(ls_t *ls);
 
 #endif /* MY_LS */
