@@ -46,21 +46,21 @@ uint32_t get_dir_size(ls_t *ls)
 
 int get_files_in_dir(ls_t *ls)
 {
-    struct dirent *directory = NULL;
+    struct dirent *dirent = NULL;
 
     if (ls == NULL)
         return return_ls_error("null pointer");
     ls->dir.n_files = get_dir_size(ls);
     if (ls->dir.n_files == UINT32_MAX)
         return ERR_RETURN;
-    ls->dir.files = malloc(ls->dir.n_files * sizeof(struct dirent *));
+    ls->dir.files = malloc(ls->dir.n_files * sizeof(struct file_s));
     if (get_dirp(&ls->dir) == ERR_RETURN)
         return ERR_RETURN;
     for (uint32_t i = 0; i < ls->dir.n_files;) {
-        directory = readdir(ls->dir.dirp);
-        if (!ls->params.all && my_str_startswith(directory->d_name, "."))
+        dirent = readdir(ls->dir.dirp);
+        if (!ls->params.all && my_str_startswith(dirent->d_name, "."))
             continue;
-        ls->dir.files[i] = directory;
+        ls->dir.files[i].dirent = dirent;
         i++;
     }
     return 0;

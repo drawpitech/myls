@@ -11,12 +11,18 @@
     #include <dirent.h>
     #include <stdbool.h>
     #include <stdint.h>
+    #include <sys/stat.h>
+
+struct file_s {
+    struct dirent *dirent;
+    struct stat stat;
+};
 
 struct directory_s {
     char path[256];
     DIR *dirp;
     uint32_t n_files;
-    struct dirent **files;
+    struct file_s *files;
 };
 
 struct params_s {

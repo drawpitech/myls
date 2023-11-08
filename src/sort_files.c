@@ -59,14 +59,16 @@ void sort_files(struct directory_s *dir)
 {
     uint32_t size;
     uint32_t x;
+    struct file_s *f;
 
     if (dir == NULL || dir->files == NULL || dir->n_files == 0)
         return;
     size = dir->n_files - 1;
+    f = dir->files;
     for (uint32_t i = 0; i < size * size; i++) {
         x = i % size;
-        if (my_strcmp_cases(dir->files[x]->d_name, dir->files[x + 1]->d_name))
-            swap_files(&dir->files[x], &dir->files[x + 1]);
+        if (my_strcmp_cases(f[x].dirent->d_name, f[x + 1].dirent->d_name))
+            swap_files(&f[x].dirent, &f[x + 1].dirent);
     }
 }
 

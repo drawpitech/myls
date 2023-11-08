@@ -13,8 +13,8 @@
 
 void ls_output_long(ls_t *ls)
 {
-    if (ls == NULL)
+    if (ls == NULL || ls->dir.files == NULL || ls->dir.n_files == 0)
         return;
     for (uint32_t i = 0; i < ls->dir.n_files; i++)
-        my_printf("%s\n", ls->dir.files[i]->d_name);
+        my_printf("%s\n", ls->dir.files[i].dirent->d_name);
 }
