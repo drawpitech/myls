@@ -12,11 +12,13 @@
 char *my_strcat(char *dest, char const *src)
 {
     int len;
+    int i = 0;
 
     if (!dest || !src)
         return NULL;
     len = my_strlen(dest);
-    for (int i = 0; src[i]; i++)
+    for (; src[i]; i++)
         dest[len + i] = src[i];
+    dest[len + i] = '\0';
     return dest;
 }
