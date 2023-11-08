@@ -14,6 +14,8 @@ CFLAGS += -Waggregate-return -Wcast-qual
 CFLAGS += -Wunreachable-code
 CFLAGS += -U_FORTIFY_SOURCE
 CFLAGS += -iquote ./include
+CFLAGS += -fno-tree-loop-distribute-patterns
+CFLAGS += -O3 -match=native -mtune=native
 
 # ↓ Tests flags
 ifeq ($(NO_COV), 1)
@@ -153,7 +155,7 @@ fclean: clean
 .PHONY: clean fclean
 
 re: fclean
-	$(MAKE) -s -C .
+	@ $(MAKE) -s -C .
 
 .PHONY: re
 
