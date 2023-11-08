@@ -93,3 +93,17 @@ Test(my_ls_normal, valid_and_invalid_dirs, .init=redirect_all_stdout)
     cr_assert_stderr_eq_str(expected_stderr);
     cr_assert_stdout_eq_str(expected_stdout);
 }
+
+Test(my_ls_normal, empty_dir, .init=cr_redirect_stdout)
+{
+    int argc = 3;
+    char *argv[] = {"./my_ls", "tests/empty", "src/print_format", NULL };
+    char expected_stdout[] =
+        "src/print_format:\n"
+        "long.c  normal.c\n"
+        "\n"
+        "tests/empty:\n";
+
+    cr_assert_eq(my_ls(argc, argv), 0);
+    cr_assert_stdout_eq_str(expected_stdout);
+}
