@@ -15,9 +15,9 @@
 #include "my_ls.h"
 
 static
-void swap_files(struct dirent **file1, struct dirent **file2)
+void swap_files(struct file_s *file1, struct file_s *file2)
 {
-    struct dirent *tmp = *file1;
+    struct file_s tmp = *file1;
 
     *file1 = *file2;
     *file2 = tmp;
@@ -43,8 +43,8 @@ char *get_ptr(char *filename)
 static
 bool my_strcmp_cases(char *str1, char *str2)
 {
-    static char filename1[256];
-    static char filename2[256];
+    static char filename1[PATH_MAX];
+    static char filename2[PATH_MAX];
 
     if (str1 == NULL || str2 == NULL)
         return true;
@@ -68,7 +68,7 @@ void sort_files(struct directory_s *dir)
     for (uint32_t i = 0; i < size * size; i++) {
         x = i % size;
         if (my_strcmp_cases(f[x].dirent->d_name, f[x + 1].dirent->d_name))
-            swap_files(&f[x].dirent, &f[x + 1].dirent);
+            swap_files(f + x, f + x + 1);
     }
 }
 

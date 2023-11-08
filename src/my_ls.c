@@ -58,21 +58,21 @@ int my_ls(int argc, char **argv)
     uint32_t uargc = (uint32_t)argc;
     char *paths[uargc + 1];
     ls_t ls = {
-        .dir = { .path = { 0 }, 0 },
         .paths = paths,
         .nbr_paths = 0,
         .params = { 0 },
+        .dir = { .path = { 0 }, 0 },
     };
-    bool success = true;
+    int ret = 0;
 
     if (argc < 1 || argv == NULL)
         return return_ls_error("invalid args");
     get_params(&ls, uargc, argv);
     if (ls.nbr_paths == 1)
-        success = (print_dir(&ls, false, 0) == 0) && success;
+        ret |= print_dir(&ls, false, 0);
     else
         for (uint32_t i = 0; i < ls.nbr_paths; i++)
-            success = (print_dir(&ls, true, i) == 0) && success;
+            ret |= print_dir(&ls, true, i);
     clear_ls(&ls);
-    return (success) ? 0 : ERR_RETURN;
+    return ret;
 }
