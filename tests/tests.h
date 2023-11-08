@@ -9,6 +9,7 @@
     #define TEST_LS
 
     #include <criterion/criterion.h>
+    #include <criterion/redirect.h>
 
     #include "my_ls.h"
 
@@ -29,6 +30,13 @@ void assert_ls(ls_t *ls, ls_t *expected)
         ls->directories.n_files);
     cr_assert_eq(ls->nbr_paths, expected->nbr_paths);
     cr_assert_arr_eq(ls->paths, expected->paths, ls->nbr_paths);
+}
+
+static inline
+void redirect_all_stdout(void)
+{
+    cr_redirect_stdout();
+    cr_redirect_stderr();
 }
 
 #endif /* TEST_LS */

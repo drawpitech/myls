@@ -45,11 +45,8 @@ void ls_output(ls_t *ls, bool print_path, uint32_t index)
 static
 int print_dir(ls_t *ls, bool print_path, uint32_t index)
 {
-    directory_t *dir;
+    directory_t *dir = &ls->directories;
 
-    if (ls == NULL)
-        return return_ls_error("invalid ptr");
-    dir = &ls->directories;
     my_strcpy(dir->path, ls->paths[index]);
     if (get_files_in_dir(ls) == ERR_RETURN) {
         clear_dir(dir);
@@ -73,7 +70,7 @@ int my_ls(int argc, char **argv)
     bool success = true;
 
     if (argc < 1 || argv == NULL)
-        return return_ls_error("invalid args\n");
+        return return_ls_error("invalid args");
     get_params(&ls, uargc, argv);
     if (ls.nbr_paths == 1)
         success = (print_dir(&ls, false, 0) == 0) && success;

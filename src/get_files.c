@@ -17,8 +17,6 @@
 static
 int get_dirp(directory_t *dir)
 {
-    if (dir == NULL)
-        return return_ls_error("null pointer");
     if (dir->dirp != NULL)
         closedir(dir->dirp);
     dir->dirp = opendir(dir->path);

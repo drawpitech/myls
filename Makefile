@@ -51,6 +51,7 @@ TEST_SRC := $(SRC)
 TEST_SRC += test_sort_paths.c
 TEST_SRC += test_params.c
 TEST_SRC += test_clear.c
+TEST_SRC += test_my_ls_normal.c
 
 SRC += main.c
 
@@ -113,7 +114,7 @@ $(TEST_NAME): $(LIBMY) $(TEST_OBJ)
 	@ $(ECHO) "[${C_BOLD}${C_YELLOW}CC${C_RESET}] ${C_GREEN}$@${C_RESET}"
 	@ $(CC) -o $@ $(TEST_OBJ) $(CFLAGS) || $(DIE)
 
-tests_run: $(TEST_NAME)
+tests_run: fclean $(TEST_NAME)
 	@ ./$(TEST_NAME)
 
 .PHONY: $(TEST_NAME) tests_run
@@ -142,7 +143,7 @@ cov:
 
 # ↓ Cleaning
 clean:
-	@ $(RM) $(OBJ) $(TEST_OBJ)
+	@ $(RM) $(OBJ) $(TEST_OBJ) $(ASAN_OBJ)
 
 fclean: clean
 	@ $(RM) $(NAME) $(TEST_NAME) $(ASAN_NAME)
