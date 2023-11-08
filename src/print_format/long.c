@@ -11,6 +11,7 @@
 #include <sys/types.h>
 #include <grp.h>
 #include <time.h>
+#include <unistd.h>
 
 #include "my.h"
 #include "my_ls.h"
@@ -81,6 +82,17 @@ void put_perms(struct file_s *file)
 }
 
 static
+void put_link(struct file_s *file)
+{
+    char buf[PATH_MAX] = {0};
+
+    if ((file->stat.st_mode & S_IFMT) != S_IFLNK)
+        return;
+    (void)readlink(file->fullpath, buf, PATH_MAX);
+    my_printf(" -> %s", buf);
+}
+
+static
 void show_long_formatting(ls_t *ls)
 {
     struct file_s *file;
@@ -99,7 +111,9 @@ void show_long_formatting(ls_t *ls)
         my_putnchar(' ', max_size[3] - my_nbr_len(file->stat.st_size));
         my_printf("%u ", file->stat.st_size);
         put_date(file);
-        my_printf("%s\n", file->dirent->d_name);
+        my_printf("%s", file->dirent->d_name);
+        put_link(file);
+        my_putchar('\n');
     }
 }
 
