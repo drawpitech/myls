@@ -33,7 +33,7 @@ void ls_output(ls_t *ls, bool print_path, uint32_t index)
         my_printf("%s%s:\n", (index != 0) ? "\n" : "", ls->dir.path);
     if (ls->dir.n_files == 0)
         return;
-    sort_files(&ls->dir);
+    sort_files(ls);
     if (ls->params.long_format)
         ls_output_long(ls);
     else

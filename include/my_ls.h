@@ -82,8 +82,9 @@ int get_files_in_dir(ls_t *ls);
  * Sort all files in the directory_t structure according to the ls->params.
  *  - By default, the files are sorted alphabetically.
  *  - If ls->params.time_sorted is true, the files are sorted by time.
+ *  - If ls->params.reversed is true, the files are then reversed.
  */
-void sort_files(struct directory_s *dir);
+void sort_files(ls_t *ls);
 
 /**
  * Sort all paths in the ls->paths array according to the ls->params, excluding

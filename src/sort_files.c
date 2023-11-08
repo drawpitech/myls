@@ -55,21 +55,53 @@ bool my_strcmp_cases(char *str1, char *str2)
     return (my_strcmp(get_ptr(filename1), get_ptr(filename2)) > 0);
 }
 
-void sort_files(struct directory_s *dir)
+static
+void reverse_files(struct directory_s *dir)
 {
-    uint32_t size;
-    uint32_t x;
-    struct file_s *f;
+    struct file_s *f = dir->files;
 
-    if (dir == NULL || dir->files == NULL || dir->n_files == 0)
-        return;
-    size = dir->n_files - 1;
-    f = dir->files;
+    for (uint32_t i = 0; i < dir->n_files / 2; i++)
+        swap_files(f + i, f + (dir->n_files - 1 - i));
+}
+
+static
+void sort_alpha_files(struct directory_s *dir)
+{
+    uint32_t size = dir->n_files - 1;
+    struct file_s *f = dir->files;
+    uint32_t x;
+
     for (uint32_t i = 0; i < size * size; i++) {
         x = i % size;
         if (my_strcmp_cases(f[x].dirent->d_name, f[x + 1].dirent->d_name))
             swap_files(f + x, f + x + 1);
     }
+}
+
+static
+void sort_time_files(struct directory_s *dir)
+{
+    uint32_t size = dir->n_files - 1;
+    struct file_s *f = dir->files;
+    uint32_t x;
+
+    for (uint32_t i = 0; i < size * size; i++) {
+        x = i % size;
+        if (f[x].stat.st_mtim.tv_sec < f[x + 1].stat.st_mtim.tv_sec)
+            swap_files(f + x, f + x + 1);
+    }
+}
+
+void sort_files(ls_t *ls)
+{
+    if (ls == NULL || ls->dir.files == NULL || ls->dir.n_files == 0)
+        return;
+    if (ls->params.time_sorted)
+        sort_time_files(&ls->dir);
+    else
+        sort_alpha_files(&ls->dir);
+    if (ls->params.reverse)
+        reverse_files(&ls->dir);
 }
 
 void sort_paths(char **paths, uint32_t n)
