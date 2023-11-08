@@ -9,6 +9,7 @@
     #define LIBMY
 
     #include <stdbool.h>
+    #include <stdint.h>
 
     #include "my_printf.h"
 
@@ -72,7 +73,10 @@ int my_strcmp(char const *s1, char const *s2);
 int my_strlen(char const *str);
 int my_strncmp(char const *s1, char const *s2, int n);
 int my_nbr_len_base(int n, const char *base);
-int my_nbr_len(int n);
+int my_i64_len_base(int64_t n, const char *base);
+int my_u64_len_base(uint64_t n, const char *base);
+int my_i64_len(int64_t n);
+int my_u64_len(uint64_t n);
 void char_swap(char *a, char *b);
 void my_putchar(char c);
 void my_sort_int_array(int *tab, int size);
