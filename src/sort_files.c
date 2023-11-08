@@ -55,7 +55,7 @@ bool my_strcmp_cases(char *str1, char *str2)
     return (my_strcmp(get_ptr(filename1), get_ptr(filename2)) > 0);
 }
 
-void sort_files(directory_t *dir)
+void sort_files(struct directory_s *dir)
 {
     uint32_t size;
     uint32_t x;

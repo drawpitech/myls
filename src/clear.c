@@ -9,7 +9,7 @@
 
 #include "my_ls.h"
 
-void clear_dir(directory_t *dir)
+void clear_dir(struct directory_s *dir)
 {
     if (dir == NULL)
         return;
@@ -32,5 +32,5 @@ void clear_ls(ls_t *ls)
     ls->nbr_paths = 0;
     ls->paths = NULL;
     ls->params = (struct params_s){0};
-    clear_dir(&ls->directories);
+    clear_dir(&ls->dir);
 }

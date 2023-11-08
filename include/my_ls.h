@@ -12,25 +12,27 @@
     #include <stdbool.h>
     #include <stdint.h>
 
-typedef struct {
+struct directory_s {
     char path[256];
     DIR *dirp;
     uint32_t n_files;
     struct dirent **files;
-} directory_t;
+};
+
+struct params_s {
+    bool all;
+    bool recursive;
+    bool time_sorted;
+    bool long_format;
+    bool directories;
+    bool reverse;
+};
 
 typedef struct {
-    directory_t directories;
     char **paths;
     uint32_t nbr_paths;
-    struct params_s {
-        bool all;
-        bool recursive;
-        bool time_sorted;
-        bool long_format;
-        bool directories;
-        bool reverse;
-    } params;
+    struct directory_s dir;
+    struct params_s params;
 } ls_t;
 
 typedef struct {
@@ -57,7 +59,7 @@ void clear_ls(ls_t *ls);
 /**
  * Clear all the allocated memory in the directory_t structure.
  */
-void clear_dir(directory_t *dir);
+void clear_dir(struct directory_s *dir);
 
 /**
  * Fetch all files in the ls->dir.path directory and store them in the
@@ -70,7 +72,7 @@ int get_files_in_dir(ls_t *ls);
  *  - By default, the files are sorted alphabetically.
  *  - If ls->params.time_sorted is true, the files are sorted by time.
  */
-void sort_files(directory_t *dir);
+void sort_files(struct directory_s *dir);
 
 /**
  * Sort all paths in the ls->paths array according to the ls->params, excluding

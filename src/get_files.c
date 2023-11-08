@@ -15,7 +15,7 @@
 #include "my_ls.h"
 
 static
-int get_dirp(directory_t *dir)
+int get_dirp(struct directory_s *dir)
 {
     if (dir->dirp != NULL)
         closedir(dir->dirp);
@@ -26,15 +26,15 @@ int get_dirp(directory_t *dir)
 }
 
 static
-uint32_t get_dir_size(ls_t *ls, directory_t *dir)
+uint32_t get_dir_size(ls_t *ls)
 {
     struct dirent *directory = NULL;
     uint32_t size = 0;
 
-    if (get_dirp(dir) == ERR_RETURN)
+    if (get_dirp(&ls->dir) == ERR_RETURN)
         return UINT32_MAX;
     do {
-        directory = readdir(dir->dirp);
+        directory = readdir(ls->dir.dirp);
         if (directory == NULL)
             continue;
         if (!ls->params.all && my_str_startswith(directory->d_name, "."))
@@ -47,22 +47,20 @@ uint32_t get_dir_size(ls_t *ls, directory_t *dir)
 int get_files_in_dir(ls_t *ls)
 {
     struct dirent *directory = NULL;
-    directory_t *dir;
 
     if (ls == NULL)
         return return_ls_error("null pointer");
-    dir = &ls->directories;
-    dir->n_files = get_dir_size(ls, dir);
-    if (dir->n_files == UINT32_MAX)
+    ls->dir.n_files = get_dir_size(ls);
+    if (ls->dir.n_files == UINT32_MAX)
         return ERR_RETURN;
-    dir->files = malloc(dir->n_files * sizeof(struct dirent *));
-    if (get_dirp(dir) == ERR_RETURN)
+    ls->dir.files = malloc(ls->dir.n_files * sizeof(struct dirent *));
+    if (get_dirp(&ls->dir) == ERR_RETURN)
         return ERR_RETURN;
-    for (uint32_t i = 0; i < dir->n_files;) {
-        directory = readdir(dir->dirp);
+    for (uint32_t i = 0; i < ls->dir.n_files;) {
+        directory = readdir(ls->dir.dirp);
         if (!ls->params.all && my_str_startswith(directory->d_name, "."))
             continue;
-        dir->files[i] = directory;
+        ls->dir.files[i] = directory;
         i++;
     }
     return 0;

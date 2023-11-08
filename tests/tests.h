@@ -23,11 +23,10 @@ void assert_ls(ls_t *ls, ls_t *expected)
     cr_assert_eq(ls->params.recursive, expected->params.recursive);
     cr_assert_eq(ls->params.reverse, expected->params.reverse);
     cr_assert_eq(ls->params.time_sorted, expected->params.time_sorted);
-    cr_assert_eq(ls->directories.n_files, expected->directories.n_files);
-    cr_assert_str_eq(ls->directories.path, expected->directories.path);
-    cr_assert_eq(ls->directories.dirp, expected->directories.dirp);
-    cr_assert_arr_eq(ls->directories.files, expected->directories.files,
-        ls->directories.n_files);
+    cr_assert_eq(ls->dir.n_files, expected->dir.n_files);
+    cr_assert_str_eq(ls->dir.path, expected->dir.path);
+    cr_assert_eq(ls->dir.dirp, expected->dir.dirp);
+    cr_assert_arr_eq(ls->dir.files, expected->dir.files, ls->dir.n_files);
     cr_assert_eq(ls->nbr_paths, expected->nbr_paths);
     cr_assert_arr_eq(ls->paths, expected->paths, ls->nbr_paths);
 }

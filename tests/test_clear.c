@@ -34,9 +34,9 @@ Test(clear, dirp)
     ls_t ls = { 0 };
     ls_t expected = { 0 };
 
-    my_strcpy(ls.directories.path, ".");
+    my_strcpy(ls.dir.path, ".");
     get_files_in_dir(&ls);
-    clear_dir(&ls.directories);
+    clear_dir(&ls.dir);
     assert_ls(&ls, &expected);
 }
 
