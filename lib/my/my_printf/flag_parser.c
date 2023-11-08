@@ -55,7 +55,7 @@ void get_flags(char **ptr, printf_args_t *arg)
         arg->flags.padding = my_getnbr(*ptr);
         arg->flags.padded = true;
         *ptr += (
-            my_nbr_len(arg->flags.padding, BASE_DEC)
+            my_nbr_len_base(arg->flags.padding, BASE_DEC)
             + (**ptr == '-' && arg->flags.padding == 0)
         );
     }
@@ -75,7 +75,7 @@ bool get_precision(char **ptr, printf_args_t *arg)
     (*ptr)++;
     arg->precision = tmp;
     *ptr += (
-        my_nbr_len(tmp, BASE_DEC)
+        my_nbr_len_base(tmp, BASE_DEC)
         + (**ptr == '-' && tmp == 0)
     );
     return true;

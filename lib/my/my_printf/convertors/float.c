@@ -15,7 +15,7 @@ int printf_float(printf_args_t *arg)
     int size = 0;
     double nbr = va_arg(arg->ap, double);
     int len = (
-        my_nbr_len((int)nbr, BASE_DEC)
+        my_nbr_len_base((int)nbr, BASE_DEC)
         + (arg->precision != 0) + arg->precision
     );
 
@@ -34,7 +34,7 @@ int printf_rounded_float(printf_args_t *arg)
     int size = 0;
     double nbr = va_arg(arg->ap, double);
     int len = (
-        my_nbr_len((int)nbr, BASE_DEC)
+        my_nbr_len_base((int)nbr, BASE_DEC)
         + (arg->precision != 0) + arg->precision
         + 4
     );

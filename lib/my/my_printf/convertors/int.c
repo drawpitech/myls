@@ -14,7 +14,7 @@ int printf_int(printf_args_t *arg)
 {
     int size = 0;
     int nbr = va_arg(arg->ap, int);
-    int len = my_nbr_len(nbr, BASE_DEC);
+    int len = my_nbr_len_base(nbr, BASE_DEC);
 
     size += left_pad(arg, len);
     if (arg->flags.sign)
