@@ -14,19 +14,6 @@ CFLAGS += -Waggregate-return -Wcast-qual
 CFLAGS += -Wunreachable-code
 CFLAGS += -U_FORTIFY_SOURCE
 CFLAGS += -iquote ./include
-CFLAGS += -fno-tree-loop-distribute-patterns
-CFLAGS += -O3 -match=native -mtune=native
-
-# ↓ Tests flags
-ifeq ($(NO_COV), 1)
-COVERAGE_FLAGS :=
-else
-COVERAGE_FLAGS := -g3 --coverage
-endif
-TEST_FLAGS := $(COVERAGE_FLAGS) -lcriterion
-
-# ↓ Asan
-ASAN_FLAGS := -fsanitize=address,leak,undefined -g3
 
 # ↓ Binaries
 NAME := my_ls
@@ -35,7 +22,7 @@ ASAN_NAME := asan
 
 # Libmy
 LIBMY := lib/libmy.a
-CFLAGS += -L./$(dir $(LIBMY)) -lmy
+LDFLAGS := -L./$(dir $(LIBMY)) -lmy
 
 # Source files
 VPATH := src
@@ -99,9 +86,11 @@ $(BUILD_DIR)/source/%.o: %.c $(LIBMY)
 	@ $(ECHO) "[${C_BOLD}${C_RED}CC${C_RESET}] $^"
 	@ $(CC) -o $@ -c $< $(CFLAGS) $(DEPS_FLAGS) || $(DIE)
 
+$(NAME): CFLAGS += -fno-tree-loop-distribute-patterns
+$(NAME): CFLAGS += -O3 -match=native -mtune=native
 $(NAME): $(LIBMY) $(OBJ)
 	@ $(ECHO) "[${C_BOLD}${C_YELLOW}CC${C_RESET}] ${C_GREEN}$@${C_RESET}"
-	@ $(CC) -o $@ $(OBJ) $(CFLAGS) || $(DIE)
+	@ $(CC) -o $@ $(OBJ) $(CFLAGS) $(LDFLAGS) || $(DIE)
 
 .PHONY: $(NAME)
 
@@ -111,10 +100,13 @@ $(BUILD_DIR)/tests/%.o: %.c $(LIBMY)
 	@ $(ECHO) "[${C_BOLD}${C_RED}CC${C_RESET}] $^"
 	@ $(CC) -o $@ -c $< $(CFLAGS) $(DEPS_FLAGS) || $(DIE)
 
-$(TEST_NAME): CFLAGS += $(TEST_FLAGS)
+ifneq ($(NO_COV), 1)
+$(TEST_NAME): CFLAGS += -g3 --coverage
+endif
+$(TEST_NAME): CFLAGS += -lcriterion
 $(TEST_NAME): $(LIBMY) $(TEST_OBJ)
 	@ $(ECHO) "[${C_BOLD}${C_YELLOW}CC${C_RESET}] ${C_GREEN}$@${C_RESET}"
-	@ $(CC) -o $@ $(TEST_OBJ) $(CFLAGS) || $(DIE)
+	@ $(CC) -o $@ $(TEST_OBJ) $(CFLAGS) $(LDFLAGS) || $(DIE)
 
 tests_run: fclean $(TEST_NAME)
 	@ ./$(TEST_NAME)
@@ -127,10 +119,10 @@ $(BUILD_DIR)/asan/%.o: %.c $(LIBMY)
 	@ $(ECHO) "[${C_BOLD}${C_RED}CC${C_RESET}] $^"
 	@ $(CC) -o $@ -c $< $(CFLAGS) $(DEPS_FLAGS) || $(DIE)
 
-$(ASAN_NAME): CFLAGS += $(ASAN_FLAGS)
+$(ASAN_NAME): CFLAGS += -fsanitize=address,leak,undefined -g3
 $(ASAN_NAME): $(LIBMY) $(ASAN_OBJ)
 	@ $(ECHO) "[${C_BOLD}${C_YELLOW}CC${C_RESET}] ${C_GREEN}$@${C_RESET}"
-	@ $(CC) -o $@ $(ASAN_OBJ) $(CFLAGS) || $(DIE)
+	@ $(CC) -o $@ $(ASAN_OBJ) $(CFLAGS) $(LDFLAGS) || $(DIE)
 
 .PHONY: $(ASAN_NAME)
 
