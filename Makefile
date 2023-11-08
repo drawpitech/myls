@@ -92,7 +92,7 @@ libmy: $(LIBMY)
 .PHONY: libmy
 
 # ↓ Compiling
-$(BUILD_DIR)/source/%.o: %.c
+$(BUILD_DIR)/source/%.o: %.c $(LIBMY)
 	@ mkdir -p $(dir $@)
 	@ $(ECHO) "[${C_BOLD}${C_RED}CC${C_RESET}] $^"
 	@ $(CC) -o $@ -c $< $(CFLAGS) $(DEPS_FLAGS) || $(DIE)
@@ -104,7 +104,7 @@ $(NAME): $(LIBMY) $(OBJ)
 .PHONY: $(NAME)
 
 # ↓ Unit tests
-$(BUILD_DIR)/tests/%.o: %.c
+$(BUILD_DIR)/tests/%.o: %.c $(LIBMY)
 	@ mkdir -p $(dir $@)
 	@ $(ECHO) "[${C_BOLD}${C_RED}CC${C_RESET}] $^"
 	@ $(CC) -o $@ -c $< $(CFLAGS) $(DEPS_FLAGS) || $(DIE)
@@ -120,7 +120,7 @@ tests_run: fclean $(TEST_NAME)
 .PHONY: $(TEST_NAME) tests_run
 
 # ↓ Asan
-$(BUILD_DIR)/asan/%.o: %.c
+$(BUILD_DIR)/asan/%.o: %.c $(LIBMY)
 	@ mkdir -p $(dir $@)
 	@ $(ECHO) "[${C_BOLD}${C_RED}CC${C_RESET}] $^"
 	@ $(CC) -o $@ -c $< $(CFLAGS) $(DEPS_FLAGS) || $(DIE)
@@ -152,7 +152,8 @@ fclean: clean
 
 .PHONY: clean fclean
 
-re: fclean all
+re: fclean
+	$(MAKE) -s -C .
 
 .PHONY: re
 
