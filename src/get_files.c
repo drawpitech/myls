@@ -10,6 +10,8 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <stdbool.h>
+#include <pwd.h>
+#include <grp.h>
 
 #include "my.h"
 #include "my_ls.h"
@@ -53,6 +55,8 @@ void set_file(char *dir_path, struct file_s *file, struct dirent *dirent)
         my_strcat(file->fullpath, "/");
     my_strcat(file->fullpath, file->dirent->d_name);
     lstat(file->fullpath, &file->stat);
+    file->passwd = getpwuid(file->stat.st_uid);
+    file->group = getgrgid(file->stat.st_gid);
 }
 
 int get_files_in_dir(ls_t *ls)

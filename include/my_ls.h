@@ -12,11 +12,15 @@
     #include <stdbool.h>
     #include <stdint.h>
     #include <sys/stat.h>
+    #include <pwd.h>
+    #include <grp.h>
 
 struct file_s {
     char fullpath[PATH_MAX];
     struct dirent *dirent;
     struct stat stat;
+    struct passwd *passwd;
+    struct group *group;
 };
 
 struct directory_s {
