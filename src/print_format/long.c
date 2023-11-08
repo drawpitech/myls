@@ -10,6 +10,7 @@
 #include <stdlib.h>
 #include <sys/types.h>
 #include <grp.h>
+#include <time.h>
 
 #include "my.h"
 #include "my_ls.h"
@@ -29,6 +30,15 @@ void get_max_size(ls_t *ls, int arr[4])
 }
 
 static
+void put_date(struct file_s *file)
+{
+    char *time = ctime(&file->stat.st_mtim.tv_sec);
+
+    time[my_strlen(time) - 9] = '\0';
+    my_printf("%s ", time + 4);
+}
+
+static
 void show_long_formatting(ls_t *ls)
 {
     struct file_s *file;
@@ -45,6 +55,7 @@ void show_long_formatting(ls_t *ls)
         my_printf("%s ", file->group->gr_name);
         my_putnchar(' ', max_size[3] - my_nbr_len(file->stat.st_size));
         my_printf("%u ", file->stat.st_size);
+        put_date(file);
         my_printf("%s\n", file->dirent->d_name);
     }
 }
