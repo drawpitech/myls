@@ -39,6 +39,48 @@ void put_date(struct file_s *file)
 }
 
 static
+char get_file_type(mode_t mode)
+{
+    switch (mode & S_IFMT) {
+        case S_IFBLK:
+            return 'b';
+        case S_IFCHR:
+            return 'c';
+        case S_IFDIR:
+            return 'd';
+        case S_IFIFO:
+            return 'i';
+        case S_IFLNK:
+            return 'l';
+        case S_IFREG:
+            return '-';
+        case S_IFSOCK:
+            return 's';
+    }
+    return '?';
+}
+
+static
+void put_perms(struct file_s *file)
+{
+    mode_t owner = file->stat.st_mode & S_IRWXU;
+    mode_t group = file->stat.st_mode & S_IRWXG;
+    mode_t other = file->stat.st_mode & S_IRWXO;
+
+    my_putchar(get_file_type(file->stat.st_mode));
+    my_putchar((owner & S_IRUSR) ? 'r' : '-');
+    my_putchar((owner & S_IWUSR) ? 'w' : '-');
+    my_putchar((owner & S_IXUSR) ? 'x' : '-');
+    my_putchar((group & S_IRGRP) ? 'r' : '-');
+    my_putchar((group & S_IWGRP) ? 'w' : '-');
+    my_putchar((group & S_IXGRP) ? 'x' : '-');
+    my_putchar((other & S_IROTH) ? 'r' : '-');
+    my_putchar((other & S_IWOTH) ? 'w' : '-');
+    my_putchar((other & S_IXOTH) ? 'x' : '-');
+    my_putchar(' ');
+}
+
+static
 void show_long_formatting(ls_t *ls)
 {
     struct file_s *file;
@@ -47,6 +89,7 @@ void show_long_formatting(ls_t *ls)
     get_max_size(ls, max_size);
     for (uint32_t i = 0; i < ls->dir.n_files; i++) {
         file = ls->dir.files + i;
+        put_perms(file);
         my_putnchar(' ', max_size[0] - my_nbr_len(file->stat.st_nlink));
         my_printf("%u ", file->stat.st_nlink);
         my_putnchar(' ', max_size[1] - my_strlen(file->passwd->pw_name));
