@@ -14,12 +14,13 @@
     #include <sys/stat.h>
 
 struct file_s {
+    char fullpath[PATH_MAX];
     struct dirent *dirent;
     struct stat stat;
 };
 
 struct directory_s {
-    char path[256];
+    char path[PATH_MAX];
     DIR *dirp;
     uint32_t n_files;
     struct file_s *files;
