@@ -44,6 +44,17 @@ uint32_t get_dir_size(ls_t *ls)
     return size;
 }
 
+static
+void set_file(char *dir_path, struct file_s *file, struct dirent *dirent)
+{
+    file->dirent = dirent;
+    my_strcpy(file->fullpath, dir_path);
+    if (dir_path[my_strlen(dir_path) - 1] != '/')
+        my_strcat(file->fullpath, "/");
+    my_strcat(file->fullpath, file->dirent->d_name);
+    lstat(file->fullpath, &file->stat);
+}
+
 int get_files_in_dir(ls_t *ls)
 {
     struct dirent *dirent = NULL;
@@ -60,8 +71,7 @@ int get_files_in_dir(ls_t *ls)
         dirent = readdir(ls->dir.dirp);
         if (!ls->params.all && my_str_startswith(dirent->d_name, "."))
             continue;
-        ls->dir.files[i].dirent = dirent;
-        i++;
+        set_file(ls->dir.path, &ls->dir.files[i++], dirent);
     }
     return 0;
 }
