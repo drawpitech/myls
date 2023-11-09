@@ -15,8 +15,10 @@ int len_str_arr(char **arr, int size)
 {
     int len = 0;
 
-    while (size--)
+    while (size) {
+        size -= 1;
         len += my_strlen(arr[size]);
+    }
     return len;
 }
 

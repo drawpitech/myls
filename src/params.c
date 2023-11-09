@@ -55,9 +55,12 @@ void get_params(ls_t *ls, uint32_t argc, char **argv)
             get_flags(ls, argv[i] + 1);
             continue;
         }
-        ls->paths[ls->nbr_paths++] = argv[i];
+        ls->paths[ls->nbr_paths] = argv[i];
+        ls->nbr_paths += 1;
     }
-    if (ls->nbr_paths == 0)
-        ls->paths[ls->nbr_paths++] = ".";
+    if (ls->nbr_paths == 0) {
+        ls->paths[ls->nbr_paths] = ".";
+        ls->nbr_paths = 1;
+    }
     sort_paths(ls->paths, ls->nbr_paths);
 }
