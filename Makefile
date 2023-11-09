@@ -86,8 +86,6 @@ $(BUILD_DIR)/source/%.o: %.c $(LIBMY)
 	@ $(ECHO) "[${C_BOLD}${C_RED}CC${C_RESET}] $^"
 	@ $(CC) -o $@ -c $< $(CFLAGS) $(DEPS_FLAGS) || $(DIE)
 
-$(NAME): CFLAGS += -fno-tree-loop-distribute-patterns
-$(NAME): CFLAGS += -O3 -match=native -mtune=native
 $(NAME): $(LIBMY) $(OBJ)
 	@ $(ECHO) "[${C_BOLD}${C_YELLOW}CC${C_RESET}] ${C_GREEN}$@${C_RESET}"
 	@ $(CC) -o $@ $(OBJ) $(CFLAGS) $(LDFLAGS) || $(DIE)
