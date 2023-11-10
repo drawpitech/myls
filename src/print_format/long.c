@@ -107,7 +107,10 @@ void put_file(int max_size[4], struct file_s *file)
     my_putnchar(' ', max_size[3] - my_u64_len(file->stat.st_size));
     my_printf("%u ", file->stat.st_size);
     put_date(file);
-    my_printf("%s", file->dirent->d_name);
+    if (my_strstr(file->dirent->d_name, " ") == NULL)
+        my_printf("%s", file->dirent->d_name);
+    else
+        my_printf("'%s'", file->dirent->d_name);
     put_link(file);
     my_putchar('\n');
 }
