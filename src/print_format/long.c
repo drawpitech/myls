@@ -31,6 +31,16 @@ void get_max_size(ls_t *ls, int arr[4])
 }
 
 static
+void put_total(ls_t *ls)
+{
+    uint32_t sum = 0;
+
+    for (uint32_t i = 0; i < ls->dir.n_files; i++)
+        sum += ls->dir.files[i].stat.st_blocks / 2;
+    my_printf("total %u\n", sum);
+}
+
+static
 void put_date(struct file_s *file)
 {
     char *time = ctime(&file->stat.st_mtim.tv_sec);
@@ -121,6 +131,7 @@ void ls_output_long(ls_t *ls)
 
     if (ls == NULL || ls->dir.files == NULL || ls->dir.n_files == 0)
         return;
+    put_total(ls);
     get_max_size(ls, max_size);
     for (uint32_t i = 0; i < ls->dir.n_files; i++)
         put_file(max_size, ls->dir.files + i);
