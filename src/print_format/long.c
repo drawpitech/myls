@@ -95,33 +95,30 @@ void put_link(struct file_s *file)
 }
 
 static
-void show_long_formatting(ls_t *ls)
+void put_file(int max_size[4], struct file_s *file)
 {
-    struct file_s *file;
-    int max_size[4] = {0};
-
-    get_max_size(ls, max_size);
-    for (uint32_t i = 0; i < ls->dir.n_files; i++) {
-        file = ls->dir.files + i;
-        put_perms(file);
-        my_putnchar(' ', max_size[0] - my_u64_len(file->stat.st_nlink));
-        my_printf("%u ", file->stat.st_nlink);
-        my_putnchar(' ', max_size[1] - my_strlen(file->passwd->pw_name));
-        my_printf("%s ", file->passwd->pw_name);
-        my_putnchar(' ', max_size[2] - my_strlen(file->group->gr_name));
-        my_printf("%s ", file->group->gr_name);
-        my_putnchar(' ', max_size[3] - my_u64_len(file->stat.st_size));
-        my_printf("%u ", file->stat.st_size);
-        put_date(file);
-        my_printf("%s", file->dirent->d_name);
-        put_link(file);
-        my_putchar('\n');
-    }
+    put_perms(file);
+    my_putnchar(' ', max_size[0] - my_u64_len(file->stat.st_nlink));
+    my_printf("%u ", file->stat.st_nlink);
+    my_putnchar(' ', max_size[1] - my_strlen(file->passwd->pw_name));
+    my_printf("%s ", file->passwd->pw_name);
+    my_putnchar(' ', max_size[2] - my_strlen(file->group->gr_name));
+    my_printf("%s ", file->group->gr_name);
+    my_putnchar(' ', max_size[3] - my_u64_len(file->stat.st_size));
+    my_printf("%u ", file->stat.st_size);
+    put_date(file);
+    my_printf("%s", file->dirent->d_name);
+    put_link(file);
+    my_putchar('\n');
 }
 
 void ls_output_long(ls_t *ls)
 {
+    int max_size[4] = {0};
+
     if (ls == NULL || ls->dir.files == NULL || ls->dir.n_files == 0)
         return;
-    show_long_formatting(ls);
+    get_max_size(ls, max_size);
+    for (uint32_t i = 0; i < ls->dir.n_files; i++)
+        put_file(max_size, ls->dir.files + i);
 }
