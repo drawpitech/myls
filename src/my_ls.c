@@ -6,7 +6,6 @@
 */
 
 #include <stdlib.h>
-#include <dirent.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdbool.h>
@@ -44,7 +43,7 @@ static
 int print_dir(ls_t *ls, bool print_path, uint32_t index)
 {
     my_strcpy(ls->dir.path, ls->paths[index]);
-    if (get_files_in_dir(ls) == ERR_RETURN) {
+    if (get_files(ls) == ERR_RETURN) {
         clear_dir(&ls->dir);
         return ERR_RETURN;
     }
@@ -64,7 +63,7 @@ int my_ls(int argc, char **argv)
         return return_ls_error("invalid args");
     ls.paths = paths,
     get_params(&ls, uargc, argv);
-    if (ls.nbr_paths == 1)
+    if (ls.nbr_paths == 1 || ls.params.directories)
         ret |= print_dir(&ls, false, 0);
     else
         for (uint32_t i = 0; i < ls.nbr_paths; i++)

@@ -9,6 +9,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <sys/types.h>
+#include <sys/stat.h>
 #include <grp.h>
 #include <time.h>
 #include <unistd.h>
@@ -97,7 +98,7 @@ void put_link(struct file_s *file)
     static char buf[PATH_MAX];
     ssize_t size;
 
-    if ((file->stat.st_mode & S_IFMT) != S_IFLNK)
+    if (!S_ISLNK(file->stat.st_mode))
         return;
     size = readlink(file->fullpath, buf, PATH_MAX);
     buf[MIN(size, PATH_MAX - 1)] = '\0';
@@ -117,10 +118,10 @@ void put_file(int max_size[4], struct file_s *file)
     my_putnchar(' ', max_size[3] - my_u64_len(file->stat.st_size));
     my_printf("%u ", file->stat.st_size);
     put_date(file);
-    if (my_strstr(file->dirent->d_name, " ") == NULL)
-        my_printf("%s", file->dirent->d_name);
+    if (my_strstr(file->filename, " ") == NULL)
+        my_printf("%s", file->filename);
     else
-        my_printf("'%s'", file->dirent->d_name);
+        my_printf("'%s'", file->filename);
     put_link(file);
     my_putchar('\n');
 }

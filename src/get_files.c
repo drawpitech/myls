@@ -47,18 +47,18 @@ uint32_t get_dir_size(ls_t *ls)
 }
 
 static
-void set_file(char *dir_path, struct file_s *file, struct dirent *dirent)
+void set_file(char *dir_path, struct file_s *file)
 {
-    file->dirent = dirent;
     my_strcpy(file->fullpath, dir_path);
     if (dir_path[my_strlen(dir_path) - 1] != '/')
         my_strcat(file->fullpath, "/");
-    my_strcat(file->fullpath, file->dirent->d_name);
+    my_strcat(file->fullpath, file->filename);
     lstat(file->fullpath, &file->stat);
     file->passwd = getpwuid(file->stat.st_uid);
     file->group = getgrgid(file->stat.st_gid);
 }
 
+static
 int get_files_in_dir(ls_t *ls)
 {
     struct dirent *dirent = NULL;
@@ -75,7 +75,27 @@ int get_files_in_dir(ls_t *ls)
         dirent = readdir(ls->dir.dirp);
         if (!ls->params.all && my_str_startswith(dirent->d_name, "."))
             continue;
-        set_file(ls->dir.path, &ls->dir.files[i++], dirent);
+        my_strcpy(ls->dir.files[i].filename, dirent->d_name);
+        set_file(ls->dir.path, &ls->dir.files[i++]);
     }
     return 0;
+}
+
+static
+int get_dirs(ls_t *ls)
+{
+    ls->dir.n_files = ls->nbr_paths;
+    ls->dir.files = malloc(ls->dir.n_files * sizeof(struct file_s));
+    for (uint32_t i = 0; i < ls->dir.n_files;) {
+        my_strcpy(ls->dir.files[i].filename, ls->paths[i]);
+        set_file("./", &ls->dir.files[i++]);
+    }
+    return 0;
+}
+
+int get_files(ls_t *ls)
+{
+    if (ls == NULL)
+        return return_ls_error("null pointer");
+    return (ls->params.directories) ? get_dirs(ls) : get_files_in_dir(ls);
 }

@@ -6,7 +6,6 @@
 */
 
 #include <stdlib.h>
-#include <dirent.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdbool.h>
@@ -73,7 +72,7 @@ void sort_alpha_files(struct directory_s *dir)
 
     for (uint32_t i = 0; i < size * size; i++) {
         x = i % size;
-        if (my_strcmp_cases(f[x].dirent->d_name, f[x + 1].dirent->d_name))
+        if (my_strcmp_cases(f[x].filename, f[x + 1].filename))
             swap_files(f + x, f + x + 1);
     }
 }

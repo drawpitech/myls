@@ -17,7 +17,7 @@
 
 struct file_s {
     char fullpath[PATH_MAX];
-    struct dirent *dirent;
+    char filename[NAME_MAX];
     struct stat stat;
     struct passwd *passwd;
     struct group *group;
@@ -76,7 +76,7 @@ void clear_dir(struct directory_s *dir);
  * Fetch all files in the ls->dir.path directory and store them in the
  * directory_t structure.
  */
-int get_files_in_dir(ls_t *ls);
+int get_files(ls_t *ls);
 
 /**
  * Sort all files in the directory_t structure according to the ls->params.

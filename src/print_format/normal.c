@@ -15,8 +15,8 @@ void ls_output_normal(ls_t *ls)
 {
     if (ls == NULL || ls->dir.files == NULL || ls->dir.n_files == 0)
         return;
-    my_printf("%s", ls->dir.files[0].dirent->d_name);
+    my_printf("%s", ls->dir.files[0].filename);
     for (uint32_t i = 1; i < ls->dir.n_files; i++)
-        my_printf("  %s", ls->dir.files[i].dirent->d_name);
+        my_printf("  %s", ls->dir.files[i].filename);
     my_printf("\n");
 }
