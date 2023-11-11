@@ -36,6 +36,8 @@ void put_total(ls_t *ls)
 {
     uint32_t sum = 0;
 
+    if (ls->params.directories)
+        return;
     for (uint32_t i = 0; i < ls->dir.n_files; i++)
         sum += ls->dir.files[i].stat.st_blocks / 2;
     my_printf("total %u\n", sum);
