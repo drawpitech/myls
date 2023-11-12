@@ -18,12 +18,12 @@
 #include "my_ls.h"
 
 static
-void get_max_size(ls_t *ls, int arr[4])
+void get_max_size(struct directory_s *dir, int arr[4])
 {
     struct file_s *file;
 
-    for (uint32_t i = 0; i < ls->dir.n_files; i++) {
-        file = ls->dir.files + i;
+    for (uint32_t i = 0; i < dir->n_files; i++) {
+        file = dir->files + i;
         arr[0] = MAX(arr[0], my_u64_len(file->stat.st_nlink));
         arr[1] = MAX(arr[1], my_strlen(file->passwd->pw_name));
         arr[2] = MAX(arr[2], my_strlen(file->group->gr_name));
@@ -32,14 +32,12 @@ void get_max_size(ls_t *ls, int arr[4])
 }
 
 static
-void put_total(ls_t *ls)
+void put_total(struct directory_s *dir)
 {
     uint32_t sum = 0;
 
-    if (ls->params.directories)
-        return;
-    for (uint32_t i = 0; i < ls->dir.n_files; i++)
-        sum += ls->dir.files[i].stat.st_blocks / 2;
+    for (uint32_t i = 0; i < dir->n_files; i++)
+        sum += dir->files[i].stat.st_blocks / 2;
     my_printf("total %u\n", sum);
 }
 
@@ -132,14 +130,15 @@ void put_file(int max_size[4], struct directory_s *dir, struct file_s *file)
     my_putchar('\n');
 }
 
-void ls_output_long(ls_t *ls)
+void ls_output_long(struct directory_s *dir, struct params_s *params)
 {
     int max_size[4] = {0};
 
-    if (ls == NULL || ls->dir.files == NULL || ls->dir.n_files == 0)
+    if (dir == NULL || params == NULL || dir->files == NULL)
         return;
-    put_total(ls);
-    get_max_size(ls, max_size);
-    for (uint32_t i = 0; i < ls->dir.n_files; i++)
-        put_file(max_size, &ls->dir, ls->dir.files + i);
+    if (!params->directories)
+        put_total(dir);
+    get_max_size(dir, max_size);
+    for (uint32_t i = 0; i < dir->n_files; i++)
+        put_file(max_size, dir, dir->files + i);
 }

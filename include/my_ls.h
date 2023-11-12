@@ -72,10 +72,10 @@ void clear_ls(ls_t *ls);
 void clear_dir(struct directory_s *dir);
 
 /**
- * Fetch all files in the ls->dir.path directory and store them in the
+ * Fetch all files in the dir->path directory and store them in the
  * directory_t structure.
  */
-int get_files(ls_t *ls);
+int get_files(struct directory_s *dir, struct params_s *params);
 
 /**
  * Sort all files in the directory_t structure according to the ls->params.
@@ -100,11 +100,11 @@ void get_params(ls_t *ls, uint32_t argc, char **argv);
 /**
  * Print the files of the ls->dir structure with the long format.
  */
-void ls_output_long(ls_t *ls);
+void ls_output_long(struct directory_s *dir, struct params_s *params);
 
 /**
  * Print the files of the ls->dir structure with the normal format.
  */
-void ls_output_normal(ls_t *ls);
+void ls_output_normal(struct directory_s *dir);
 
 #endif /* MY_LS */
