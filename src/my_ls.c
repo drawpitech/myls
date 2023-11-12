@@ -28,7 +28,7 @@ int return_ls_error(char *str)
 static
 int print_dir(ls_t *ls, bool show_path, bool line_jmp, struct directory_s *dir)
 {
-    if (get_files(dir, &ls->params) == ERR_RETURN) {
+    if (get_files_in_dir(dir, &ls->params) == ERR_RETURN) {
         clear_dir(dir);
         return ERR_RETURN;
     }
@@ -38,7 +38,7 @@ int print_dir(ls_t *ls, bool show_path, bool line_jmp, struct directory_s *dir)
         return 0;
     sort_files(ls);
     if (ls->params.long_format)
-        ls_output_long(dir, &ls->params);
+        ls_output_long(dir, true);
     else
         ls_output_normal(dir);
     clear_dir(&ls->dir);
@@ -46,17 +46,40 @@ int print_dir(ls_t *ls, bool show_path, bool line_jmp, struct directory_s *dir)
 }
 
 static
+void print_alone_files(ls_t *ls)
+{
+    ls->dir.path[0] = '\0';
+    ls->dir.dirp = NULL;
+    ls->dir.n_files = ls->alone_files.n;
+    if (ls->dir.n_files == 0)
+        return;
+    ls->dir.files = malloc(ls->dir.n_files * sizeof(struct file_s));
+    for (uint32_t i = 0; i < ls->dir.n_files; i++) {
+        my_strcpy(ls->dir.files[i].filename, ls->alone_files.paths[i]);
+        set_file(".", ls->dir.files + i);
+    }
+    sort_files(ls);
+    if (ls->params.long_format)
+        ls_output_long(&ls->dir, false);
+    else
+        ls_output_normal(&ls->dir);
+    clear_dir(&ls->dir);
+}
+
+static
 int print_ls(ls_t *ls)
 {
     int ret = 0;
+    bool has_af = (ls->alone_files.n != 0);
 
-    if (ls->nbr_paths == 1 || ls->params.directories) {
+    if (!has_af && (ls->nbr_paths == 1 || ls->params.directories)) {
         my_strcpy(ls->dir.path, ls->paths[0]);
         return print_dir(ls, false, false, &ls->dir);
     }
+    print_alone_files(ls);
     for (uint32_t i = 0; i < ls->nbr_paths; i++) {
         my_strcpy(ls->dir.path, ls->paths[i]);
-        ret |= print_dir(ls, true, (i != 0), &ls->dir);
+        ret |= print_dir(ls, true, (has_af || i != 0), &ls->dir);
     }
     return ret;
 }
@@ -65,12 +88,14 @@ int my_ls(int argc, char **argv)
 {
     uint32_t uargc = (uint32_t)argc;
     char *paths[uargc];
+    char *alone_files[uargc];
     ls_t ls = { 0 };
     int ret = 0;
 
     if (argc < 1 || argv == NULL)
         return return_ls_error("invalid args");
-    ls.paths = paths,
+    ls.paths = paths;
+    ls.alone_files.paths = alone_files;
     get_params(&ls, uargc, argv);
     ret |= print_ls(&ls);
     clear_ls(&ls);

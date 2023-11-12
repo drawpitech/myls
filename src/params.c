@@ -10,6 +10,7 @@
 
 #include "my.h"
 #include "my_ls.h"
+#include "sys/stat.h"
 
 static
 int set_flag(char c, arg_t *arr)
@@ -44,23 +45,42 @@ void get_flags(ls_t *ls, char *str)
     }
 }
 
+static
+void add_param(char *param, ls_t *ls)
+{
+    static struct stat file_stat;
+
+    if (param == NULL)
+        return;
+    if (param[0] == '-') {
+        get_flags(ls, param + 1);
+        return;
+    }
+    if (stat(param, &file_stat) == -1 || !S_ISDIR(file_stat.st_mode)) {
+        ls->alone_files.paths[ls->alone_files.n] = param;
+        ls->alone_files.n += 1;
+        return;
+    }
+    ls->paths[ls->nbr_paths] = param;
+    ls->nbr_paths += 1;
+}
+
 void get_params(ls_t *ls, uint32_t argc, char **argv)
 {
     if (ls == NULL || argv == NULL || ls->paths == NULL)
         return;
-    for (uint32_t i = 1; i < argc; i++) {
-        if (argv[i] == NULL)
-            return;
-        if (argv[i][0] == '-') {
-            get_flags(ls, argv[i] + 1);
-            continue;
+    for (uint32_t i = 1; i < argc; i++)
+        add_param(argv[i], ls);
+    if (ls->params.directories) {
+        for (uint32_t i = 0; i < ls->nbr_paths; i++) {
+            ls->alone_files.paths[ls->alone_files.n] = ls->paths[i];
+            ls->alone_files.n += 1;
         }
-        ls->paths[ls->nbr_paths] = argv[i];
-        ls->nbr_paths += 1;
-    }
-    if (ls->nbr_paths == 0) {
+        ls->nbr_paths = 0;
+    } else if (ls->nbr_paths == 0 && ls->alone_files.n == 0) {
         ls->paths[ls->nbr_paths] = ".";
         ls->nbr_paths = 1;
     }
     sort_paths(ls->paths, ls->nbr_paths);
+    sort_paths(ls->alone_files.paths, ls->alone_files.n);
 }

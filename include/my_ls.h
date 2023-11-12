@@ -38,9 +38,15 @@ struct params_s {
     bool reverse;
 };
 
+struct paths_s {
+    char **paths;
+    uint32_t n;
+};
+
 typedef struct {
     char **paths;
     uint32_t nbr_paths;
+    struct paths_s alone_files;
     struct directory_s dir;
     struct params_s params;
 } ls_t;
@@ -75,7 +81,13 @@ void clear_dir(struct directory_s *dir);
  * Fetch all files in the dir->path directory and store them in the
  * directory_t structure.
  */
-int get_files(struct directory_s *dir, struct params_s *params);
+int get_files_in_dir(struct directory_s *dir, struct params_s *params);
+
+/**
+ * Fill the file struct with the file->filename.
+ * If dir_path is NULL, the filename is considered already resolved.
+ */
+void set_file(char *dir_path, struct file_s *file);
 
 /**
  * Sort all files in the directory_t structure according to the ls->params.
@@ -100,7 +112,7 @@ void get_params(ls_t *ls, uint32_t argc, char **argv);
 /**
  * Print the files of the ls->dir structure with the long format.
  */
-void ls_output_long(struct directory_s *dir, struct params_s *params);
+void ls_output_long(struct directory_s *dir, bool total);
 
 /**
  * Print the files of the ls->dir structure with the normal format.

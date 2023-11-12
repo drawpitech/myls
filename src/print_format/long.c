@@ -130,13 +130,13 @@ void put_file(int max_size[4], struct directory_s *dir, struct file_s *file)
     my_putchar('\n');
 }
 
-void ls_output_long(struct directory_s *dir, struct params_s *params)
+void ls_output_long(struct directory_s *dir, bool total)
 {
     int max_size[4] = {0};
 
-    if (dir == NULL || params == NULL || dir->files == NULL)
+    if (dir == NULL || dir->files == NULL)
         return;
-    if (!params->directories)
+    if (total)
         put_total(dir);
     get_max_size(dir, max_size);
     for (uint32_t i = 0; i < dir->n_files; i++)

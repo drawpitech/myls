@@ -46,7 +46,6 @@ uint32_t get_dir_size(struct directory_s *dir, struct params_s *params)
     return size;
 }
 
-static
 void set_file(char *dir_path, struct file_s *file)
 {
     static char fullpath[PATH_MAX];
@@ -58,7 +57,6 @@ void set_file(char *dir_path, struct file_s *file)
     file->group = getgrgid(file->stat.st_gid);
 }
 
-static
 int get_files_in_dir(struct directory_s *dir, struct params_s *params)
 {
     struct dirent *dirent = NULL;
@@ -77,11 +75,4 @@ int get_files_in_dir(struct directory_s *dir, struct params_s *params)
         set_file(dir->path, dir->files + i++);
     }
     return 0;
-}
-
-int get_files(struct directory_s *dir, struct params_s *params)
-{
-    if (dir == NULL || params == NULL)
-        return return_ls_error("null pointer");
-    return get_files_in_dir(dir, params);
 }

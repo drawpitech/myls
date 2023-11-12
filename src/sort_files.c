@@ -108,7 +108,7 @@ void sort_paths(char **paths, uint32_t n)
     uint32_t size = n - 1;
     uint32_t x;
 
-    if (paths == NULL)
+    if (paths == NULL || n == 0)
         return;
     for (uint32_t i = 0; i < size * size; i++) {
         x = i % size;
