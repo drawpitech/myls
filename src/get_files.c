@@ -46,20 +46,26 @@ uint32_t get_dir_size(struct directory_s *dir, struct params_s *params)
     return size;
 }
 
-void set_file(char *dir_path, struct file_s *file)
+int set_file(char *dir_path, struct file_s *file)
 {
     static char fullpath[PATH_MAX];
 
     if (get_fullpath(dir_path, file->filename, fullpath) == NULL)
-        return;
-    lstat(fullpath, &file->stat);
+        return ERR_RETURN;
+    if (lstat(fullpath, &file->stat) == -1) {
+        file->passwd = NULL;
+        file->group = NULL;
+        return return_ls_error(NULL);
+    }
     file->passwd = getpwuid(file->stat.st_uid);
     file->group = getgrgid(file->stat.st_gid);
+    return 0;
 }
 
 int get_files_in_dir(struct directory_s *dir, struct params_s *params)
 {
     struct dirent *dirent = NULL;
+    int ret = 0;
 
     dir->n_files = get_dir_size(dir, params);
     if (dir->n_files == UINT32_MAX)
@@ -72,7 +78,8 @@ int get_files_in_dir(struct directory_s *dir, struct params_s *params)
         if (!params->all && my_str_startswith(dirent->d_name, "."))
             continue;
         my_strcpy(dir->files[i].filename, dirent->d_name);
-        set_file(dir->path, dir->files + i++);
+        ret |= set_file(dir->path, dir->files + i);
+        i += 1;
     }
-    return 0;
+    return ret;
 }

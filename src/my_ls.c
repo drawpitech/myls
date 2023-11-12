@@ -50,19 +50,22 @@ int print_dir(ls_t *ls, bool show_path, bool line_jmp, struct directory_s *dir)
 }
 
 static
-void print_alone_files(ls_t *ls)
+int print_alone_files(ls_t *ls)
 {
+    int ret = 0;
+
     ls->dir.path[0] = '\0';
     ls->dir.dirp = NULL;
     ls->dir.n_files = ls->alone_files.n;
     if (ls->dir.n_files == 0)
-        return;
+        return 0;
     ls->dir.files = malloc(ls->dir.n_files * sizeof(struct file_s));
     for (uint32_t i = 0; i < ls->dir.n_files; i++) {
         my_strcpy(ls->dir.files[i].filename, ls->alone_files.paths[i]);
-        set_file(".", ls->dir.files + i);
+        ret |= set_file(".", ls->dir.files + i);
     }
     print_files(ls, false);
+    return ret;
 }
 
 static
@@ -75,7 +78,7 @@ int print_ls(ls_t *ls)
         my_strcpy(ls->dir.path, ls->paths[0]);
         return print_dir(ls, false, false, &ls->dir);
     }
-    print_alone_files(ls);
+    ret |= print_alone_files(ls);
     for (uint32_t i = 0; i < ls->nbr_paths; i++) {
         my_strcpy(ls->dir.path, ls->paths[i]);
         ret |= print_dir(ls, true, (has_af || i != 0), &ls->dir);

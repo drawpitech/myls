@@ -87,7 +87,7 @@ int get_files_in_dir(struct directory_s *dir, struct params_s *params);
  * Fill the file struct with the file->filename.
  * If dir_path is NULL, the filename is considered already resolved.
  */
-void set_file(char *dir_path, struct file_s *file);
+int set_file(char *dir_path, struct file_s *file);
 
 /**
  * Sort all files in the directory_t structure according to the ls->params.
