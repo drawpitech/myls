@@ -24,7 +24,7 @@ void get_max_size(struct directory_s *dir, int arr[4])
 
     for (uint32_t i = 0; i < dir->n_files; i++) {
         file = dir->files + i;
-        if (file->passwd == NULL || file->group == NULL)
+        if (!file->valid)
             continue;
         arr[0] = MAX(arr[0], my_u64_len(file->stat.st_nlink));
         arr[1] = MAX(arr[1], my_strlen(file->passwd->pw_name));
@@ -114,7 +114,7 @@ void put_link(struct directory_s *dir, struct file_s *file)
 static
 void put_file(int max_size[4], struct directory_s *dir, struct file_s *file)
 {
-    if (file->group == NULL || file->passwd == NULL)
+    if (!file->valid)
         return;
     put_perms(file);
     my_putnchar(' ', max_size[0] - my_u64_len(file->stat.st_nlink));

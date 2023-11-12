@@ -11,19 +11,28 @@
 #include "my.h"
 #include "my_ls.h"
 
+static
+void show_file(struct file_s *file, bool *first)
+{
+    char *pad = (*first) ? "" : "  ";
+
+    if (!file->valid)
+        return;
+    *first = false;
+    if (my_strstr(file->filename, " ") == NULL)
+        my_printf("%s%s", pad, file->filename);
+    else
+        my_printf("%s'%s'", pad, file->filename);
+}
+
 void ls_output_normal(struct directory_s *dir)
 {
-    struct file_s *file;
+    bool first = true;
 
-    if (dir == NULL || dir->files == NULL)
+    if (dir == NULL || dir->files == NULL || dir->n_files == 0)
         return;
-    my_printf("%s", dir->files[0].filename);
-    for (uint32_t i = 1; i < dir->n_files; i++) {
-        file = dir->files + i;
-        if (my_strstr(file->filename, " ") == NULL)
-            my_printf("  %s", file->filename);
-        else
-            my_printf("  '%s'", file->filename);
-    }
-    my_printf("\n");
+    for (uint32_t i = 0; i < dir->n_files; i++)
+        show_file(dir->files + i, &first);
+    if (!first)
+        my_printf("\n");
 }

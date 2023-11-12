@@ -43,12 +43,12 @@ Test(params, no_args)
 Test(params, multiple_dirs)
 {
     uint32_t argc = 3;
-    char *argv[] = { "./my_ls", "src", "build" };
+    char *argv[] = { "./my_ls", "src", "tests" };
     ls_t ls = { 0 };
     ls_t expect = { 0 };
 
     ls.paths = (char *[2]){ 0 };
-    expect.paths = (char *[]){ "build", "src" },
+    expect.paths = (char *[]){ "src", "tests" },
     expect.nbr_paths = 2;
     get_params(&ls, argc, argv);
     assert_ls(&ls, &expect);
@@ -114,9 +114,10 @@ Test(params, args_with_paths)
     expect.params.long_format = true;
     expect.params.time_sorted = true;
     expect.params.directories = true;
-    ls.paths = (char *[2]){ 0 };
-    expect.paths = (char *[]){ "build", "src" },
-    expect.nbr_paths = 2;
+    ls.paths = (char *[1]){ 0 };
+    ls.alone_files.paths = (char *[2]){ 0 };
+    expect.alone_files.paths = (char *[]){ "build", "src" },
+    expect.alone_files.n = 2;
     get_params(&ls, argc, argv);
     assert_ls(&ls, &expect);
 }

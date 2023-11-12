@@ -17,6 +17,7 @@
 
 struct file_s {
     char filename[NAME_MAX];
+    bool valid;
     struct stat stat;
     struct passwd *passwd;
     struct group *group;

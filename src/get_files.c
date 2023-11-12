@@ -53,10 +53,10 @@ int set_file(char *dir_path, struct file_s *file)
     if (get_fullpath(dir_path, file->filename, fullpath) == NULL)
         return ERR_RETURN;
     if (lstat(fullpath, &file->stat) == -1) {
-        file->passwd = NULL;
-        file->group = NULL;
+        file->valid = false;
         return return_ls_error(NULL);
     }
+    file->valid = true;
     file->passwd = getpwuid(file->stat.st_uid);
     file->group = getgrgid(file->stat.st_gid);
     return 0;
