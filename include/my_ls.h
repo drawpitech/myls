@@ -9,11 +9,11 @@
     #define MY_LS
 
     #include <dirent.h>
+    #include <grp.h>
+    #include <pwd.h>
     #include <stdbool.h>
     #include <stdint.h>
     #include <sys/stat.h>
-    #include <pwd.h>
-    #include <grp.h>
 
 struct file_s {
     char fullpath[PATH_MAX];

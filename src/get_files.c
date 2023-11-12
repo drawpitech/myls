@@ -5,13 +5,13 @@
 ** get_files
 */
 
-#include <stdlib.h>
 #include <dirent.h>
+#include <grp.h>
+#include <pwd.h>
+#include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
-#include <stdbool.h>
-#include <pwd.h>
-#include <grp.h>
+#include <stdlib.h>
 
 #include "my.h"
 #include "my_ls.h"
