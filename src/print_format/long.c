@@ -96,20 +96,23 @@ void put_perms(struct file_s *file)
 }
 
 static
-void put_link(struct file_s *file)
+void put_link(struct directory_s *dir, struct file_s *file)
 {
-    static char buf[PATH_MAX];
+    static char linkpath[PATH_MAX];
+    static char fullpath[PATH_MAX];
     ssize_t size;
 
     if (!S_ISLNK(file->stat.st_mode))
         return;
-    size = readlink(file->fullpath, buf, PATH_MAX);
-    buf[MIN(size, PATH_MAX - 1)] = '\0';
-    my_printf(" -> %s", buf);
+    if (get_fullpath(dir->path, file->filename, fullpath) == NULL)
+        return;
+    size = readlink(fullpath, linkpath, PATH_MAX);
+    linkpath[MIN(size, PATH_MAX - 1)] = '\0';
+    my_printf(" -> %s", linkpath);
 }
 
 static
-void put_file(int max_size[4], struct file_s *file)
+void put_file(int max_size[4], struct directory_s *dir, struct file_s *file)
 {
     put_perms(file);
     my_putnchar(' ', max_size[0] - my_u64_len(file->stat.st_nlink));
@@ -125,7 +128,7 @@ void put_file(int max_size[4], struct file_s *file)
         my_printf("%s", file->filename);
     else
         my_printf("'%s'", file->filename);
-    put_link(file);
+    put_link(dir, file);
     my_putchar('\n');
 }
 
@@ -138,5 +141,5 @@ void ls_output_long(ls_t *ls)
     put_total(ls);
     get_max_size(ls, max_size);
     for (uint32_t i = 0; i < ls->dir.n_files; i++)
-        put_file(max_size, ls->dir.files + i);
+        put_file(max_size, &ls->dir, ls->dir.files + i);
 }

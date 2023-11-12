@@ -16,7 +16,6 @@
     #include <sys/stat.h>
 
 struct file_s {
-    char fullpath[PATH_MAX];
     char filename[NAME_MAX];
     struct stat stat;
     struct passwd *passwd;

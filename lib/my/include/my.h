@@ -48,6 +48,7 @@ char *my_strncpy(char *dest, char const *src, int n);
 char *my_strndup(char const *src, int n);
 char *my_strstr(char *str, char const *to_find);
 char *my_strupcase(char *str);
+char *get_fullpath(char *directory, char *filename, char *result);
 int count_island(char **world);
 int get_color(unsigned char red, unsigned char green, unsigned char blue);
 int my_compute_power_rec(int nb, int power);
