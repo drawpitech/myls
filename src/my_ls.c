@@ -26,9 +26,8 @@ int return_ls_error(char *str)
 }
 
 static
-int print_dir(ls_t *ls, bool print_path, bool line_jmp, char *path)
+int print_dir(ls_t *ls, bool print_path, bool line_jmp)
 {
-    my_strcpy(ls->dir.path, path);
     if (get_files(ls) == ERR_RETURN) {
         clear_dir(&ls->dir);
         return ERR_RETURN;
@@ -46,6 +45,22 @@ int print_dir(ls_t *ls, bool print_path, bool line_jmp, char *path)
     return 0;
 }
 
+static
+int print_ls(ls_t *ls)
+{
+    int ret = 0;
+
+    if (ls->nbr_paths == 1 || ls->params.directories) {
+        my_strcpy(ls->dir.path, ls->paths[0]);
+        return print_dir(ls, false, false);
+    }
+    for (uint32_t i = 0; i < ls->nbr_paths; i++) {
+        my_strcpy(ls->dir.path, ls->paths[i]);
+        ret |= print_dir(ls, true, (i != 0));
+    }
+    return ret;
+}
+
 int my_ls(int argc, char **argv)
 {
     uint32_t uargc = (uint32_t)argc;
@@ -57,11 +72,7 @@ int my_ls(int argc, char **argv)
         return return_ls_error("invalid args");
     ls.paths = paths,
     get_params(&ls, uargc, argv);
-    if (ls.nbr_paths == 1 || ls.params.directories)
-        ret |= print_dir(&ls, false, false, ls.paths[0]);
-    else
-        for (uint32_t i = 0; i < ls.nbr_paths; i++)
-            ret |= print_dir(&ls, true, (i != 0), ls.paths[i]);
+    ret |= print_ls(&ls);
     clear_ls(&ls);
     return ret;
 }
