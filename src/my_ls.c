@@ -26,28 +26,22 @@ int return_ls_error(char *str)
 }
 
 static
-void ls_output(ls_t *ls, bool print_path, uint32_t index)
+int print_dir(ls_t *ls, bool print_path, bool line_jmp, char *path)
 {
+    my_strcpy(ls->dir.path, path);
+    if (get_files(ls) == ERR_RETURN) {
+        clear_dir(&ls->dir);
+        return ERR_RETURN;
+    }
     if (print_path)
-        my_printf("%s%s:\n", (index != 0) ? "\n" : "", ls->dir.path);
+        my_printf("%s%s:\n", (line_jmp) ? "\n" : "", ls->dir.path);
     if (ls->dir.n_files == 0)
-        return;
+        return 0;
     sort_files(ls);
     if (ls->params.long_format)
         ls_output_long(ls);
     else
         ls_output_normal(ls);
-}
-
-static
-int print_dir(ls_t *ls, bool print_path, uint32_t index)
-{
-    my_strcpy(ls->dir.path, ls->paths[index]);
-    if (get_files(ls) == ERR_RETURN) {
-        clear_dir(&ls->dir);
-        return ERR_RETURN;
-    }
-    ls_output(ls, print_path, index);
     clear_dir(&ls->dir);
     return 0;
 }
@@ -55,7 +49,7 @@ int print_dir(ls_t *ls, bool print_path, uint32_t index)
 int my_ls(int argc, char **argv)
 {
     uint32_t uargc = (uint32_t)argc;
-    char *paths[uargc + 1];
+    char *paths[uargc];
     ls_t ls = { 0 };
     int ret = 0;
 
@@ -64,10 +58,10 @@ int my_ls(int argc, char **argv)
     ls.paths = paths,
     get_params(&ls, uargc, argv);
     if (ls.nbr_paths == 1 || ls.params.directories)
-        ret |= print_dir(&ls, false, 0);
+        ret |= print_dir(&ls, false, false, ls.paths[0]);
     else
         for (uint32_t i = 0; i < ls.nbr_paths; i++)
-            ret |= print_dir(&ls, true, i);
+            ret |= print_dir(&ls, true, (i != 0), ls.paths[i]);
     clear_ls(&ls);
     return ret;
 }
