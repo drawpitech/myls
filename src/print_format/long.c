@@ -77,20 +77,21 @@ char get_file_type(mode_t mode)
 static
 void put_perms(struct file_s *file)
 {
-    mode_t owner = file->stat.st_mode & S_IRWXU;
-    mode_t group = file->stat.st_mode & S_IRWXG;
-    mode_t other = file->stat.st_mode & S_IRWXO;
+    mode_t mode = file->stat.st_mode;
 
     my_putchar(get_file_type(file->stat.st_mode));
-    my_putchar((owner & S_IRUSR) ? 'r' : '-');
-    my_putchar((owner & S_IWUSR) ? 'w' : '-');
-    my_putchar((owner & S_IXUSR) ? 'x' : '-');
-    my_putchar((group & S_IRGRP) ? 'r' : '-');
-    my_putchar((group & S_IWGRP) ? 'w' : '-');
-    my_putchar((group & S_IXGRP) ? 'x' : '-');
-    my_putchar((other & S_IROTH) ? 'r' : '-');
-    my_putchar((other & S_IWOTH) ? 'w' : '-');
-    my_putchar((other & S_IXOTH) ? 'x' : '-');
+    my_putchar((mode & S_IRUSR) ? 'r' : '-');
+    my_putchar((mode & S_IWUSR) ? 'w' : '-');
+    my_putchar((mode & S_IXUSR) ? 'x' : '-');
+    my_putchar((mode & S_IRGRP) ? 'r' : '-');
+    my_putchar((mode & S_IWGRP) ? 'w' : '-');
+    my_putchar((mode & S_IXGRP) ? 'x' : '-');
+    my_putchar((mode & S_IROTH) ? 'r' : '-');
+    my_putchar((mode & S_IWOTH) ? 'w' : '-');
+    if (mode & S_ISVTX)
+        my_putchar('t');
+    else
+        my_putchar((mode & S_IXOTH) ? 'x' : '-');
     my_putchar(' ');
 }
 
