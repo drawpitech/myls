@@ -26,6 +26,17 @@ int return_ls_error(char *str)
 }
 
 static
+void print_files(ls_t *ls, bool same_dir)
+{
+    sort_files(ls);
+    if (ls->params.long_format)
+        ls_output_long(&ls->dir, same_dir);
+    else
+        ls_output_normal(&ls->dir);
+    clear_dir(&ls->dir);
+}
+
+static
 int print_dir(ls_t *ls, bool show_path, bool line_jmp, struct directory_s *dir)
 {
     if (get_files_in_dir(dir, &ls->params) == ERR_RETURN) {
@@ -34,14 +45,7 @@ int print_dir(ls_t *ls, bool show_path, bool line_jmp, struct directory_s *dir)
     }
     if (show_path)
         my_printf("%s%s:\n", (line_jmp) ? "\n" : "", ls->dir.path);
-    if (dir->n_files == 0)
-        return 0;
-    sort_files(ls);
-    if (ls->params.long_format)
-        ls_output_long(dir, true);
-    else
-        ls_output_normal(dir);
-    clear_dir(&ls->dir);
+    print_files(ls, true);
     return 0;
 }
 
@@ -58,12 +62,7 @@ void print_alone_files(ls_t *ls)
         my_strcpy(ls->dir.files[i].filename, ls->alone_files.paths[i]);
         set_file(".", ls->dir.files + i);
     }
-    sort_files(ls);
-    if (ls->params.long_format)
-        ls_output_long(&ls->dir, false);
-    else
-        ls_output_normal(&ls->dir);
-    clear_dir(&ls->dir);
+    print_files(ls, false);
 }
 
 static
