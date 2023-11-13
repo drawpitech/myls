@@ -1,0 +1,15 @@
+# my_ls
+
+LiSting command-like, in C.
+
+## Supported options
+
+- `-a`, `--all`: do not ignore entries starting with .
+- `-d`, `--directory`: list directories themselves, not their contents
+- `-f`: list all entries in directory order
+- `-F`, `--classify`: append indicator (one of */=>@|) to entries
+- `-l`: use a long listing format
+- `-r`, `--reverse`: reverse order while sorting
+- `-R`, `--recursive`: list subdirectories recursively
+- `-t`: sort by modification time, newest first
+- `-u`: sort by last access time
