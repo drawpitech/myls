@@ -40,7 +40,7 @@ static const struct {
     { 'r', "reverse", OPT_REVERSE },
     { 't', NULL, OPT_TIME_SORT },
     { 'u', NULL, OPT_ACCESS_TIME },
-    { 'F', NULL, OPT_CLASSIFY },
+    { 'F', "classify", OPT_CLASSIFY },
     { 'f', NULL, OPT_DIR_ORDER },
     { '\0', NULL, 0 },
 };
