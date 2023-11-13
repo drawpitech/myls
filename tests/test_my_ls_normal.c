@@ -28,7 +28,7 @@ Test(my_ls_normal, directory, .init=cr_redirect_stdout)
 {
     int argc = 2;
     char *argv[] = {"./my_ls", "src/../src/print_format", NULL };
-    char expected[] = "long.c  normal.c\n";
+    char expected[] = "long.c  normal.c  print.c\n";
 
     cr_assert_eq(my_ls(argc, argv), 0);
     cr_assert_stdout_eq_str(expected);
@@ -44,7 +44,7 @@ Test(my_ls_normal, multiple_dirs, .init=cr_redirect_stdout)
         "flake.nix  include  lib  Makefile  src  tests  unit_tests\n"
         "\n"
         "src/../src/print_format:\n"
-        "long.c  normal.c\n";
+        "long.c  normal.c  print.c\n";
 
     cr_assert_eq(my_ls(argc, argv), 0);
     cr_assert_stdout_eq_str(expected);
@@ -54,7 +54,7 @@ Test(my_ls_normal, hidden_files, .init=cr_redirect_stdout)
 {
     int argc = 3;
     char *argv[] = {"./my_ls", "src/../src/print_format", "-a", NULL };
-    char expected[] = ".  ..  long.c  normal.c\n";
+    char expected[] = ".  ..  long.c  normal.c  print.c\n";
 
     cr_assert_eq(my_ls(argc, argv), 0);
     cr_assert_stdout_eq_str(expected);
@@ -87,7 +87,7 @@ Test(my_ls_normal, valid_and_invalid_dirs, .init=redirect_all_stdout)
     char expected_stdout[] =
         "\n"
         "src/../src/print_format:\n"
-        "long.c  normal.c\n";
+        "long.c  normal.c  print.c\n";
 
     cr_assert_eq(my_ls(argc, argv), 84);
     cr_assert_stderr_eq_str(expected_stderr);
@@ -100,7 +100,7 @@ Test(my_ls_normal, empty_dir, .init=cr_redirect_stdout)
     char *argv[] = {"./my_ls", "tests/empty", "src/print_format", NULL };
     char expected_stdout[] =
         "src/print_format:\n"
-        "long.c  normal.c\n"
+        "long.c  normal.c  print.c\n"
         "\n"
         "tests/empty:\n";
 
