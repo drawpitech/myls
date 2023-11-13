@@ -149,4 +149,10 @@ int print_dir(
  */
 int print_alone_files(ls_t *ls);
 
+/**
+ * Print the file name with the correct modfiers.
+ * Ex: 'foo bar'
+ */
+void print_filename(struct file_s *file);
+
 #endif /* MY_LS */

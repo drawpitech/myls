@@ -14,15 +14,11 @@
 static
 void show_file(struct file_s *file, bool *first)
 {
-    char *pad = (*first) ? "" : "  ";
-
     if (!file->valid)
         return;
+    my_printf("%s", (*first) ? "" : "  ");
     *first = false;
-    if (my_strstr(file->filename, " ") == NULL)
-        my_printf("%s%s", pad, file->filename);
-    else
-        my_printf("%s'%s'", pad, file->filename);
+    print_filename(file);
 }
 
 void ls_output_normal(struct directory_s *dir)

@@ -134,10 +134,7 @@ void put_file(
     my_putnchar(' ', max_size[3] - my_u64_len(file->stat.st_size));
     my_printf("%u ", file->stat.st_size);
     put_date(file, options);
-    if (my_strstr(file->filename, " ") == NULL)
-        my_printf("%s", file->filename);
-    else
-        my_printf("'%s'", file->filename);
+    print_filename(file);
     put_link(dir, file);
     my_putchar('\n');
 }

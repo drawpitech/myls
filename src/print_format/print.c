@@ -48,6 +48,14 @@ void print_files(
     clear_dir(dir);
 }
 
+void print_filename(struct file_s *file)
+{
+    if (my_strstr(file->filename, " ") == NULL)
+        my_printf("%s", file->filename);
+    else
+        my_printf("'%s'", file->filename);
+}
+
 int print_dir(ls_t *ls, bool show_path, bool line_jmp, struct directory_s *dir)
 {
     if (ls == NULL || dir == NULL)
