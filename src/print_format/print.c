@@ -76,18 +76,22 @@ void print_classify(mode_t mode)
 static
 bool print_color(mode_t mode)
 {
-    filetype_t ft = FT_TABLE[mode & S_IFMT];
-
-    if (ft.color == NULL) {
-        if (mode & S_IXUSR) {
-            my_putstr("\x1b[1;32m");
+    switch (mode & S_IFMT) {
+        case S_IFDIR:
+            my_printf("%s", "\x1b[1;34m");
             return true;
-        }
-        return false;
+        case S_IFCHR:
+            my_printf("%s%s", "\x1b[40m", "\x1b[1;33m");
+            return true;
+        case S_IFLNK:
+            my_printf("%s", "\x1b[1;36m");
+            return true;
+        case S_IFREG:
+            if (mode & S_IXUSR)
+                my_printf("%s", "\x1b[1;32m");
+            return (mode & S_IXUSR);
     }
-    my_putstr(ft.background);
-    my_putstr(ft.color);
-    return true;
+    return false;
 }
 
 void print_filename(struct file_s *file, options_t options)

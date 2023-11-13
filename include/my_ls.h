@@ -76,12 +76,6 @@ typedef struct {
     options_t options;
 } ls_t;
 
-typedef struct {
-    char c;
-    char *background;
-    char *color;
-} filetype_t;
-
 /**
  * Main function of the program. Mimic the ls command in the shell.
  */
@@ -169,15 +163,15 @@ int print_alone_files(ls_t *ls);
  */
 void print_filename(struct file_s *file, options_t options);
 
-static const filetype_t FT_TABLE[] = {
-    [S_IFBLK] = { 'b', NULL, NULL },
-    [S_IFCHR] = { 'c', "\x1b[40m", "\x1b[1;33m" },
-    [S_IFDIR] = { 'd', "", "\x1b[1;34m" },
-    [S_IFIFO] = { 'i', NULL, NULL },
-    [S_IFLNK] = { 'l', "", "\x1b[1;36m" },
-    [S_IFREG] = { '-', NULL, NULL },
-    [S_IFSOCK] = { 's', NULL, NULL },
-    [0] = { '?', NULL, NULL },
+static const char FT_TABLE[] = {
+    [S_IFBLK] = 'b',
+    [S_IFCHR] = 'c',
+    [S_IFDIR] = 'd',
+    [S_IFIFO] = 'i',
+    [S_IFLNK] = 'l',
+    [S_IFREG] = '-',
+    [S_IFSOCK] = 's',
+    [0] = '?',
 };
 
 #endif /* MY_LS */

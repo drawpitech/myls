@@ -60,7 +60,7 @@ void put_perms(struct file_s *file)
 {
     mode_t mode = file->stat.st_mode;
 
-    my_putchar(FT_TABLE[mode & S_IFMT].c);
+    my_putchar(FT_TABLE[mode & S_IFMT]);
     my_putchar((mode & S_IRUSR) ? 'r' : '-');
     my_putchar((mode & S_IWUSR) ? 'w' : '-');
     my_putchar((mode & S_IXUSR) ? 'x' : '-');
