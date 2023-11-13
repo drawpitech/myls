@@ -33,6 +33,7 @@ SRC += params.c
 SRC += clear.c
 SRC += print_format/long.c
 SRC += print_format/normal.c
+SRC += print_format/print.c
 
 # Tests files
 VPATH += tests

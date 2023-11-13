@@ -91,16 +91,17 @@ void sort_time_files(struct directory_s *dir)
     }
 }
 
-void sort_files(ls_t *ls)
+void sort_files(struct directory_s *dir, struct params_s *params)
 {
-    if (ls == NULL || ls->dir.files == NULL || ls->dir.n_files == 0)
+    if (dir == NULL || dir->files == NULL
+        || dir->n_files == 0 || params == NULL)
         return;
-    if (ls->params.time_sorted)
-        sort_time_files(&ls->dir);
+    if (params->time_sorted)
+        sort_time_files(dir);
     else
-        sort_alpha_files(&ls->dir);
-    if (ls->params.reverse)
-        reverse_files(&ls->dir);
+        sort_alpha_files(dir);
+    if (params->reverse)
+        reverse_files(dir);
 }
 
 void sort_paths(struct paths_s *paths)

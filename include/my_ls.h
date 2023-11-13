@@ -95,7 +95,7 @@ int set_file(char *dir_path, struct file_s *file);
  *  - If ls->params.time_sorted is true, the files are sorted by time.
  *  - If ls->params.reversed is true, the files are then reversed.
  */
-void sort_files(ls_t *ls);
+void sort_files(struct directory_s *dir, struct params_s *params);
 
 /**
  * Sort all paths in the ls->paths array according to the ls->params, excluding
@@ -118,5 +118,23 @@ void ls_output_long(struct directory_s *dir, bool total);
  * Print the files of the ls->dir structure with the normal format.
  */
 void ls_output_normal(struct directory_s *dir);
+
+/**
+ * Print a directory to the stdout following the ls->params formats.
+ */
+int print_dir(
+    ls_t *ls,
+    bool show_path,
+    bool line_jmp,
+    struct directory_s *dir
+);
+
+/**
+ * Prints the 'alone files' following the ls->params format.
+ * Alone files are:
+ *  - Paths that are passed to the program but are not directories.
+ *  - All the dirs when the -d is used.
+ */
+int print_alone_files(ls_t *ls);
 
 #endif /* MY_LS */
