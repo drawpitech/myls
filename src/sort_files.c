@@ -117,7 +117,7 @@ void sort_access_time_files(struct directory_s *dir)
 static
 void select_sort(struct directory_s *dir, options_t options)
 {
-    if (options & OPT_DIR_ORDER)
+    if ((options & OPT_DIR_ORDER) == OPT_DIR_ORDER)
         return;
     if (options & OPT_ACCESS_TIME
         && (options & OPT_TIME_SORT || !(options & OPT_LONG_FORMAT))
