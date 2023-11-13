@@ -82,6 +82,7 @@ void char_swap(char *a, char *b);
 void my_putchar(char c);
 void my_sort_int_array(int *tab, int size);
 void my_swap(int *a, int *b);
+void str_swap(char **file1, char **file2);
 int my_put_unsigned_base(unsigned int, const char *);
 int my_put_long_base(unsigned long, const char *);
 int my_put_double(double n, int precison);

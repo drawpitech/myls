@@ -23,15 +23,6 @@ void swap_files(struct file_s *file1, struct file_s *file2)
 }
 
 static
-void swap_str(char **file1, char **file2)
-{
-    char *tmp = *file1;
-
-    *file1 = *file2;
-    *file2 = tmp;
-}
-
-static
 char *get_ptr(char *filename)
 {
     while (*filename == '.')
@@ -123,18 +114,29 @@ void sort_access_time_files(struct directory_s *dir)
     }
 }
 
+static
+void select_sort(struct directory_s *dir, options_t options)
+{
+    if (options & OPT_DIR_ORDER)
+        return;
+    if (options & OPT_ACCESS_TIME
+        && (options & OPT_TIME_SORT || !(options & OPT_LONG_FORMAT))
+    ) {
+        sort_access_time_files(dir);
+        return;
+    }
+    if (options & OPT_TIME_SORT) {
+        sort_time_files(dir);
+        return;
+    }
+    sort_alpha_files(dir);
+}
+
 void sort_files(struct directory_s *dir, options_t options)
 {
     if (dir == NULL || dir->files == NULL || dir->n_files == 0)
         return;
-    if (options & OPT_ACCESS_TIME
-        && (options & OPT_TIME_SORT || !(options & OPT_LONG_FORMAT))
-    )
-        sort_access_time_files(dir);
-    else if (options & OPT_TIME_SORT)
-        sort_time_files(dir);
-    else
-        sort_alpha_files(dir);
+    select_sort(dir, options);
     if (options & OPT_REVERSE)
         reverse_files(dir);
 }
@@ -150,6 +152,6 @@ void sort_paths(struct paths_s *paths)
     for (uint32_t i = 0; i < size * size; i++) {
         x = i % size;
         if (my_strcmp_cases(paths->paths[x], paths->paths[x + 1]))
-            swap_str(paths->paths + x, paths->paths + x + 1);
+            str_swap(paths->paths + x, paths->paths + x + 1);
     }
 }

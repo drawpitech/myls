@@ -26,6 +26,7 @@ typedef uint16_t options_t;
     #define OPT_TIME_SORT   (1 << 5)
     #define OPT_ACCESS_TIME (1 << 6)
     #define OPT_CLASSIFY    (1 << 7)
+    #define OPT_DIR_ORDER   ((1 << 8) | OPT_ALL)
 
 static const struct {
     char c;
@@ -40,6 +41,7 @@ static const struct {
     { 't', NULL, OPT_TIME_SORT },
     { 'u', NULL, OPT_ACCESS_TIME },
     { 'F', NULL, OPT_CLASSIFY },
+    { 'f', NULL, OPT_DIR_ORDER },
     { '\0', NULL, 0 },
 };
 
