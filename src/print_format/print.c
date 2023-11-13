@@ -41,7 +41,7 @@ void print_files(
 {
     sort_files(dir, ls->options);
     if (ls->options & OPT_LONG_FORMAT)
-        ls_output_long(dir, same_dir);
+        ls_output_long(dir, same_dir, ls->options);
     else
         ls_output_normal(dir);
     recursive_print(ls, dir);

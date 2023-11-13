@@ -86,8 +86,40 @@ void sort_time_files(struct directory_s *dir)
 
     for (uint32_t i = 0; i < size * size; i++) {
         x = i % size;
-        if (f[x].stat.st_mtim.tv_sec < f[x + 1].stat.st_mtim.tv_sec)
+        if (f[x].stat.st_mtim.tv_sec < f[x + 1].stat.st_mtim.tv_sec) {
             swap_files(f + x, f + x + 1);
+            continue;
+        }
+        if (
+            (f[x].stat.st_mtim.tv_sec == f[x + 1].stat.st_mtim.tv_sec)
+            && (f[x].stat.st_mtim.tv_nsec < f[x + 1].stat.st_mtim.tv_nsec)
+        ) {
+            swap_files(f + x, f + x + 1);
+            continue;
+        }
+    }
+}
+
+static
+void sort_access_time_files(struct directory_s *dir)
+{
+    uint32_t size = dir->n_files - 1;
+    struct file_s *f = dir->files;
+    uint32_t x;
+
+    for (uint32_t i = 0; i < size * size; i++) {
+        x = i % size;
+        if (f[x].stat.st_atim.tv_sec < f[x + 1].stat.st_atim.tv_sec) {
+            swap_files(f + x, f + x + 1);
+            continue;
+        }
+        if (
+            (f[x].stat.st_atim.tv_sec == f[x + 1].stat.st_atim.tv_sec)
+            && (f[x].stat.st_atim.tv_nsec < f[x + 1].stat.st_atim.tv_nsec)
+        ) {
+            swap_files(f + x, f + x + 1);
+            continue;
+        }
     }
 }
 
@@ -95,7 +127,11 @@ void sort_files(struct directory_s *dir, uint8_t options)
 {
     if (dir == NULL || dir->files == NULL || dir->n_files == 0)
         return;
-    if (options & OPT_TIME_SORT)
+    if (options & OPT_ACCESS_TIME
+        && (options & OPT_TIME_SORT || !(options & OPT_LONG_FORMAT))
+    )
+        sort_access_time_files(dir);
+    else if (options & OPT_TIME_SORT)
         sort_time_files(dir);
     else
         sort_alpha_files(dir);

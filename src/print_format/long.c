@@ -44,9 +44,12 @@ void put_total(struct directory_s *dir)
 }
 
 static
-void put_date(struct file_s *file)
+void put_date(struct file_s *file, uint8_t options)
 {
-    char *time = ctime(&file->stat.st_mtim.tv_sec);
+    struct timespec timestamp = (options & OPT_ACCESS_TIME)
+        ? file->stat.st_atim
+        : file->stat.st_mtim;
+    char *time = ctime(&timestamp.tv_sec);
 
     time[my_strlen(time) - 9] = '\0';
     my_printf("%s ", time + 4);
@@ -112,7 +115,12 @@ void put_link(struct directory_s *dir, struct file_s *file)
 }
 
 static
-void put_file(int max_size[4], struct directory_s *dir, struct file_s *file)
+void put_file(
+    int max_size[4],
+    struct directory_s *dir,
+    struct file_s *file,
+    uint8_t options
+)
 {
     if (!file->valid)
         return;
@@ -125,7 +133,7 @@ void put_file(int max_size[4], struct directory_s *dir, struct file_s *file)
     my_printf("%s ", file->group->gr_name);
     my_putnchar(' ', max_size[3] - my_u64_len(file->stat.st_size));
     my_printf("%u ", file->stat.st_size);
-    put_date(file);
+    put_date(file, options);
     if (my_strstr(file->filename, " ") == NULL)
         my_printf("%s", file->filename);
     else
@@ -134,7 +142,7 @@ void put_file(int max_size[4], struct directory_s *dir, struct file_s *file)
     my_putchar('\n');
 }
 
-void ls_output_long(struct directory_s *dir, bool total)
+void ls_output_long(struct directory_s *dir, bool total, uint8_t options)
 {
     int max_size[4] = {0};
 
@@ -144,5 +152,5 @@ void ls_output_long(struct directory_s *dir, bool total)
         put_total(dir);
     get_max_size(dir, max_size);
     for (uint32_t i = 0; i < dir->n_files; i++)
-        put_file(max_size, dir, dir->files + i);
+        put_file(max_size, dir, dir->files + i, options);
 }
