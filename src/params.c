@@ -25,7 +25,7 @@ int set_flag(ls_t *ls, char c)
 }
 
 static
-void get_flags(ls_t *ls, char *str)
+void get_smol_option(ls_t *ls, char *str)
 {
     for (; *str; str++) {
         if (set_flag(ls, *str) == ERR_RETURN) {
@@ -36,14 +36,30 @@ void get_flags(ls_t *ls, char *str)
 }
 
 static
+void get_big_option(ls_t *ls, char *str)
+{
+    for (uint32_t i = 0; OPTIONS[i].bit_mask != 0; i++) {
+        if (OPTIONS[i].word != NULL && my_strcmp(OPTIONS[i].word, str) == 0) {
+            ls->options |= OPTIONS[i].bit_mask;
+            return;
+        }
+    }
+    exit(return_ls_error("invalid option\n"));
+}
+
+static
 void add_param(char *param, ls_t *ls)
 {
     static struct stat file_stat;
 
-    if (param == NULL)
+    if (param == NULL || param[0] == '\0')
+        exit(return_ls_error("invalid option\n"));
+    if (my_strncmp(param, "--", 2) == 0) {
+        get_big_option(ls, param + 2);
         return;
+    }
     if (param[0] == '-') {
-        get_flags(ls, param + 1);
+        get_smol_option(ls, param + 1);
         return;
     }
     if (stat(param, &file_stat) == -1 || !S_ISDIR(file_stat.st_mode)) {

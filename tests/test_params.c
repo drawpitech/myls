@@ -151,7 +151,7 @@ Test(params, null_argv)
     get_params(&ls, argc, NULL);
 }
 
-Test(params, null_paths)
+Test(params, invalid_option)
 {
     uint32_t argc = 2;
     char *argv[] = { "./my_ls", "-g" };
@@ -160,7 +160,7 @@ Test(params, null_paths)
     get_params(&ls, argc, argv);
 }
 
-Test(params, null_in_arr)
+Test(params, null_in_arr, .exit_code=ERR_RETURN, .init=cr_redirect_stderr)
 {
     uint32_t argc = 2;
     char *argv[] = { "./my_ls", NULL };
