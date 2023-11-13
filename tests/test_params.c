@@ -125,7 +125,7 @@ Test(params, args_with_paths)
 Test(params, invalid_flag, .exit_code=ERR_RETURN, .init=cr_redirect_stderr)
 {
     uint32_t argc = 2;
-    char *argv[] = { "./my_ls", "-g" };
+    char *argv[] = { "./my_ls", "-z" };
     ls_t ls = { 0 };
 
     ls.paths.paths = (char *[1]){ 0 };
