@@ -123,7 +123,7 @@ void sort_access_time_files(struct directory_s *dir)
     }
 }
 
-void sort_files(struct directory_s *dir, uint8_t options)
+void sort_files(struct directory_s *dir, options_t options)
 {
     if (dir == NULL || dir->files == NULL || dir->n_files == 0)
         return;

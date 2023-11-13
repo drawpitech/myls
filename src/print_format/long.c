@@ -44,7 +44,7 @@ void put_total(struct directory_s *dir)
 }
 
 static
-void put_date(struct file_s *file, uint8_t options)
+void put_date(struct file_s *file, options_t options)
 {
     struct timespec timestamp = (options & OPT_ACCESS_TIME)
         ? file->stat.st_atim
@@ -119,7 +119,7 @@ void put_file(
     int max_size[4],
     struct directory_s *dir,
     struct file_s *file,
-    uint8_t options
+    options_t options
 )
 {
     if (!file->valid)
@@ -139,7 +139,7 @@ void put_file(
     my_putchar('\n');
 }
 
-void ls_output_long(struct directory_s *dir, bool total, uint8_t options)
+void ls_output_long(struct directory_s *dir, bool total, options_t options)
 {
     int max_size[4] = {0};
 

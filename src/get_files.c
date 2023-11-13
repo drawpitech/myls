@@ -28,7 +28,7 @@ int get_dirp(struct directory_s *dir)
 }
 
 static
-uint32_t get_dir_size(struct directory_s *dir, uint8_t options)
+uint32_t get_dir_size(struct directory_s *dir, options_t options)
 {
     struct dirent *file = NULL;
     uint32_t size = 0;
@@ -62,7 +62,7 @@ int set_file(char *dir_path, struct file_s *file)
     return 0;
 }
 
-int get_files_in_dir(struct directory_s *dir, uint8_t options)
+int get_files_in_dir(struct directory_s *dir, options_t options)
 {
     struct dirent *dirent = NULL;
     int ret = 0;

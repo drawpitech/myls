@@ -16,6 +16,31 @@
     #include <stdlib.h>
     #include <sys/stat.h>
 
+typedef uint8_t options_t;
+
+    #define OPT_ALL         (1 << 0)
+    #define OPT_DIRECTORY   (1 << 1)
+    #define OPT_LONG_FORMAT (1 << 2)
+    #define OPT_RECURSIVE   (1 << 3)
+    #define OPT_REVERSE     (1 << 4)
+    #define OPT_TIME_SORT   (1 << 5)
+    #define OPT_ACCESS_TIME (1 << 6)
+
+static const struct {
+    char c;
+    char *word;
+    options_t bit_mask;
+} OPTIONS[sizeof(options_t) * 8] = {
+    { 'a', "all", OPT_ALL },
+    { 'd', "directory", OPT_DIRECTORY },
+    { 'l', NULL, OPT_LONG_FORMAT },
+    { 'R', "recursive", OPT_RECURSIVE },
+    { 'r', "reverse", OPT_REVERSE },
+    { 't', NULL, OPT_TIME_SORT },
+    { 'u', NULL, OPT_ACCESS_TIME },
+    { '\0', NULL, 0 },
+};
+
 struct file_s {
     char filename[NAME_MAX];
     bool valid;
@@ -40,33 +65,8 @@ typedef struct {
     struct paths_s paths;
     struct paths_s alone_files;
     struct directory_s dir;
-    uint8_t options;
+    options_t options;
 } ls_t;
-
-typedef struct {
-    char c;
-    char *word;
-    uint8_t bit_mask;
-} option_t;
-
-    #define OPT_ALL         (1 << 0)
-    #define OPT_DIRECTORY   (1 << 1)
-    #define OPT_LONG_FORMAT (1 << 2)
-    #define OPT_RECURSIVE   (1 << 3)
-    #define OPT_REVERSE     (1 << 4)
-    #define OPT_TIME_SORT   (1 << 5)
-    #define OPT_ACCESS_TIME (1 << 6)
-
-static const option_t OPTIONS[sizeof(uint8_t) * 8] = {
-    { 'a', "all", OPT_ALL },
-    { 'd', "directory", OPT_DIRECTORY },
-    { 'l', NULL, OPT_LONG_FORMAT },
-    { 'R', "recursive", OPT_RECURSIVE },
-    { 'r', "reverse", OPT_REVERSE },
-    { 't', NULL, OPT_TIME_SORT },
-    { 'u', NULL, OPT_ACCESS_TIME },
-    { '\0', NULL, 0 },
-};
 
 /**
  * Main function of the program. Mimic the ls command in the shell.
@@ -93,7 +93,7 @@ void clear_dir(struct directory_s *dir);
  * Fetch all files in the dir->path directory and store them in the
  * directory_t structure.
  */
-int get_files_in_dir(struct directory_s *dir, uint8_t options);
+int get_files_in_dir(struct directory_s *dir, options_t options);
 
 /**
  * Fill the file struct with the file->filename.
@@ -107,7 +107,7 @@ int set_file(char *dir_path, struct file_s *file);
  *  - If ls->params.time_sorted is true, the files are sorted by time.
  *  - If ls->params.reversed is true, the files are then reversed.
  */
-void sort_files(struct directory_s *dir, uint8_t options);
+void sort_files(struct directory_s *dir, options_t options);
 
 /**
  * Sort all paths in the ls->paths array according to the ls->params, excluding
@@ -124,7 +124,7 @@ void get_params(ls_t *ls, uint32_t argc, char **argv);
 /**
  * Print the files of the ls->dir structure with the long format.
  */
-void ls_output_long(struct directory_s *dir, bool total, uint8_t options);
+void ls_output_long(struct directory_s *dir, bool total, options_t options);
 
 /**
  * Print the files of the ls->dir structure with the normal format.
