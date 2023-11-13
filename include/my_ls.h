@@ -27,6 +27,7 @@ typedef uint16_t options_t;
     #define OPT_ACCESS_TIME (1 << 6)
     #define OPT_CLASSIFY    (1 << 7)
     #define OPT_DIR_ORDER   ((1 << 8) | OPT_ALL)
+    #define OPT_LONG_NO_OWN ((1 << 9) | OPT_LONG_FORMAT)
 
 static const struct {
     char c;
@@ -42,6 +43,7 @@ static const struct {
     { 'u', NULL, OPT_ACCESS_TIME },
     { 'F', "classify", OPT_CLASSIFY },
     { 'f', NULL, OPT_DIR_ORDER },
+    { 'g', NULL, OPT_LONG_NO_OWN },
     { '\0', NULL, 0 },
 };
 

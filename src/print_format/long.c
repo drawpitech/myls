@@ -127,8 +127,10 @@ void put_file(
     put_perms(file);
     my_putnchar(' ', max_size[0] - my_u64_len(file->stat.st_nlink));
     my_printf("%u ", file->stat.st_nlink);
-    my_putnchar(' ', max_size[1] - my_strlen(file->passwd->pw_name));
-    my_printf("%s ", file->passwd->pw_name);
+    if ((options & OPT_LONG_NO_OWN) != OPT_LONG_NO_OWN) {
+        my_putnchar(' ', max_size[1] - my_strlen(file->passwd->pw_name));
+        my_printf("%s ", file->passwd->pw_name);
+    }
     my_putnchar(' ', max_size[2] - my_strlen(file->group->gr_name));
     my_printf("%s ", file->group->gr_name);
     my_putnchar(' ', max_size[3] - my_u64_len(file->stat.st_size));

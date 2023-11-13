@@ -8,6 +8,7 @@ LiSting command-like, in C.
 - `-d`, `--directory`: list directories themselves, not their contents
 - `-f`: list all entries in directory order
 - `-F`, `--classify`: append indicator (one of */=>@|) to entries
+- `-g`: like -l, but do not list owner
 - `-l`: use a long listing format
 - `-r`, `--reverse`: reverse order while sorting
 - `-R`, `--recursive`: list subdirectories recursively
