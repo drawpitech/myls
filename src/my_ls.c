@@ -31,9 +31,9 @@ int print_ls(ls_t *ls)
     int ret = 0;
     bool has_af = (ls->alone_files.n != 0);
 
-    if (!has_af && (ls->paths.n == 1 || ls->params.directories)) {
+    if (!has_af && (ls->paths.n == 1 || ls->options & OPT_DIRECTORY)) {
         my_strcpy(ls->dir.path, ls->paths.paths[0]);
-        return print_dir(ls, (ls->params.recursive), false, &ls->dir);
+        return print_dir(ls, (ls->options & OPT_RECURSIVE), false, &ls->dir);
     }
     ret |= print_alone_files(ls);
     for (uint32_t i = 0; i < ls->paths.n; i++) {

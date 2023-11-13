@@ -18,7 +18,7 @@ void recursive_print(ls_t *ls, struct directory_s *dir)
     struct file_s *file;
     struct directory_s rec_dir = { 0 };
 
-    if (!ls->params.recursive)
+    if (!(ls->options & OPT_RECURSIVE))
         return;
     for (uint32_t i = 0; i < dir->n_files; i++) {
         file = dir->files + i;
@@ -39,8 +39,8 @@ void print_files(
     bool same_dir
 )
 {
-    sort_files(dir, &ls->params);
-    if (ls->params.long_format)
+    sort_files(dir, ls->options);
+    if (ls->options & OPT_LONG_FORMAT)
         ls_output_long(dir, same_dir);
     else
         ls_output_normal(dir);
@@ -52,7 +52,7 @@ int print_dir(ls_t *ls, bool show_path, bool line_jmp, struct directory_s *dir)
 {
     if (ls == NULL || dir == NULL)
         return return_ls_error("null ptr");
-    if (get_files_in_dir(dir, &ls->params) == ERR_RETURN) {
+    if (get_files_in_dir(dir, ls->options) == ERR_RETURN) {
         clear_dir(dir);
         return ERR_RETURN;
     }

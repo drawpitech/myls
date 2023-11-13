@@ -13,11 +13,11 @@
 #include "sys/stat.h"
 
 static
-int set_flag(char c, arg_t *arr)
+int set_flag(ls_t *ls, char c)
 {
-    for (uint32_t i = 0; arr[i].b != NULL; i++) {
-        if (arr[i].c == c) {
-            *arr[i].b = true;
+    for (uint32_t i = 0; OPTIONS[i].bit_mask != 0; i++) {
+        if (OPTIONS[i].c == c) {
+            ls->options |= OPTIONS[i].bit_mask;
             return 0;
         }
     }
@@ -27,18 +27,8 @@ int set_flag(char c, arg_t *arr)
 static
 void get_flags(ls_t *ls, char *str)
 {
-    arg_t arr[] = {
-        {'a', &ls->params.all},
-        {'l', &ls->params.long_format},
-        {'r', &ls->params.reverse},
-        {'R', &ls->params.recursive},
-        {'t', &ls->params.time_sorted},
-        {'d', &ls->params.directories},
-        {'\0', NULL},
-    };
-
     for (; *str; str++) {
-        if (set_flag(*str, arr) == ERR_RETURN) {
+        if (set_flag(ls, *str) == ERR_RETURN) {
             clear_ls(ls);
             exit(ERR_RETURN);
         }
@@ -73,7 +63,7 @@ void get_params(ls_t *ls, uint32_t argc, char **argv)
         return;
     for (uint32_t i = 1; i < argc; i++)
         add_param(argv[i], ls);
-    if (ls->params.directories) {
+    if (ls->options & OPT_DIRECTORY) {
         for (uint32_t i = 0; i < ls->paths.n; i++) {
             ls->alone_files.paths[ls->alone_files.n] = ls->paths.paths[i];
             ls->alone_files.n += 1;

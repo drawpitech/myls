@@ -68,7 +68,7 @@ Test(params, single_arg)
     ls.alone_files.paths = (char *[1]){ 0 };
     expect.paths.paths = (char *[]){ "." },
     expect.paths.n = 1;
-    expect.params.all = true;
+    expect.options = OPT_ALL;
     get_params(&ls, argc, argv);
     assert_ls(&ls, &expect);
 }
@@ -84,8 +84,7 @@ Test(params, multi_arg)
     ls.alone_files.paths = (char *[1]){ 0 };
     expect.paths.paths = (char *[]){ "." },
     expect.paths.n = 1;
-    expect.params.all = true;
-    expect.params.long_format = true;
+    expect.options = OPT_ALL | OPT_LONG_FORMAT;
     get_params(&ls, argc, argv);
     assert_ls(&ls, &expect);
 }
@@ -101,10 +100,7 @@ Test(params, multi_arg_in_one)
     ls.alone_files.paths = (char *[1]){ 0 };
     expect.paths.paths = (char *[]){ "." },
     expect.paths.n = 1;
-    expect.params.all = true;
-    expect.params.long_format = true;
-    expect.params.recursive = true;
-    expect.params.reverse = true;
+    expect.options = OPT_ALL | OPT_LONG_FORMAT | OPT_RECURSIVE | OPT_REVERSE;
     get_params(&ls, argc, argv);
     assert_ls(&ls, &expect);
 }
@@ -116,10 +112,7 @@ Test(params, args_with_paths)
     ls_t ls = { 0 };
     ls_t expect = { 0 };
 
-    expect.params.all = true;
-    expect.params.long_format = true;
-    expect.params.time_sorted = true;
-    expect.params.directories = true;
+    expect.options = OPT_ALL | OPT_LONG_FORMAT | OPT_TIME_SORT | OPT_DIRECTORY;
     ls.paths.paths = (char *[1]){ 0 };
     ls.alone_files.paths = (char *[2]){ 0 };
     expect.paths.n = 0;

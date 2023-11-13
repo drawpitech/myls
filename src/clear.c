@@ -36,7 +36,7 @@ void clear_ls(ls_t *ls)
 {
     if (ls == NULL)
         return;
-    ls->params = (struct params_s){0};
+    ls->options = 0;
     clear_paths(&ls->paths);
     clear_paths(&ls->alone_files);
     clear_dir(&ls->dir);

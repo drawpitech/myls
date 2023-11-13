@@ -28,7 +28,7 @@ int get_dirp(struct directory_s *dir)
 }
 
 static
-uint32_t get_dir_size(struct directory_s *dir, struct params_s *params)
+uint32_t get_dir_size(struct directory_s *dir, uint8_t options)
 {
     struct dirent *file = NULL;
     uint32_t size = 0;
@@ -39,7 +39,7 @@ uint32_t get_dir_size(struct directory_s *dir, struct params_s *params)
         file = readdir(dir->dirp);
         if (file == NULL)
             continue;
-        if (!params->all && my_str_startswith(file->d_name, "."))
+        if (!(options & OPT_ALL) && my_str_startswith(file->d_name, "."))
             continue;
         size++;
     } while (file != NULL);
@@ -62,12 +62,12 @@ int set_file(char *dir_path, struct file_s *file)
     return 0;
 }
 
-int get_files_in_dir(struct directory_s *dir, struct params_s *params)
+int get_files_in_dir(struct directory_s *dir, uint8_t options)
 {
     struct dirent *dirent = NULL;
     int ret = 0;
 
-    dir->n_files = get_dir_size(dir, params);
+    dir->n_files = get_dir_size(dir, options);
     if (dir->n_files == UINT32_MAX)
         return ERR_RETURN;
     dir->files = malloc(dir->n_files * sizeof(struct file_s));
@@ -75,7 +75,7 @@ int get_files_in_dir(struct directory_s *dir, struct params_s *params)
         return ERR_RETURN;
     for (uint32_t i = 0; i < dir->n_files;) {
         dirent = readdir(dir->dirp);
-        if (!params->all && my_str_startswith(dirent->d_name, "."))
+        if (!(options & OPT_ALL) && my_str_startswith(dirent->d_name, "."))
             continue;
         my_strcpy(dir->files[i].filename, dirent->d_name);
         ret |= set_file(dir->path, dir->files + i);

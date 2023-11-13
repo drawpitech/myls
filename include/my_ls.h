@@ -13,6 +13,7 @@
     #include <pwd.h>
     #include <stdbool.h>
     #include <stdint.h>
+    #include <stdlib.h>
     #include <sys/stat.h>
 
 struct file_s {
@@ -30,15 +31,6 @@ struct directory_s {
     struct file_s *files;
 };
 
-struct params_s {
-    bool all;
-    bool recursive;
-    bool time_sorted;
-    bool long_format;
-    bool directories;
-    bool reverse;
-};
-
 struct paths_s {
     char **paths;
     uint32_t n;
@@ -48,13 +40,31 @@ typedef struct {
     struct paths_s paths;
     struct paths_s alone_files;
     struct directory_s dir;
-    struct params_s params;
+    uint8_t options;
 } ls_t;
 
 typedef struct {
     char c;
-    bool *b;
-} arg_t;
+    char *word;
+    uint8_t bit_mask;
+} option_t;
+
+    #define OPT_ALL         (1 << 0)
+    #define OPT_DIRECTORY   (1 << 1)
+    #define OPT_LONG_FORMAT (1 << 2)
+    #define OPT_RECURSIVE   (1 << 3)
+    #define OPT_REVERSE     (1 << 4)
+    #define OPT_TIME_SORT   (1 << 5)
+
+static const option_t OPTIONS[] = {
+    { 'a', "all", OPT_ALL },
+    { 'd', "directory", OPT_DIRECTORY },
+    { 'l', NULL, OPT_LONG_FORMAT },
+    { 'R', "recursive", OPT_RECURSIVE },
+    { 'r', "reverse", OPT_REVERSE },
+    { 't', NULL, OPT_TIME_SORT },
+    { '\0', NULL, 0 },
+};
 
 /**
  * Main function of the program. Mimic the ls command in the shell.
@@ -81,7 +91,7 @@ void clear_dir(struct directory_s *dir);
  * Fetch all files in the dir->path directory and store them in the
  * directory_t structure.
  */
-int get_files_in_dir(struct directory_s *dir, struct params_s *params);
+int get_files_in_dir(struct directory_s *dir, uint8_t options);
 
 /**
  * Fill the file struct with the file->filename.
@@ -95,7 +105,7 @@ int set_file(char *dir_path, struct file_s *file);
  *  - If ls->params.time_sorted is true, the files are sorted by time.
  *  - If ls->params.reversed is true, the files are then reversed.
  */
-void sort_files(struct directory_s *dir, struct params_s *params);
+void sort_files(struct directory_s *dir, uint8_t options);
 
 /**
  * Sort all paths in the ls->paths array according to the ls->params, excluding
