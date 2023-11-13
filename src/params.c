@@ -79,15 +79,16 @@ void get_params(ls_t *ls, uint32_t argc, char **argv)
         return;
     for (uint32_t i = 1; i < argc; i++)
         add_param(argv[i], ls);
+    if (ls->paths.n == 0 && ls->alone_files.n == 0) {
+        ls->paths.paths[ls->paths.n] = ".";
+        ls->paths.n = 1;
+    }
     if (ls->options & OPT_DIRECTORY) {
         for (uint32_t i = 0; i < ls->paths.n; i++) {
             ls->alone_files.paths[ls->alone_files.n] = ls->paths.paths[i];
             ls->alone_files.n += 1;
         }
         ls->paths.n = 0;
-    } else if (ls->paths.n == 0 && ls->alone_files.n == 0) {
-        ls->paths.paths[ls->paths.n] = ".";
-        ls->paths.n = 1;
     }
     sort_paths(&ls->paths);
     sort_paths(&ls->alone_files);
