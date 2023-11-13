@@ -12,30 +12,39 @@
 
 Test(sort_paths, basic)
 {
-    char *paths[] = { "src", "build" };
+    struct paths_s paths = {
+        .paths = (char *[]){ "src", "build" },
+        .n = 2,
+    };
     char *expected[] = { "build", "src" };
 
-    sort_paths(paths, 2);
-    cr_assert_arr_eq(paths, expected, 2);
+    sort_paths(&paths);
+    cr_assert_arr_eq(paths.paths, expected, paths.n);
 }
 
 Test(sort_paths, dotfiles)
 {
-    char *paths[] = { "src", ".direnv", "build", ".asan", ".", ".." };
+    struct paths_s paths = {
+        .paths = (char *[]){ "src", ".direnv", "build", ".asan", ".", ".." },
+        .n = 6,
+    };
     char *expected[] = { ".", "..", ".asan", "build", ".direnv", "src" };
 
-    sort_paths(paths, 6);
-    cr_assert_arr_eq(paths, expected, 6);
+    sort_paths(&paths);
+    cr_assert_arr_eq(paths.paths, expected, paths.n);
 }
 
 Test(sort_paths, null_filename)
 {
-    char *paths[] = { "src", NULL, ".." };
+    struct paths_s paths = {
+        .paths = (char *[]){ "src", NULL, ".." },
+        .n = 3,
+    };
 
-    sort_paths(paths, 3);
+    sort_paths(&paths);
 }
 
 Test(sort_paths, null)
 {
-    sort_paths(NULL, 0);
+    sort_paths(NULL);
 }

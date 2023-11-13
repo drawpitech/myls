@@ -103,16 +103,17 @@ void sort_files(ls_t *ls)
         reverse_files(&ls->dir);
 }
 
-void sort_paths(char **paths, uint32_t n)
+void sort_paths(struct paths_s *paths)
 {
-    uint32_t size = n - 1;
+    uint32_t size;
     uint32_t x;
 
-    if (paths == NULL || n == 0)
+    if (paths == NULL || paths->n == 0 || paths->paths == NULL)
         return;
+    size = paths->n - 1;
     for (uint32_t i = 0; i < size * size; i++) {
         x = i % size;
-        if (my_strcmp_cases(paths[x], paths[x + 1]))
-            swap_str(paths + x, paths + x + 1);
+        if (my_strcmp_cases(paths->paths[x], paths->paths[x + 1]))
+            swap_str(paths->paths + x, paths->paths + x + 1);
     }
 }

@@ -18,7 +18,7 @@ Test(clear, basic)
     ls_t ls = { 0 };
     ls_t expected = { 0 };
 
-    ls.paths = (char *[2]){ 0 };
+    ls.paths.paths = (char *[2]){ 0 };
     get_params(&ls, argc, argv);
     clear_ls(&ls);
     assert_ls(&ls, &expected);

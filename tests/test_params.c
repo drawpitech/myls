@@ -19,9 +19,10 @@ Test(params, basic)
     ls_t ls = { 0 };
     ls_t expect = { 0 };
 
-    ls.paths = (char *[1]){ 0 };
-    expect.paths = (char *[]){ "." },
-    expect.nbr_paths = 1;
+    ls.paths.paths = (char *[1]){ 0 };
+    ls.alone_files.paths = (char *[1]){ 0 };
+    expect.paths.paths = (char *[]){ "." },
+    expect.paths.n = 1;
     get_params(&ls, argc, argv);
     assert_ls(&ls, &expect);
 }
@@ -33,9 +34,10 @@ Test(params, no_args)
     ls_t ls = { 0 };
     ls_t expect = { 0 };
 
-    ls.paths = (char *[1]){ 0 };
-    expect.paths = (char *[]){ "." },
-    expect.nbr_paths = 1;
+    ls.paths.paths = (char *[1]){ 0 };
+    ls.alone_files.paths = (char *[1]){ 0 };
+    expect.paths.paths = (char *[]){ "." },
+    expect.paths.n = 1;
     get_params(&ls, argc, argv);
     assert_ls(&ls, &expect);
 }
@@ -47,9 +49,10 @@ Test(params, multiple_dirs)
     ls_t ls = { 0 };
     ls_t expect = { 0 };
 
-    ls.paths = (char *[2]){ 0 };
-    expect.paths = (char *[]){ "src", "tests" },
-    expect.nbr_paths = 2;
+    ls.paths.paths = (char *[2]){ 0 };
+    ls.alone_files.paths = (char *[1]){ 0 };
+    expect.paths.paths = (char *[]){ "src", "tests" },
+    expect.paths.n = 2;
     get_params(&ls, argc, argv);
     assert_ls(&ls, &expect);
 }
@@ -61,9 +64,10 @@ Test(params, single_arg)
     ls_t ls = { 0 };
     ls_t expect = { 0 };
 
-    ls.paths = (char *[1]){ 0 };
-    expect.paths = (char *[]){ "." },
-    expect.nbr_paths = 1;
+    ls.paths.paths = (char *[1]){ 0 };
+    ls.alone_files.paths = (char *[1]){ 0 };
+    expect.paths.paths = (char *[]){ "." },
+    expect.paths.n = 1;
     expect.params.all = true;
     get_params(&ls, argc, argv);
     assert_ls(&ls, &expect);
@@ -76,9 +80,10 @@ Test(params, multi_arg)
     ls_t ls = { 0 };
     ls_t expect = { 0 };
 
-    ls.paths = (char *[1]){ 0 };
-    expect.paths = (char *[]){ "." },
-    expect.nbr_paths = 1;
+    ls.paths.paths = (char *[1]){ 0 };
+    ls.alone_files.paths = (char *[1]){ 0 };
+    expect.paths.paths = (char *[]){ "." },
+    expect.paths.n = 1;
     expect.params.all = true;
     expect.params.long_format = true;
     get_params(&ls, argc, argv);
@@ -92,9 +97,10 @@ Test(params, multi_arg_in_one)
     ls_t ls = { 0 };
     ls_t expect = { 0 };
 
-    ls.paths = (char *[1]){ 0 };
-    expect.paths = (char *[]){ "." },
-    expect.nbr_paths = 1;
+    ls.paths.paths = (char *[1]){ 0 };
+    ls.alone_files.paths = (char *[1]){ 0 };
+    expect.paths.paths = (char *[]){ "." },
+    expect.paths.n = 1;
     expect.params.all = true;
     expect.params.long_format = true;
     expect.params.recursive = true;
@@ -114,8 +120,9 @@ Test(params, args_with_paths)
     expect.params.long_format = true;
     expect.params.time_sorted = true;
     expect.params.directories = true;
-    ls.paths = (char *[1]){ 0 };
+    ls.paths.paths = (char *[1]){ 0 };
     ls.alone_files.paths = (char *[2]){ 0 };
+    expect.paths.n = 0;
     expect.alone_files.paths = (char *[]){ "build", "src" },
     expect.alone_files.n = 2;
     get_params(&ls, argc, argv);
@@ -128,7 +135,8 @@ Test(params, invalid_flag, .exit_code=ERR_RETURN, .init=cr_redirect_stderr)
     char *argv[] = { "./my_ls", "-g" };
     ls_t ls = { 0 };
 
-    ls.paths = (char *[1]){ 0 };
+    ls.paths.paths = (char *[1]){ 0 };
+    ls.alone_files.paths = (char *[1]){ 0 };
     get_params(&ls, argc, argv);
 }
 
@@ -145,7 +153,8 @@ Test(params, null_argv)
     uint32_t argc = 2;
     ls_t ls = { 0 };
 
-    ls.paths = (char *[1]){ 0 };
+    ls.paths.paths = (char *[1]){ 0 };
+    ls.alone_files.paths = (char *[1]){ 0 };
     get_params(&ls, argc, NULL);
 }
 
@@ -164,6 +173,7 @@ Test(params, null_in_arr)
     char *argv[] = { "./my_ls", NULL };
     ls_t ls = { 0 };
 
-    ls.paths = (char *[1]){ 0 };
+    ls.paths.paths = (char *[1]){ 0 };
+    ls.alone_files.paths = (char *[1]){ 0 };
     get_params(&ls, argc, argv);
 }

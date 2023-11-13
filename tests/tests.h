@@ -14,9 +14,15 @@
     #include "my_ls.h"
 
 static inline
+void assert_paths(struct paths_s *paths, struct paths_s *expected)
+{
+    cr_assert_eq(paths->n, expected->n);
+    cr_assert_arr_eq(paths->paths, expected->paths, expected->n);
+}
+
+static inline
 void assert_ls(ls_t *ls, ls_t *expected)
 {
-    cr_assert_eq(ls->nbr_paths, expected->nbr_paths);
     cr_assert_eq(ls->params.all, expected->params.all);
     cr_assert_eq(ls->params.directories, expected->params.directories);
     cr_assert_eq(ls->params.long_format, expected->params.long_format);
@@ -27,8 +33,8 @@ void assert_ls(ls_t *ls, ls_t *expected)
     cr_assert_str_eq(ls->dir.path, expected->dir.path);
     cr_assert_eq(ls->dir.dirp, expected->dir.dirp);
     cr_assert_arr_eq(ls->dir.files, expected->dir.files, ls->dir.n_files);
-    cr_assert_eq(ls->nbr_paths, expected->nbr_paths);
-    cr_assert_arr_eq(ls->paths, expected->paths, ls->nbr_paths);
+    assert_paths(&ls->paths, &expected->paths);
+    assert_paths(&ls->alone_files, &expected->alone_files);
 }
 
 static inline

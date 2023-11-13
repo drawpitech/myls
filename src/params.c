@@ -61,26 +61,28 @@ void add_param(char *param, ls_t *ls)
         ls->alone_files.n += 1;
         return;
     }
-    ls->paths[ls->nbr_paths] = param;
-    ls->nbr_paths += 1;
+    ls->paths.paths[ls->paths.n] = param;
+    ls->paths.n += 1;
 }
 
 void get_params(ls_t *ls, uint32_t argc, char **argv)
 {
-    if (ls == NULL || argv == NULL || ls->paths == NULL)
+    if (ls == NULL || argv == NULL
+        || ls->paths.paths == NULL
+        || ls->alone_files.paths == NULL)
         return;
     for (uint32_t i = 1; i < argc; i++)
         add_param(argv[i], ls);
     if (ls->params.directories) {
-        for (uint32_t i = 0; i < ls->nbr_paths; i++) {
-            ls->alone_files.paths[ls->alone_files.n] = ls->paths[i];
+        for (uint32_t i = 0; i < ls->paths.n; i++) {
+            ls->alone_files.paths[ls->alone_files.n] = ls->paths.paths[i];
             ls->alone_files.n += 1;
         }
-        ls->nbr_paths = 0;
-    } else if (ls->nbr_paths == 0 && ls->alone_files.n == 0) {
-        ls->paths[ls->nbr_paths] = ".";
-        ls->nbr_paths = 1;
+        ls->paths.n = 0;
+    } else if (ls->paths.n == 0 && ls->alone_files.n == 0) {
+        ls->paths.paths[ls->paths.n] = ".";
+        ls->paths.n = 1;
     }
-    sort_paths(ls->paths, ls->nbr_paths);
-    sort_paths(ls->alone_files.paths, ls->alone_files.n);
+    sort_paths(&ls->paths);
+    sort_paths(&ls->alone_files);
 }

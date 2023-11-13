@@ -74,13 +74,13 @@ int print_ls(ls_t *ls)
     int ret = 0;
     bool has_af = (ls->alone_files.n != 0);
 
-    if (!has_af && (ls->nbr_paths == 1 || ls->params.directories)) {
-        my_strcpy(ls->dir.path, ls->paths[0]);
+    if (!has_af && (ls->paths.n == 1 || ls->params.directories)) {
+        my_strcpy(ls->dir.path, ls->paths.paths[0]);
         return print_dir(ls, false, false, &ls->dir);
     }
     ret |= print_alone_files(ls);
-    for (uint32_t i = 0; i < ls->nbr_paths; i++) {
-        my_strcpy(ls->dir.path, ls->paths[i]);
+    for (uint32_t i = 0; i < ls->paths.n; i++) {
+        my_strcpy(ls->dir.path, ls->paths.paths[i]);
         ret |= print_dir(ls, true, (has_af || i != 0), &ls->dir);
     }
     return ret;
@@ -96,7 +96,7 @@ int my_ls(int argc, char **argv)
 
     if (argc < 1 || argv == NULL)
         return return_ls_error("invalid args");
-    ls.paths = paths;
+    ls.paths.paths = paths;
     ls.alone_files.paths = alone_files;
     get_params(&ls, uargc, argv);
     ret |= print_ls(&ls);

@@ -25,12 +25,19 @@ void clear_dir(struct directory_s *dir)
     dir->path[0] = '\0';
 }
 
+static
+void clear_paths(struct paths_s *paths)
+{
+    paths->n = 0;
+    paths->paths = NULL;
+}
+
 void clear_ls(ls_t *ls)
 {
     if (ls == NULL)
         return;
-    ls->nbr_paths = 0;
-    ls->paths = NULL;
     ls->params = (struct params_s){0};
+    clear_paths(&ls->paths);
+    clear_paths(&ls->alone_files);
     clear_dir(&ls->dir);
 }

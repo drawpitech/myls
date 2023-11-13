@@ -45,8 +45,7 @@ struct paths_s {
 };
 
 typedef struct {
-    char **paths;
-    uint32_t nbr_paths;
+    struct paths_s paths;
     struct paths_s alone_files;
     struct directory_s dir;
     struct params_s params;
@@ -102,7 +101,7 @@ void sort_files(ls_t *ls);
  * Sort all paths in the ls->paths array according to the ls->params, excluding
  * the '.' from the start of the paths.
  */
-void sort_paths(char **paths, uint32_t n);
+void sort_paths(struct paths_s *paths);
 
 /**
  * Set the ls structure parameters according to the arguments passed to the
