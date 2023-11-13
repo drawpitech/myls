@@ -8,6 +8,7 @@
 #include <limits.h>
 #include <stdbool.h>
 #include <stdlib.h>
+#include <sys/types.h>
 
 #include "my.h"
 #include "my_ls.h"
@@ -43,17 +44,46 @@ void print_files(
     if (ls->options & OPT_LONG_FORMAT)
         ls_output_long(dir, same_dir, ls->options);
     else
-        ls_output_normal(dir);
+        ls_output_normal(dir, ls->options);
     recursive_print(ls, dir);
     clear_dir(dir);
 }
 
-void print_filename(struct file_s *file)
+static
+void print_classify(mode_t mode)
 {
-    if (my_strstr(file->filename, " ") == NULL)
+    switch (mode & S_IFMT) {
+        case S_IFDIR:
+            my_putchar('/');
+            return;
+        case S_IFIFO:
+            my_putchar('|');
+            return;
+        case S_IFLNK:
+            my_putchar('@');
+            return;
+        case S_IFSOCK:
+            my_putchar('=');
+            return;
+        case S_IFREG:
+            if (mode & S_IXUSR)
+                my_putchar('*');
+            return;
+    }
+}
+
+void print_filename(struct file_s *file, options_t options)
+{
+    bool need_quotes = (my_strstr(file->filename, " ") != NULL);
+
+    if (!need_quotes)
         my_printf("%s", file->filename);
     else
-        my_printf("'%s'", file->filename);
+        my_printf("'%s", file->filename);
+    if (options & OPT_CLASSIFY)
+        print_classify(file->stat.st_mode);
+    if (need_quotes)
+        my_putchar('\'');
 }
 
 int print_dir(ls_t *ls, bool show_path, bool line_jmp, struct directory_s *dir)

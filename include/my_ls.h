@@ -16,7 +16,7 @@
     #include <stdlib.h>
     #include <sys/stat.h>
 
-typedef uint8_t options_t;
+typedef uint16_t options_t;
 
     #define OPT_ALL         (1 << 0)
     #define OPT_DIRECTORY   (1 << 1)
@@ -25,6 +25,7 @@ typedef uint8_t options_t;
     #define OPT_REVERSE     (1 << 4)
     #define OPT_TIME_SORT   (1 << 5)
     #define OPT_ACCESS_TIME (1 << 6)
+    #define OPT_CLASSIFY    (1 << 7)
 
 static const struct {
     char c;
@@ -38,6 +39,7 @@ static const struct {
     { 'r', "reverse", OPT_REVERSE },
     { 't', NULL, OPT_TIME_SORT },
     { 'u', NULL, OPT_ACCESS_TIME },
+    { 'F', NULL, OPT_CLASSIFY },
     { '\0', NULL, 0 },
 };
 
@@ -129,7 +131,7 @@ void ls_output_long(struct directory_s *dir, bool total, options_t options);
 /**
  * Print the files of the ls->dir structure with the normal format.
  */
-void ls_output_normal(struct directory_s *dir);
+void ls_output_normal(struct directory_s *dir, options_t options);
 
 /**
  * Print a directory to the stdout following the ls->params formats.
@@ -153,6 +155,6 @@ int print_alone_files(ls_t *ls);
  * Print the file name with the correct modfiers.
  * Ex: 'foo bar'
  */
-void print_filename(struct file_s *file);
+void print_filename(struct file_s *file, options_t options);
 
 #endif /* MY_LS */
