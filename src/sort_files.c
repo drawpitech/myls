@@ -14,15 +14,6 @@
 #include "my_ls.h"
 
 static
-void swap_files(struct file_s *file1, struct file_s *file2)
-{
-    struct file_s tmp = *file1;
-
-    *file1 = *file2;
-    *file2 = tmp;
-}
-
-static
 char *get_ptr(char *filename)
 {
     while (*filename == '.')
@@ -51,7 +42,7 @@ void reverse_files(struct directory_s *dir)
     struct file_s *f = dir->files;
 
     for (uint32_t i = 0; i < dir->n_files / 2; i++)
-        swap_files(f + i, f + (dir->n_files - 1 - i));
+        swap(f + i, f + (dir->n_files - 1 - i), sizeof(struct file_s));
 }
 
 static
@@ -64,7 +55,7 @@ void sort_alpha_files(struct directory_s *dir)
     for (uint32_t i = 0; i < size * size; i++) {
         x = i % size;
         if (my_strcmp_cases(f[x].filename, f[x + 1].filename))
-            swap_files(f + x, f + x + 1);
+            swap(f + x, f + x + 1, sizeof(struct file_s));
     }
 }
 
@@ -78,14 +69,14 @@ void sort_time_files(struct directory_s *dir)
     for (uint32_t i = 0; i < size * size; i++) {
         x = i % size;
         if (f[x].stat.st_mtim.tv_sec < f[x + 1].stat.st_mtim.tv_sec) {
-            swap_files(f + x, f + x + 1);
+            swap(f + x, f + x + 1, sizeof(struct file_s));
             continue;
         }
         if (
             (f[x].stat.st_mtim.tv_sec == f[x + 1].stat.st_mtim.tv_sec)
             && (f[x].stat.st_mtim.tv_nsec < f[x + 1].stat.st_mtim.tv_nsec)
         ) {
-            swap_files(f + x, f + x + 1);
+            swap(f + x, f + x + 1, sizeof(struct file_s));
             continue;
         }
     }
@@ -101,14 +92,14 @@ void sort_access_time_files(struct directory_s *dir)
     for (uint32_t i = 0; i < size * size; i++) {
         x = i % size;
         if (f[x].stat.st_atim.tv_sec < f[x + 1].stat.st_atim.tv_sec) {
-            swap_files(f + x, f + x + 1);
+            swap(f + x, f + x + 1, sizeof(struct file_s));
             continue;
         }
         if (
             (f[x].stat.st_atim.tv_sec == f[x + 1].stat.st_atim.tv_sec)
             && (f[x].stat.st_atim.tv_nsec < f[x + 1].stat.st_atim.tv_nsec)
         ) {
-            swap_files(f + x, f + x + 1);
+            swap(f + x, f + x + 1, sizeof(struct file_s));
             continue;
         }
     }
@@ -152,6 +143,6 @@ void sort_paths(struct paths_s *paths)
     for (uint32_t i = 0; i < size * size; i++) {
         x = i % size;
         if (my_strcmp_cases(paths->paths[x], paths->paths[x + 1]))
-            str_swap(paths->paths + x, paths->paths + x + 1);
+            swap(paths->paths + x, paths->paths + x + 1, sizeof(char *));
     }
 }

@@ -10,6 +10,7 @@
 
     #include <stdbool.h>
     #include <stdint.h>
+    #include <stdlib.h>
 
     #include "my_printf.h"
 
@@ -79,6 +80,7 @@ int my_u64_len_base(uint64_t n, const char *base);
 int my_i64_len(int64_t n);
 int my_u64_len(uint64_t n);
 void char_swap(char *a, char *b);
+void swap(void *left, void *right, size_t size);
 void my_putchar(char c);
 void my_sort_int_array(int *tab, int size);
 void my_swap(int *a, int *b);
