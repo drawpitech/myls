@@ -46,63 +46,36 @@ void reverse_files(struct directory_s *dir)
 }
 
 static
-void sort_alpha_files(struct directory_s *dir)
+bool compare_filenames(void *left, void *right)
 {
-    uint32_t size = dir->n_files - 1;
-    struct file_s *f = dir->files;
-    uint32_t x;
-
-    for (uint32_t i = 0; i < size * size; i++) {
-        x = i % size;
-        if (my_strcmp_cases(f[x].filename, f[x + 1].filename))
-            swap(f + x, f + x + 1, sizeof(struct file_s));
-    }
+    return my_strcmp_cases(
+        ((struct file_s *)left)->filename,
+        ((struct file_s *)right)->filename
+    );
 }
 
 static
-void sort_time_files(struct directory_s *dir)
+bool compare_mtim(void *left, void *right)
 {
-    uint32_t size = dir->n_files - 1;
-    struct file_s *f = dir->files;
-    uint32_t x;
+    struct timespec tl = ((struct file_s *)left)->stat.st_mtim;
+    struct timespec tr = ((struct file_s *)right)->stat.st_mtim;
 
-    for (uint32_t i = 0; i < size * size; i++) {
-        x = i % size;
-        if (f[x].stat.st_mtim.tv_sec < f[x + 1].stat.st_mtim.tv_sec) {
-            swap(f + x, f + x + 1, sizeof(struct file_s));
-            continue;
-        }
-        if (
-            (f[x].stat.st_mtim.tv_sec == f[x + 1].stat.st_mtim.tv_sec)
-            && (f[x].stat.st_mtim.tv_nsec < f[x + 1].stat.st_mtim.tv_nsec)
-        ) {
-            swap(f + x, f + x + 1, sizeof(struct file_s));
-            continue;
-        }
-    }
+    return (
+        (tl.tv_sec < tr.tv_sec)
+        || ((tl.tv_sec == tr.tv_sec) && (tl.tv_nsec < tr.tv_nsec))
+    );
 }
 
 static
-void sort_access_time_files(struct directory_s *dir)
+bool compare_atim(void *left, void *right)
 {
-    uint32_t size = dir->n_files - 1;
-    struct file_s *f = dir->files;
-    uint32_t x;
+    struct timespec tl = ((struct file_s *)left)->stat.st_atim;
+    struct timespec tr = ((struct file_s *)right)->stat.st_atim;
 
-    for (uint32_t i = 0; i < size * size; i++) {
-        x = i % size;
-        if (f[x].stat.st_atim.tv_sec < f[x + 1].stat.st_atim.tv_sec) {
-            swap(f + x, f + x + 1, sizeof(struct file_s));
-            continue;
-        }
-        if (
-            (f[x].stat.st_atim.tv_sec == f[x + 1].stat.st_atim.tv_sec)
-            && (f[x].stat.st_atim.tv_nsec < f[x + 1].stat.st_atim.tv_nsec)
-        ) {
-            swap(f + x, f + x + 1, sizeof(struct file_s));
-            continue;
-        }
-    }
+    return (
+        (tl.tv_sec < tr.tv_sec)
+        || ((tl.tv_sec == tr.tv_sec) && (tl.tv_nsec < tr.tv_nsec))
+    );
 }
 
 static
@@ -113,14 +86,20 @@ void select_sort(struct directory_s *dir, options_t options)
     if (options & OPT_ACCESS_TIME
         && (options & OPT_TIME_SORT || !(options & OPT_LONG_FORMAT))
     ) {
-        sort_access_time_files(dir);
+        bubble_sort(
+            dir->n_files, dir->files,
+            sizeof(struct file_s), &compare_atim);
         return;
     }
     if (options & OPT_TIME_SORT) {
-        sort_time_files(dir);
+        bubble_sort(
+            dir->n_files, dir->files,
+            sizeof(struct file_s), &compare_mtim);
         return;
     }
-    sort_alpha_files(dir);
+    bubble_sort(
+        dir->n_files, dir->files,
+        sizeof(struct file_s), &compare_filenames);
 }
 
 void sort_files(struct directory_s *dir, options_t options)
