@@ -18,7 +18,8 @@ Test(my_ls_normal, no_args, .init=cr_redirect_stdout)
     char *argv[] = {"./my_ls", NULL};
     char expected[] =
         "assignement.pdf  compile_commands.json  ecsls.toml  flake.lock  "
-        "flake.nix  include  lib  Makefile  src  tests  unit_tests\n";
+        "flake.nix  include  lib  Makefile  README.md  src  tests  "
+        "unit_tests\n";
 
     cr_assert_eq(my_ls(argc, argv), 0);
     cr_assert_stdout_eq_str(expected);
@@ -41,7 +42,8 @@ Test(my_ls_normal, multiple_dirs, .init=cr_redirect_stdout)
     char expected[] =
         ".:\n"
         "assignement.pdf  compile_commands.json  ecsls.toml  flake.lock  "
-        "flake.nix  include  lib  Makefile  src  tests  unit_tests\n"
+        "flake.nix  include  lib  Makefile  README.md  src  tests  "
+        "unit_tests\n"
         "\n"
         "src/../src/print_format:\n"
         "long.c  normal.c  print.c\n";
