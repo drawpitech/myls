@@ -5,6 +5,7 @@ LiSting command-like, in C.
 ## Supported options
 
 - `-a`, `--all`: do not ignore entries starting with .
+- `--color`: color the output
 - `-d`, `--directory`: list directories themselves, not their contents
 - `-f`: list all entries in directory order
 - `-F`, `--classify`: append indicator (one of */=>@|) to entries

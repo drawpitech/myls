@@ -28,6 +28,7 @@ typedef uint16_t options_t;
     #define OPT_CLASSIFY    (1 << 7)
     #define OPT_DIR_ORDER   ((1 << 8) | OPT_ALL)
     #define OPT_LONG_NO_OWN ((1 << 9) | OPT_LONG_FORMAT)
+    #define OPT_COLOR       (1 << 10)
 
 static const struct {
     char c;
@@ -44,6 +45,7 @@ static const struct {
     { 'F', "classify", OPT_CLASSIFY },
     { 'f', NULL, OPT_DIR_ORDER },
     { 'g', NULL, OPT_LONG_NO_OWN },
+    { '\0', "color", OPT_COLOR },
     { '\0', NULL, 0 },
 };
 
@@ -73,6 +75,23 @@ typedef struct {
     struct directory_s dir;
     options_t options;
 } ls_t;
+
+typedef struct {
+    char c;
+    char *background;
+    char *color;
+} filetype_t;
+
+static const filetype_t FT_TABLE[] = {
+    [S_IFBLK] = { 'b', NULL, NULL },
+    [S_IFCHR] = { 'c', "\x1b[40m", "\x1b[1;33m" },
+    [S_IFDIR] = { 'd', "", "\x1b[1;34m" },
+    [S_IFIFO] = { 'i', NULL, NULL },
+    [S_IFLNK] = { 'l', "", "\x1b[1;36m" },
+    [S_IFREG] = { '-', NULL, NULL },
+    [S_IFSOCK] = { 's', NULL, NULL },
+    [0] = { '?', NULL, NULL },
+};
 
 /**
  * Main function of the program. Mimic the ls command in the shell.

@@ -12,6 +12,7 @@
 
 #include "my.h"
 #include "my_ls.h"
+#include "sys/stat.h"
 
 static
 void recursive_print(ls_t *ls, struct directory_s *dir)
@@ -72,10 +73,30 @@ void print_classify(mode_t mode)
     }
 }
 
+static
+bool print_color(mode_t mode)
+{
+    filetype_t ft = FT_TABLE[mode & S_IFMT];
+
+    if (ft.color == NULL) {
+        if (mode & S_IXUSR) {
+            my_putstr("\x1b[1;32m");
+            return true;
+        }
+        return false;
+    }
+    my_putstr(ft.background);
+    my_putstr(ft.color);
+    return true;
+}
+
 void print_filename(struct file_s *file, options_t options)
 {
     bool need_quotes = (my_strstr(file->filename, " ") != NULL);
+    bool need_color = (options & OPT_COLOR);
 
+    if (need_color)
+        need_color = print_color(file->stat.st_mode);
     if (!need_quotes)
         my_printf("%s", file->filename);
     else
@@ -84,6 +105,8 @@ void print_filename(struct file_s *file, options_t options)
         print_classify(file->stat.st_mode);
     if (need_quotes)
         my_putchar('\'');
+    if (need_color)
+        my_putstr("\x1b[0m");
 }
 
 int print_dir(ls_t *ls, bool show_path, bool line_jmp, struct directory_s *dir)

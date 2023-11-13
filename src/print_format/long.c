@@ -56,33 +56,11 @@ void put_date(struct file_s *file, options_t options)
 }
 
 static
-char get_file_type(mode_t mode)
-{
-    switch (mode & S_IFMT) {
-        case S_IFBLK:
-            return 'b';
-        case S_IFCHR:
-            return 'c';
-        case S_IFDIR:
-            return 'd';
-        case S_IFIFO:
-            return 'i';
-        case S_IFLNK:
-            return 'l';
-        case S_IFREG:
-            return '-';
-        case S_IFSOCK:
-            return 's';
-    }
-    return '?';
-}
-
-static
 void put_perms(struct file_s *file)
 {
     mode_t mode = file->stat.st_mode;
 
-    my_putchar(get_file_type(file->stat.st_mode));
+    my_putchar(FT_TABLE[mode & S_IFMT].c);
     my_putchar((mode & S_IRUSR) ? 'r' : '-');
     my_putchar((mode & S_IWUSR) ? 'w' : '-');
     my_putchar((mode & S_IXUSR) ? 'x' : '-');
