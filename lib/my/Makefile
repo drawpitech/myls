@@ -20,7 +20,7 @@ NAME := libmy.a
 
 # Source files
 VPATH := .
-SRC := my_compute_power_rec.c
+SRC := pow.c
 SRC += my_compute_square_root.c
 SRC += my_find_prime_sup.c
 SRC += my_getnbr.c

@@ -55,6 +55,7 @@ char *get_fullpath(char *directory, char *filename, char *result);
 int count_island(char **world);
 int get_color(unsigned char red, unsigned char green, unsigned char blue);
 int my_compute_power_rec(int nb, int power);
+uint32_t my_pow(uint32_t x, uint32_t y);
 int my_compute_square_root(int nb);
 int my_find_prime_sup(int nb);
 int my_getnbr(char const *str);

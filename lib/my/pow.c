@@ -26,3 +26,12 @@ int my_compute_power_rec(int nb, int p)
         return 0;
     return res;
 }
+
+uint32_t my_pow(uint32_t x, uint32_t y)
+{
+    uint32_t res = 1;
+
+    for (uint32_t i = 0; i < y; i++)
+        res *= x;
+    return res;
+}
