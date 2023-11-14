@@ -141,10 +141,8 @@ int print_alone_files(ls_t *ls)
     if (dir->n_files == 0)
         return 0;
     dir->files = malloc(dir->n_files * sizeof(struct file_s));
-    for (uint32_t i = 0; i < dir->n_files; i++) {
-        my_strcpy(dir->files[i].filename, ls->alone_files.paths[i]);
-        ret |= set_file(".", dir->files + i);
-    }
+    for (uint32_t i = 0; i < dir->n_files; i++)
+        ret |= set_file(".", ls->alone_files.paths[i], dir->files + i);
     print_files(dir, ls, false);
     return ret;
 }

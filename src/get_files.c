@@ -27,10 +27,11 @@ int get_dirp(struct directory_s *dir)
     return 0;
 }
 
-int set_file(char *dir_path, struct file_s *file)
+int set_file(char *dir_path, char *file_path, struct file_s *file)
 {
     static char fullpath[PATH_MAX];
 
+    my_strcpy(file->filename, file_path);
     if (get_fullpath(dir_path, file->filename, fullpath) == NULL)
         return ERR_RETURN;
     if (lstat(fullpath, &file->stat) == -1) {
@@ -56,12 +57,12 @@ int get_files_in_dir(struct directory_s *dir, options_t options)
             (!(options & OPT_ALL) && my_str_startswith(dirent->d_name, ".")))
             continue;
         if (dir->n_files + 1 >= dir->allocated) {
-            dir->files = my_reallocarray(dir->files, sizeof(struct file_s),
-                dir->allocated, (dir->allocated) ? dir->allocated * 2 : 1);
+            dir->files = my_reallocarray(
+                dir->files, sizeof(struct file_s), dir->allocated,
+                (dir->allocated) ? dir->allocated * 2 : 1);
             dir->allocated = (dir->allocated) ? dir->allocated * 2 : 1;
         }
-        my_strcpy(dir->files[dir->n_files].filename, dirent->d_name);
-        ret |= set_file(dir->path, dir->files + dir->n_files);
+        ret |= set_file(dir->path, dirent->d_name, dir->files + dir->n_files);
         dir->n_files += 1;
     } while (dirent != NULL);
     return ret;
