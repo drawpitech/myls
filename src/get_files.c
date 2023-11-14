@@ -16,17 +16,6 @@
 #include "my.h"
 #include "my_ls.h"
 
-static
-int get_dirp(struct directory_s *dir)
-{
-    if (dir->dirp != NULL)
-        closedir(dir->dirp);
-    dir->dirp = opendir(dir->path);
-    if (dir->dirp == NULL)
-        return return_ls_error(NULL);
-    return 0;
-}
-
 int set_file(char *dir_path, char *file_path, struct file_s *file)
 {
     static char fullpath[PATH_MAX];
@@ -44,24 +33,38 @@ int set_file(char *dir_path, char *file_path, struct file_s *file)
     return 0;
 }
 
+static
+int resize_dir(struct directory_s *dir)
+{
+    struct file_s *ptr;
+    uint32_t new = (dir->allocated) ? dir->allocated * 2 : 1;
+
+    ptr = my_reallocarray(
+        dir->files, sizeof(struct file_s),
+        dir->allocated, new);
+    if (ptr == NULL)
+        return return_ls_error("malloc failed");
+    dir->files = ptr;
+    dir->allocated = new;
+    return 0;
+}
+
 int get_files_in_dir(struct directory_s *dir, options_t options)
 {
     struct dirent *dirent = NULL;
     int ret = 0;
 
-    if (get_dirp(dir) == ERR_RETURN)
-        return ERR_RETURN;
+    dir->dirp = opendir(dir->path);
+    if (dir->dirp == NULL)
+        return return_ls_error(NULL);
     do {
         dirent = readdir(dir->dirp);
         if (dirent == NULL ||
             (!(options & OPT_ALL) && my_str_startswith(dirent->d_name, ".")))
             continue;
-        if (dir->n_files + 1 >= dir->allocated) {
-            dir->allocated = (dir->allocated) ? dir->allocated * 2 : 1;
-            dir->files = my_reallocarray(
-                dir->files, sizeof(struct file_s),
-                dir->allocated / 2, dir->allocated);
-        }
+        if ((dir->n_files + 1 >= dir->allocated)
+            && (resize_dir(dir) == ERR_RETURN))
+            return ERR_RETURN;
         ret |= set_file(dir->path, dirent->d_name, dir->files + dir->n_files);
         dir->n_files += 1;
     } while (dirent != NULL);
