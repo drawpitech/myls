@@ -27,25 +27,6 @@ int get_dirp(struct directory_s *dir)
     return 0;
 }
 
-static
-uint32_t get_dir_size(struct directory_s *dir, options_t options)
-{
-    struct dirent *file = NULL;
-    uint32_t size = 0;
-
-    if (get_dirp(dir) == ERR_RETURN)
-        return UINT32_MAX;
-    do {
-        file = readdir(dir->dirp);
-        if (file == NULL)
-            continue;
-        if (!(options & OPT_ALL) && my_str_startswith(file->d_name, "."))
-            continue;
-        size++;
-    } while (file != NULL);
-    return size;
-}
-
 int set_file(char *dir_path, struct file_s *file)
 {
     static char fullpath[PATH_MAX];
@@ -67,19 +48,21 @@ int get_files_in_dir(struct directory_s *dir, options_t options)
     struct dirent *dirent = NULL;
     int ret = 0;
 
-    dir->n_files = get_dir_size(dir, options);
-    if (dir->n_files == UINT32_MAX)
-        return ERR_RETURN;
-    dir->files = malloc(dir->n_files * sizeof(struct file_s));
     if (get_dirp(dir) == ERR_RETURN)
         return ERR_RETURN;
-    for (uint32_t i = 0; i < dir->n_files;) {
+    do {
         dirent = readdir(dir->dirp);
-        if (!(options & OPT_ALL) && my_str_startswith(dirent->d_name, "."))
+        if (dirent == NULL ||
+            (!(options & OPT_ALL) && my_str_startswith(dirent->d_name, ".")))
             continue;
-        my_strcpy(dir->files[i].filename, dirent->d_name);
-        ret |= set_file(dir->path, dir->files + i);
-        i += 1;
-    }
+        if (dir->n_files + 1 >= dir->allocated) {
+            dir->allocated = (dir->allocated) ? dir->allocated * 2 : 1;
+            dir->files = reallocarray(
+                dir->files, sizeof(struct file_s), dir->allocated);
+        }
+        my_strcpy(dir->files[dir->n_files].filename, dirent->d_name);
+        ret |= set_file(dir->path, dir->files + dir->n_files);
+        dir->n_files += 1;
+    } while (dirent != NULL);
     return ret;
 }

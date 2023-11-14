@@ -22,6 +22,7 @@ void clear_dir(struct directory_s *dir)
         dir->files = NULL;
     }
     dir->n_files = 0;
+    dir->allocated = 0;
     dir->path[0] = '\0';
 }
 
