@@ -19,6 +19,7 @@ CFLAGS += -iquote ./include
 NAME := my_ls
 TEST_NAME := unit_tests
 ASAN_NAME := asan
+PROF_NAME := prof
 
 # Libmy
 LIBMY := lib/libmy.a
@@ -50,12 +51,14 @@ BUILD_DIR := .build
 OBJ := $(SRC:%.c=$(BUILD_DIR)/source/%.o)
 TEST_OBJ := $(TEST_SRC:%.c=$(BUILD_DIR)/tests/%.o)
 ASAN_OBJ := $(SRC:%.c=$(BUILD_DIR)/asan/%.o)
+PROF_OBJ := $(SRC:%.c=$(BUILD_DIR)/prof/%.o)
 
 # ↓ Dependencies for headers
 DEPS_FLAGS := -MMD -MP
 DEPS := $(OBJ:.o=.d)
 TEST_DEPS := $(TEST_OBJ:.o=.d)
 ASAN_DEPS := $(ASAN_OBJ:.o=.d)
+PROF_DEPS := $(PROF_OBJ:.o=.d)
 
 DIE := exit 1
 # ↓ Colors
@@ -125,6 +128,19 @@ $(ASAN_NAME): $(LIBMY) $(ASAN_OBJ)
 
 .PHONY: $(ASAN_NAME)
 
+# ↓ Profiler
+$(BUILD_DIR)/prof/%.o: %.c $(LIBMY)
+	@ mkdir -p $(dir $@)
+	@ $(ECHO) "[${C_BOLD}${C_RED}CC${C_RESET}] $^"
+	@ $(CC) -o $@ -c $< $(CFLAGS) $(DEPS_FLAGS) || $(DIE)
+
+$(PROF_NAME): CFLAGS += -pg
+$(PROF_NAME): $(LIBMY) $(PROF_OBJ)
+	@ $(ECHO) "[${C_BOLD}${C_YELLOW}CC${C_RESET}] ${C_GREEN}$@${C_RESET}"
+	@ $(CC) -o $@ $(PROF_OBJ) $(CFLAGS) $(LDFLAGS) || $(DIE)
+
+.PHONY: $(PROF_NAME)
+
 # ↓ Coverage
 cov: GCOVR_FLAGS := --exclude bonus/
 cov: GCOVR_FLAGS += --exclude tests/
@@ -153,3 +169,4 @@ re: fclean
 -include $(DEPS)
 -include $(TEST_DEPS)
 -include $(ASAN_DEPS)
+-include $(PROF_DEPS)

@@ -3,6 +3,7 @@
 unit_tests
 asan
 my_ls
+prof
 
 # Compilation
 .build/
