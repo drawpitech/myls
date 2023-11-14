@@ -26,10 +26,10 @@ void get_max_size(struct directory_s *dir, int arr[4])
         file = dir->files + i;
         if (!file->valid)
             continue;
-        arr[0] = MAX(arr[0], my_u64_len(file->stat.st_nlink));
+        arr[0] = MAX(arr[0], my_u64_len((uint32_t)file->stat.st_nlink));
         arr[1] = MAX(arr[1], my_strlen(file->passwd->pw_name));
         arr[2] = MAX(arr[2], my_strlen(file->group->gr_name));
-        arr[3] = MAX(arr[3], my_u64_len(file->stat.st_size));
+        arr[3] = MAX(arr[3], my_u64_len((uint32_t)file->stat.st_size));
     }
 }
 
