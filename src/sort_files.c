@@ -77,34 +77,31 @@ bool compare_atim(void *left, void *right)
 }
 
 static
-void select_sort(struct directory_s *dir, options_t options)
+compar_func_t *select_sort(options_t options)
 {
     if ((options & OPT_DIR_ORDER) == OPT_DIR_ORDER)
-        return;
+        return NULL;
     if (options & OPT_ACCESS_TIME
         && (options & OPT_TIME_SORT || !(options & OPT_LONG_FORMAT))
-    ) {
-        bubble_sort(
-            dir->n_files, dir->files,
-            sizeof(struct file_s), &compare_atim);
-        return;
-    }
-    if (options & OPT_TIME_SORT) {
-        bubble_sort(
-            dir->n_files, dir->files,
-            sizeof(struct file_s), &compare_mtim);
-        return;
-    }
-    bubble_sort(
-        dir->n_files, dir->files,
-        sizeof(struct file_s), &compare_filenames);
+    )
+        return &compare_atim;
+    if (options & OPT_TIME_SORT)
+        return &compare_mtim;
+    return &compare_filenames;
 }
 
 void sort_files(struct directory_s *dir, options_t options)
 {
+    compar_func_t *func;
+
     if (dir == NULL || dir->files == NULL || dir->n_files == 0)
         return;
-    select_sort(dir, options);
+    func = select_sort(options);
+    if (func != NULL)
+        bubble_sort(
+            dir->n_files, dir->files,
+            sizeof(struct file_s), func
+        );
     if (options & OPT_REVERSE)
         reverse_files(dir);
 }
