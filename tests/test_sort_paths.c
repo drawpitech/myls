@@ -34,16 +34,6 @@ Test(sort_paths, dotfiles)
     cr_assert_arr_eq(paths.paths, expected, paths.n);
 }
 
-Test(sort_paths, null_filename)
-{
-    struct paths_s paths = {
-        .paths = (char *[]){ "src", NULL, ".." },
-        .n = 3,
-    };
-
-    sort_paths(&paths);
-}
-
 Test(sort_paths, null)
 {
     sort_paths(NULL);

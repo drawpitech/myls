@@ -27,8 +27,6 @@ bool my_strcmp_cases(char *str1, char *str2)
     static char filename1[PATH_MAX];
     static char filename2[PATH_MAX];
 
-    if (str1 == NULL || str2 == NULL)
-        return true;
     my_strcpy(filename1, str1);
     my_strcpy(filename2, str2);
     my_strlowcase(filename1);
@@ -111,17 +109,17 @@ void sort_files(struct directory_s *dir, options_t options)
         reverse_files(dir);
 }
 
+static
+bool compare_paths(void *left, void *right)
+{
+    return (my_strcmp_cases(*(char **)left, *(char **)right));
+}
+
 void sort_paths(struct paths_s *paths)
 {
-    uint32_t size;
-    uint32_t x;
-
-    if (paths == NULL || paths->n == 0 || paths->paths == NULL)
+    if (paths == NULL)
         return;
-    size = paths->n - 1;
-    for (uint32_t i = 0; i < size * size; i++) {
-        x = i % size;
-        if (my_strcmp_cases(paths->paths[x], paths->paths[x + 1]))
-            swap(paths->paths + x, paths->paths + x + 1, sizeof(char *));
-    }
+    bubble_sort(
+        paths->n, paths->paths,
+        sizeof(char *), &compare_paths);
 }
