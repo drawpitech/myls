@@ -36,15 +36,6 @@ bool my_strcmp_cases(char *str1, char *str2)
 }
 
 static
-void reverse_files(struct directory_s *dir)
-{
-    struct file_s *f = dir->files;
-
-    for (uint32_t i = 0; i < dir->n_files / 2; i++)
-        swap(f + i, f + (dir->n_files - 1 - i), sizeof(struct file_s));
-}
-
-static
 bool compare_filenames(void *left, void *right)
 {
     return my_strcmp_cases(
@@ -107,7 +98,7 @@ void sort_files(struct directory_s *dir, options_t options)
             sizeof(struct file_s), func
         );
     if (options & OPT_REVERSE)
-        reverse_files(dir);
+        reverse_arr(dir->n_files, dir->files, sizeof(struct file_s));
 }
 
 static

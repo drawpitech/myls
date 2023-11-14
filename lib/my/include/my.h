@@ -95,5 +95,6 @@ int my_putnchar(char c, int n);
 int return_err(char *str);
 bool my_str_startswith(const char *big, const char *little);
 void bubble_sort(uint32_t n, void *arr, size_t size, compar_func_t *compar);
+void *reverse_arr(uint32_t size, void *arr, size_t memsize);
 
 #endif /* LIBMY */
