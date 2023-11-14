@@ -9,6 +9,7 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 
 #include "my.h"
 #include "my_ls.h"
@@ -53,26 +54,29 @@ bool compare_filenames(void *left, void *right)
 }
 
 static
+bool compare_dates(struct timespec *left, struct timespec *right)
+{
+    return (
+        (left->tv_sec < right->tv_sec) ||
+        ((left->tv_sec == right->tv_sec) && (left->tv_nsec < right->tv_nsec))
+    );
+}
+
+static
 bool compare_mtim(void *left, void *right)
 {
-    struct timespec tl = ((struct file_s *)left)->stat.st_mtim;
-    struct timespec tr = ((struct file_s *)right)->stat.st_mtim;
-
-    return (
-        (tl.tv_sec < tr.tv_sec)
-        || ((tl.tv_sec == tr.tv_sec) && (tl.tv_nsec < tr.tv_nsec))
+    return compare_dates(
+        &((struct file_s *)left)->stat.st_mtim,
+        &((struct file_s *)right)->stat.st_mtim
     );
 }
 
 static
 bool compare_atim(void *left, void *right)
 {
-    struct timespec tl = ((struct file_s *)left)->stat.st_atim;
-    struct timespec tr = ((struct file_s *)right)->stat.st_atim;
-
-    return (
-        (tl.tv_sec < tr.tv_sec)
-        || ((tl.tv_sec == tr.tv_sec) && (tl.tv_nsec < tr.tv_nsec))
+    return compare_dates(
+        &((struct file_s *)left)->stat.st_atim,
+        &((struct file_s *)right)->stat.st_atim
     );
 }
 
