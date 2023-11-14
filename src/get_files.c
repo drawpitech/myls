@@ -57,10 +57,10 @@ int get_files_in_dir(struct directory_s *dir, options_t options)
             (!(options & OPT_ALL) && my_str_startswith(dirent->d_name, ".")))
             continue;
         if (dir->n_files + 1 >= dir->allocated) {
-            dir->files = my_reallocarray(
-                dir->files, sizeof(struct file_s), dir->allocated,
-                (dir->allocated) ? dir->allocated * 2 : 1);
             dir->allocated = (dir->allocated) ? dir->allocated * 2 : 1;
+            dir->files = my_reallocarray(
+                dir->files, sizeof(struct file_s),
+                dir->allocated / 2, dir->allocated);
         }
         ret |= set_file(dir->path, dirent->d_name, dir->files + dir->n_files);
         dir->n_files += 1;
