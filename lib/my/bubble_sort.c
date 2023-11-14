@@ -11,10 +11,7 @@
 
 #include "my.h"
 
-void bubble_sort(
-    uint32_t n, void *arr, size_t size,
-    bool (*compar)(void *, void *)
-)
+void bubble_sort(uint32_t n, void *arr, size_t size, compar_func_t *compar)
 {
     uint8_t *ptr = arr;
     uint32_t x;

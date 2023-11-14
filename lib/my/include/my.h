@@ -34,6 +34,8 @@
 
     #define ERR_RETURN (84)
 
+typedef bool (compar_func_t)(void *, void *);
+
 char **my_str_to_word_array(char const *str);
 char *concat_params(int argc, char **argv);
 char *convert_base(char const *, char const *, char const *);
@@ -92,9 +94,6 @@ int my_put_double_base(double n, const char *base, int precision);
 int my_putnchar(char c, int n);
 int return_err(char *str);
 bool my_str_startswith(const char *big, const char *little);
-void bubble_sort(
-    uint32_t n, void *arr, size_t size,
-    bool (*compar)(void *, void *)
-);
+void bubble_sort(uint32_t n, void *arr, size_t size, compar_func_t *compar);
 
 #endif /* LIBMY */
