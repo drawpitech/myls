@@ -102,5 +102,6 @@ void *my_memcpy(void *restrict dest, const void *restrict src, size_t n);
 void *my_calloc(size_t nmemb, size_t size);
 void *my_realloc(void *ptr, size_t old, size_t size);
 void *my_reallocarray(void *ptr, size_t nmemb, size_t old, size_t size);
+void my_qsort(void *arr, size_t size, size_t nmemb, compar_func_t *compar);
 
 #endif /* LIBMY */
