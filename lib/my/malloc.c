@@ -20,7 +20,7 @@ void *my_calloc(size_t nmemb, size_t size)
     return ptr;
 }
 
-void *my_realloc(void *ptr, size_t size)
+void *my_realloc(void *ptr, size_t old, size_t size)
 {
     void *new;
 
@@ -32,12 +32,12 @@ void *my_realloc(void *ptr, size_t size)
     new = malloc(size);
     if (ptr == NULL || new == NULL)
         return new;
-    my_memcpy(new, ptr, size);
+    my_memcpy(new, ptr, old);
     free(ptr);
     return new;
 }
 
-void *my_reallocarray(void *ptr, size_t nmemb, size_t size)
+void *my_reallocarray(void *ptr, size_t nmemb, size_t old, size_t size)
 {
-    return my_realloc(ptr, nmemb * size);
+    return my_realloc(ptr, nmemb * old, nmemb * size);
 }
