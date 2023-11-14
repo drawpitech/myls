@@ -115,16 +115,15 @@ void print_filename(struct file_s *file, options_t options)
 
 int print_dir(ls_t *ls, bool show_path, bool line_jmp, struct directory_s *dir)
 {
+    int ret = 0;
+
     if (ls == NULL || dir == NULL)
         return return_ls_error("null ptr");
-    if (get_files_in_dir(dir, ls->options) == ERR_RETURN) {
-        clear_dir(dir);
-        return ERR_RETURN;
-    }
+    ret = get_files_in_dir(dir, ls->options);
     if (show_path)
         my_printf("%s%s:\n", (line_jmp) ? "\n" : "", dir->path);
     print_files(dir, ls, true);
-    return 0;
+    return ret;
 }
 
 int print_alone_files(ls_t *ls)
