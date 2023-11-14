@@ -61,6 +61,7 @@ struct directory_s {
     char path[PATH_MAX];
     DIR *dirp;
     uint32_t n_files;
+    uint32_t allocated;
     struct file_s *files;
 };
 

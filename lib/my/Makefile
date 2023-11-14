@@ -70,6 +70,7 @@ SRC += return_err.c
 SRC += get_fullpath.c
 SRC += bubble_sort.c
 SRC += mem.c
+SRC += malloc.c
 SRC += my_printf/my_printf.c
 SRC += my_printf/flag_parser.c
 SRC += my_printf/flag_utils.c

@@ -98,5 +98,8 @@ void bubble_sort(uint32_t n, void *arr, size_t size, compar_func_t *compar);
 void *reverse_arr(uint32_t size, void *arr, size_t memsize);
 void *my_memset(void *s, int c, size_t n);
 void *my_memcpy(void *restrict dest, const void *restrict src, size_t n);
+void *my_calloc(size_t nmemb, size_t size);
+void *my_realloc(void *ptr, size_t size);
+void *my_reallocarray(void *ptr, size_t nmemb, size_t size);
 
 #endif /* LIBMY */
