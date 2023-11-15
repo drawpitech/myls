@@ -15,3 +15,8 @@ LiSting command-like, in C.
 - `-R`, `--recursive`: list subdirectories recursively
 - `-t`: sort by modification time, newest first
 - `-u`: sort by last access time
+
+## Notable features
+
+- Blazzing fast sorting with the Quick Sort algorithm
+- Extensible options with bit shifting
