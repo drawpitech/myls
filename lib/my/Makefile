@@ -68,7 +68,6 @@ SRC += my_nbr_len.c
 SRC += my_str_startswith.c
 SRC += return_err.c
 SRC += get_fullpath.c
-SRC += bubble_sort.c
 SRC += mem.c
 SRC += malloc.c
 SRC += qsort.c

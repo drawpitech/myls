@@ -95,7 +95,6 @@ int my_put_double_base(double n, const char *base, int precision);
 int my_putnchar(char c, int n);
 int return_err(char *str);
 bool my_str_startswith(const char *big, const char *little);
-void bubble_sort(uint32_t n, void *arr, size_t size, compar_func_t *compar);
 void *reverse_arr(uint32_t size, void *arr, size_t memsize);
 void *my_memset(void *s, int c, size_t n);
 void *my_memcpy(void *restrict dest, const void *restrict src, size_t n);
