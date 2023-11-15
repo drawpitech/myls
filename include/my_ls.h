@@ -82,13 +82,13 @@ typedef struct {
 /**
  * Main function of the program. Mimic the ls command in the shell.
  */
-int my_ls(int argc, char **argv);
+int my_ls(int argc, char *const *argv);
 
 /**
  * Return 84 and print an error message. If the error message is NULL,
  * perror() is called.
  */
-int return_ls_error(char *str);
+int return_ls_error(char const *str);
 
 /**
  * Clear all the allocated memory in the ls_t structure.
@@ -110,7 +110,7 @@ int get_files_in_dir(struct directory_s *dir, options_t options);
  * Fill the file struct with the file->filename.
  * If dir_path is NULL, the filename is considered already resolved.
  */
-int set_file(char *dir_path, char *file_path, struct file_s *file);
+int set_file(char const *dir_path, char const *file_path, struct file_s *file);
 
 /**
  * Sort all files in the directory_t structure according to the ls->params.
@@ -130,17 +130,19 @@ void sort_paths(struct paths_s *paths);
  * Set the ls structure parameters according to the arguments passed to the
  * program. Get the paths ("." if none are provided), and the parameters.
  */
-void get_params(ls_t *ls, uint32_t argc, char **argv);
+void get_params(ls_t *ls, uint32_t argc, char *const *argv);
 
 /**
  * Print the files of the ls->dir structure with the long format.
  */
-void ls_output_long(struct directory_s *dir, bool total, options_t options);
+void ls_output_long(
+    struct directory_s const *dir,
+    bool total, options_t options);
 
 /**
  * Print the files of the ls->dir structure with the normal format.
  */
-void ls_output_normal(struct directory_s *dir, options_t options);
+void ls_output_normal(struct directory_s const *dir, options_t options);
 
 /**
  * Print a directory to the stdout following the ls->params formats.
@@ -164,7 +166,7 @@ int print_alone_files(ls_t *ls);
  * Print the file name with the correct modfiers.
  * Ex: 'foo bar'
  */
-void print_filename(struct file_s *file, options_t options);
+void print_filename(struct file_s const *file, options_t options);
 
 static const char FT_TABLE[] = {
     [S_IFBLK] = 'b',

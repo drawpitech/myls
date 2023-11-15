@@ -20,7 +20,7 @@
 #include "my_ls.h"
 
 static
-void get_max_size(struct directory_s *dir, size_t arr[4])
+void get_max_size(struct directory_s const *dir, size_t arr[4])
 {
     struct file_s *file;
 
@@ -37,7 +37,7 @@ void get_max_size(struct directory_s *dir, size_t arr[4])
 }
 
 static
-void put_total(struct directory_s *dir)
+void put_total(struct directory_s const *dir)
 {
     uint32_t sum = 0;
 
@@ -47,7 +47,7 @@ void put_total(struct directory_s *dir)
 }
 
 static
-void put_date(struct file_s *file, options_t options)
+void put_date(struct file_s const *file, options_t options)
 {
     struct timespec timestamp = (options & OPT_ACCESS_TIME)
         ? file->stat.st_atim
@@ -59,7 +59,7 @@ void put_date(struct file_s *file, options_t options)
 }
 
 static
-void put_perms(struct file_s *file)
+void put_perms(struct file_s const *file)
 {
     static char const perms[] = "-rwx";
     static char buf[PERMS_SIZE];
@@ -76,7 +76,7 @@ void put_perms(struct file_s *file)
 }
 
 static
-void put_link(struct directory_s *dir, struct file_s *file)
+void put_link(struct directory_s const *dir, struct file_s const *file)
 {
     static char linkpath[PATH_MAX];
     static char fullpath[PATH_MAX];
@@ -92,7 +92,7 @@ void put_link(struct directory_s *dir, struct file_s *file)
 }
 
 static
-void put_size(size_t max_size[4], struct file_s *file)
+void put_size(size_t const max_size[4], struct file_s const *file)
 {
     if (!S_ISCHR(file->stat.st_mode)) {
         my_putnchar(' ', max_size[3] - my_u64_len(file->stat.st_size));
@@ -108,8 +108,8 @@ void put_size(size_t max_size[4], struct file_s *file)
 
 static
 void put_file(
-    size_t max_size[4],
-    struct directory_s *dir,
+    size_t const max_size[4],
+    struct directory_s const *dir,
     struct file_s *file,
     options_t options
 )
@@ -132,7 +132,9 @@ void put_file(
     my_putchar('\n');
 }
 
-void ls_output_long(struct directory_s *dir, bool total, options_t options)
+void ls_output_long(
+    struct directory_s const *dir,
+    bool total, options_t options)
 {
     size_t max_size[4] = {0};
 

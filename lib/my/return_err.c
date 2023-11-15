@@ -9,7 +9,7 @@
 
 #include "my.h"
 
-int return_err(char *str)
+int return_err(char const *str)
 {
     write(STDERR_FILENO, str, my_strlen(str));
     return ERR_RETURN;

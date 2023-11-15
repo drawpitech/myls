@@ -94,7 +94,7 @@ bool print_color(mode_t mode)
     return false;
 }
 
-void print_filename(struct file_s *file, options_t options)
+void print_filename(struct file_s const *file, options_t options)
 {
     bool need_quotes = (my_strstr(file->filename, " ") != NULL);
     bool need_color = (options & OPT_COLOR);

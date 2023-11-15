@@ -9,9 +9,9 @@
 
 #include "my.h"
 
-char *my_strstr(char *str, char const *to_find)
+char const *my_strstr(char const *str, char const *to_find)
 {
-    int len;
+    size_t len;
 
     if (str == NULL || to_find == NULL)
         return NULL;

@@ -12,7 +12,7 @@
 #include "my_ls.h"
 
 static
-void show_file(struct file_s *file, bool *first, options_t options)
+void show_file(struct file_s const *file, bool *first, options_t options)
 {
     if (!file->valid)
         return;
@@ -21,7 +21,7 @@ void show_file(struct file_s *file, bool *first, options_t options)
     print_filename(file, options);
 }
 
-void ls_output_normal(struct directory_s *dir, options_t options)
+void ls_output_normal(struct directory_s const *dir, options_t options)
 {
     bool first = true;
 

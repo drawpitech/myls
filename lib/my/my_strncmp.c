@@ -5,9 +5,11 @@
 ** my_strncmp
 */
 
-int my_strncmp(char const *s1, char const *s2, int n)
+#include <stdlib.h>
+
+int my_strncmp(char const *s1, char const *s2, size_t n)
 {
-    int i = 0;
+    size_t i = 0;
 
     if (!s1 || !s2 || n == 0)
         return 0;

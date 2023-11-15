@@ -9,7 +9,7 @@
 
 #include "my.h"
 
-char *get_fullpath(char *directory, char *filename, char *result)
+char *get_fullpath(char const *directory, char const *filename, char *result)
 {
     if (directory == NULL || filename == NULL || result == NULL)
         return NULL;

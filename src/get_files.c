@@ -16,7 +16,7 @@
 #include "my.h"
 #include "my_ls.h"
 
-int set_file(char *dir_path, char *file_path, struct file_s *file)
+int set_file(char const *dir_path, char const *file_path, struct file_s *file)
 {
     static char fullpath[PATH_MAX];
 

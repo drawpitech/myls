@@ -13,7 +13,7 @@
 #include "my.h"
 #include "my_ls.h"
 
-int return_ls_error(char *str)
+int return_ls_error(char const *str)
 {
     if (str == NULL) {
         perror("my_ls");
@@ -43,7 +43,7 @@ int print_ls(ls_t *ls)
     return ret;
 }
 
-int my_ls(int argc, char **argv)
+int my_ls(int argc, char *const *argv)
 {
     uint32_t uargc = (uint32_t)argc;
     char *paths[uargc];

@@ -71,7 +71,7 @@ void add_param(char *param, ls_t *ls)
     ls->paths.n += 1;
 }
 
-void get_params(ls_t *ls, uint32_t argc, char **argv)
+void get_params(ls_t *ls, uint32_t argc, char *const *argv)
 {
     if (ls == NULL || argv == NULL
         || ls->paths.paths == NULL
