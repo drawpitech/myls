@@ -49,9 +49,9 @@ int compare_filenames(void *left, void *right)
 static
 int compare_dates(struct timespec *left, struct timespec *right)
 {
-    return (
-        (left->tv_sec < right->tv_sec) ||
-        ((left->tv_sec == right->tv_sec) && (left->tv_nsec < right->tv_nsec))
+    return (int)((right->tv_sec != left->tv_sec)
+        ? (right->tv_sec - left->tv_sec)
+        : (right->tv_nsec - left->tv_nsec)
     );
 }
 
