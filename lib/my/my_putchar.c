@@ -16,10 +16,9 @@ void my_putchar(char c)
 
 size_t my_putnchar(char c, size_t n)
 {
-    char buf[n + 1];
+    char buf[n];
 
     for (size_t i = 0; i < n; i++)
         buf[i] = c;
-    my_putstr(buf);
-    return n;
+    return my_putnstr(buf, n);
 }
