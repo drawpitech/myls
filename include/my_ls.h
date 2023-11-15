@@ -20,17 +20,19 @@
 
 typedef uint16_t options_t;
 
-    #define OPT_ALL         (1 << 0)
-    #define OPT_DIRECTORY   (1 << 1)
-    #define OPT_LONG_FORMAT (1 << 2)
-    #define OPT_RECURSIVE   (1 << 3)
-    #define OPT_REVERSE     (1 << 4)
-    #define OPT_TIME_SORT   (1 << 5)
-    #define OPT_ACCESS_TIME (1 << 6)
-    #define OPT_CLASSIFY    (1 << 7)
-    #define OPT_DIR_ORDER   ((1 << 8) | OPT_ALL)
-    #define OPT_LONG_NO_OWN ((1 << 9) | OPT_LONG_FORMAT)
-    #define OPT_COLOR       (1 << 10)
+enum {
+    OPT_ALL = (1 << 0),
+    OPT_DIRECTORY = (1 << 1),
+    OPT_LONG_FORMAT = (1 << 2),
+    OPT_RECURSIVE = (1 << 3),
+    OPT_REVERSE = (1 << 4),
+    OPT_TIME_SORT = (1 << 5),
+    OPT_ACCESS_TIME = (1 << 6),
+    OPT_CLASSIFY = (1 << 7),
+    OPT_DIR_ORDER = ((1 << 8) | OPT_ALL),
+    OPT_LONG_NO_OWN = ((1 << 9) | OPT_LONG_FORMAT),
+    OPT_COLOR = (1 << 10),
+};
 
 static const struct {
     char c;
