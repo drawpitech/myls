@@ -10,6 +10,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <sys/stat.h>
+#include <sys/sysmacros.h>
 #include <sys/types.h>
 #include <time.h>
 #include <unistd.h>
@@ -29,7 +30,8 @@ void get_max_size(struct directory_s *dir, int arr[4])
         arr[0] = MAX(arr[0], my_u64_len((uint32_t)file->stat.st_nlink));
         arr[1] = MAX(arr[1], my_strlen(file->passwd->pw_name));
         arr[2] = MAX(arr[2], my_strlen(file->group->gr_name));
-        arr[3] = MAX(arr[3], my_u64_len((uint32_t)file->stat.st_size));
+        arr[3] = MAX(arr[3], (S_ISCHR(file->stat.st_mode))
+                ? 4 : my_u64_len((uint32_t)file->stat.st_size));
     }
 }
 
@@ -93,6 +95,21 @@ void put_link(struct directory_s *dir, struct file_s *file)
 }
 
 static
+void put_size(int max_size[4], struct file_s *file)
+{
+    if (!S_ISCHR(file->stat.st_mode)) {
+        my_putnchar(' ', max_size[3] - my_u64_len(file->stat.st_size));
+        my_printf("%u ", file->stat.st_size);
+        return;
+    }
+    my_printf(
+        "%u, %u ",
+        (uintmax_t)minor(file->stat.st_dev),
+        (uintmax_t)major(file->stat.st_dev)
+    );
+}
+
+static
 void put_file(
     int max_size[4],
     struct directory_s *dir,
@@ -111,8 +128,7 @@ void put_file(
     }
     my_putnchar(' ', max_size[2] - my_strlen(file->group->gr_name));
     my_printf("%s ", file->group->gr_name);
-    my_putnchar(' ', max_size[3] - my_u64_len(file->stat.st_size));
-    my_printf("%u ", file->stat.st_size);
+    put_size(max_size, file);
     put_date(file, options);
     print_filename(file, options);
     put_link(dir, file);
