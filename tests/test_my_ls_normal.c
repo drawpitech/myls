@@ -66,7 +66,7 @@ Test(my_ls_normal, invalid_dir, .init=cr_redirect_stderr)
 {
     int argc = 2;
     char *argv[] = {"./my_ls", "eh", NULL };
-    char expected[] = "my_ls: No such file or directory\n";
+    char expected[] = "my_ls: no such file or directory\n";
 
     cr_assert_eq(my_ls(argc, argv), 84);
     cr_assert_stderr_eq_str(expected);
@@ -85,7 +85,7 @@ Test(my_ls_normal, valid_and_invalid_dirs, .init=redirect_all_stdout)
 {
     int argc = 3;
     char *argv[] = {"./my_ls", "eh", "src/../src/print_format", NULL };
-    char expected_stderr[] = "my_ls: No such file or directory\n";
+    char expected_stderr[] = "my_ls: no such file or directory\n";
     char expected_stdout[] =
         "\n"
         "src/../src/print_format:\n"
