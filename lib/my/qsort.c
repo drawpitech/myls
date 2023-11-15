@@ -13,29 +13,29 @@
 #include "my.h"
 
 static
-size_t get_pivot(uint8_t *ptr, size_t size, size_t nmemb, compar_func_t *cmp)
+size_t get_pivot(uint8_t *ptr, size_t nmemb, size_t size, compar_func_t *cmp)
 {
-    uint8_t *pivot = ptr + (size - 1) * nmemb;
+    uint8_t *pivot = ptr + (nmemb - 1) * size;
     size_t i = 0;
 
-    for (uint8_t *j = ptr; j <= pivot - nmemb; j += nmemb) {
-        if (!cmp(j, pivot)) {
-            swap(ptr, j, nmemb);
+    for (uint8_t *j = ptr; j <= pivot; j += size) {
+        if (cmp(j, pivot)) {
+            swap(ptr + (i * size), j, size);
             i += 1;
         }
     }
-    swap(ptr + (i * nmemb), pivot, nmemb);
+    swap(ptr + (i * size), pivot, size);
     return i;
 }
 
-void my_qsort(void *arr, size_t size, size_t nmemb, compar_func_t *compar)
+void my_qsort(void *arr, size_t nmemb, size_t size, compar_func_t *compar)
 {
     uint8_t *ptr = arr;
     size_t pi;
 
-    if (ptr >= ptr + (size * nmemb))
+    if (ptr >= ptr + ((nmemb - 1) * size))
         return;
-    pi = get_pivot(ptr, size, nmemb, compar);
-    my_qsort(arr, pi - 1, nmemb, compar);
-    my_qsort(ptr + (pi + 1) * nmemb, size - (pi + 1), nmemb, compar);
+    pi = get_pivot(ptr, nmemb, size, compar);
+    my_qsort(arr, pi - 1, size, compar);
+    my_qsort(ptr + (pi + 1) * size, nmemb - (pi + 1), size, compar);
 }
