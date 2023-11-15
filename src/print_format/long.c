@@ -62,7 +62,7 @@ static
 void put_perms(struct file_s const *file)
 {
     static char const perms[] = "-rwx";
-    static char buf[PERMS_SIZE];
+    static char buf[PERMS_SIZE + 1];
     mode_t mode = file->stat.st_mode;
 
     for (int i = 0; i < PERMS_SIZE; i += 3) {
@@ -72,7 +72,8 @@ void put_perms(struct file_s const *file)
     }
     if (mode & S_ISVTX)
         buf[PERMS_SIZE - 1] = 't';
-    my_putnstr(buf, PERMS_SIZE);
+    buf[PERMS_SIZE] = ' ';
+    my_putnstr(buf, PERMS_SIZE + 1);
 }
 
 static
