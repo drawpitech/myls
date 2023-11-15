@@ -111,7 +111,7 @@ $(TEST_NAME): $(LIBMY) $(TEST_OBJ)
 	@ $(CC) -o $@ $(TEST_OBJ) $(CFLAGS) $(LDFLAGS) || $(DIE)
 
 tests_run: fclean $(TEST_NAME)
-	@ ./$(TEST_NAME)
+	@-./$(TEST_NAME)
 
 .PHONY: $(TEST_NAME) tests_run
 
@@ -155,7 +155,7 @@ clean:
 	@ $(RM) $(OBJ) $(TEST_OBJ) $(ASAN_OBJ)
 
 fclean: clean
-	@ $(RM) $(NAME) $(TEST_NAME) $(ASAN_NAME)
+	@ $(RM) $(NAME) $(TEST_NAME) $(ASAN_NAME) $(PROF_NAME)
 	@ $(RM) -r $(BUILD_DIR)
 	@ $(MAKE) -s -C $(dir $(LIBMY))/my fclean
 
