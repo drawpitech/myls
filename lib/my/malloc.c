@@ -12,11 +12,11 @@
 
 void *my_calloc(size_t nmemb, size_t size)
 {
-    void *ptr = malloc(size * nmemb);
+    void *ptr = malloc(nmemb * size);
 
     if (ptr == NULL)
         return NULL;
-    my_memset(ptr, 0, size * nmemb);
+    my_memset(ptr, 0, nmemb * size);
     return ptr;
 }
 
@@ -37,7 +37,7 @@ void *my_realloc(void *ptr, size_t old, size_t size)
     return new;
 }
 
-void *my_reallocarray(void *ptr, size_t nmemb, size_t old, size_t size)
+void *my_reallocarray(void *ptr, size_t nmemb, size_t nmemb_old, size_t size)
 {
-    return my_realloc(ptr, nmemb * old, nmemb * size);
+    return my_realloc(ptr, nmemb * size, nmemb_old * size);
 }

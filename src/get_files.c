@@ -40,8 +40,8 @@ int resize_dir(struct directory_s *dir)
     uint32_t new = (dir->allocated) ? dir->allocated * 2 : 1;
 
     ptr = my_reallocarray(
-        dir->files, sizeof(struct file_s),
-        dir->allocated, new);
+        dir->files, dir->allocated,
+        new, sizeof(struct file_s));
     if (ptr == NULL)
         return return_ls_error("malloc failed");
     dir->files = ptr;
