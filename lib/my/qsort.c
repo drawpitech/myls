@@ -18,8 +18,8 @@ size_t get_pivot(uint8_t *ptr, size_t nmemb, size_t size, compar_func_t *cmp)
     uint8_t *pivot = ptr + (nmemb - 1) * size;
     size_t i = 0;
 
-    for (uint8_t *j = ptr; j <= pivot; j += size) {
-        if (cmp(j, pivot)) {
+    for (uint8_t *j = ptr; j < pivot; j += size) {
+        if (cmp(j, pivot) < 0) {
             swap(ptr + (i * size), j, size);
             i += 1;
         }
@@ -33,9 +33,9 @@ void my_qsort(void *arr, size_t nmemb, size_t size, compar_func_t *compar)
     uint8_t *ptr = arr;
     size_t pi;
 
-    if (ptr >= ptr + ((nmemb - 1) * size))
+    if (nmemb <= 1)
         return;
     pi = get_pivot(ptr, nmemb, size, compar);
-    my_qsort(arr, pi - 1, size, compar);
+    my_qsort(ptr, pi, size, compar);
     my_qsort(ptr + (pi + 1) * size, nmemb - (pi + 1), size, compar);
 }
