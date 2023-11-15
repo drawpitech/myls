@@ -17,7 +17,9 @@
 #include <unistd.h>
 
 #include "my.h"
-#include "my_ls.h"
+
+#include "../my_ls.h"
+#include "print.h"
 
 static
 void get_max_size(struct directory_s const *dir, size_t arr[4])

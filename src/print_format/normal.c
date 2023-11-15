@@ -9,7 +9,9 @@
 #include <stdlib.h>
 
 #include "my.h"
-#include "my_ls.h"
+
+#include "../my_ls.h"
+#include "print.h"
 
 static
 void show_file(struct file_s const *file, bool *first, options_t options)

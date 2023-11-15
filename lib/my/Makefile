@@ -119,6 +119,7 @@ $(NAME): $(HEADER) $(OBJ)
 	@ cp $@ ..
 	@ mkdir -p ../../include
 	@ cp my.h ../../include/
+	@ cp colors.h ../../include/
 
 # ↓ Cleaning
 clean:
@@ -127,6 +128,7 @@ clean:
 fclean: clean
 	@ $(RM) $(NAME) ../$(NAME)
 	@ $(RM) ../../include/my.h
+	@ $(RM) ../../include/colors.h
 
 .PHONY: clean fclean
 

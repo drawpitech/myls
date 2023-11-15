@@ -7,10 +7,11 @@
 
 #include <stdint.h>
 #include <stdlib.h>
+#include <sys/stat.h>
 
 #include "my.h"
+
 #include "my_ls.h"
-#include "sys/stat.h"
 
 static
 int set_flag(ls_t *ls, char c)

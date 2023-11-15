@@ -10,6 +10,7 @@ prof
 *.a
 *.o
 include/my.h
+include/colors.h
 
 # Editors junk
 *~

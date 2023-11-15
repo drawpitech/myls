@@ -9,7 +9,7 @@
 #include <criterion/redirect.h>
 
 #include "my.h"
-#include "my_ls.h"
+#include "../src/my_ls.h"
 #include "tests.h"
 
 Test(my_ls_normal, no_args, .init=cr_redirect_stdout)
@@ -29,7 +29,7 @@ Test(my_ls_normal, directory, .init=cr_redirect_stdout)
 {
     int argc = 2;
     char *argv[] = {"./my_ls", "src/../src/print_format", NULL };
-    char expected[] = "long.c  normal.c  print.c\n";
+    char expected[] = "long.c  normal.c  print.c  print.h\n";
 
     cr_assert_eq(my_ls(argc, argv), RET_VALID);
     cr_assert_stdout_eq_str(expected);
@@ -46,7 +46,7 @@ Test(my_ls_normal, multiple_dirs, .init=cr_redirect_stdout)
         "unit_tests\n"
         "\n"
         "src/../src/print_format:\n"
-        "long.c  normal.c  print.c\n";
+        "long.c  normal.c  print.c  print.h\n";
 
     cr_assert_eq(my_ls(argc, argv), RET_VALID);
     cr_assert_stdout_eq_str(expected);
@@ -56,7 +56,7 @@ Test(my_ls_normal, hidden_files, .init=cr_redirect_stdout)
 {
     int argc = 3;
     char *argv[] = {"./my_ls", "src/../src/print_format", "-a", NULL };
-    char expected[] = ".  ..  long.c  normal.c  print.c\n";
+    char expected[] = ".  ..  long.c  normal.c  print.c  print.h\n";
 
     cr_assert_eq(my_ls(argc, argv), RET_VALID);
     cr_assert_stdout_eq_str(expected);
@@ -89,7 +89,7 @@ Test(my_ls_normal, valid_and_invalid_dirs, .init=redirect_all_stdout)
     char expected_stdout[] =
         "\n"
         "src/../src/print_format:\n"
-        "long.c  normal.c  print.c\n";
+        "long.c  normal.c  print.c  print.h\n";
 
     cr_assert_eq(my_ls(argc, argv), RET_ERROR);
     cr_assert_stderr_eq_str(expected_stderr);
@@ -102,7 +102,7 @@ Test(my_ls_normal, empty_dir, .init=cr_redirect_stdout)
     char *argv[] = {"./my_ls", "tests/empty", "src/print_format", NULL };
     char expected_stdout[] =
         "src/print_format:\n"
-        "long.c  normal.c  print.c\n"
+        "long.c  normal.c  print.c  print.h\n"
         "\n"
         "tests/empty:\n";
 

@@ -13,7 +13,9 @@
 
 #include "colors.h"
 #include "my.h"
-#include "my_ls.h"
+
+#include "../my_ls.h"
+#include "print.h"
 
 static
 void recursive_print(ls_t *ls, struct directory_s *dir)

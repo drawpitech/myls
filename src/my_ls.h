@@ -9,14 +9,10 @@
     #define MY_LS
 
     #include <dirent.h>
-    #include <grp.h>
-    #include <pwd.h>
     #include <stdbool.h>
     #include <stdint.h>
     #include <stdlib.h>
     #include <sys/stat.h>
-
-    #define PERMS_SIZE (9)
 
 typedef uint16_t options_t;
 
@@ -163,22 +159,5 @@ int print_dir(
  *  - All the dirs when the -d is used.
  */
 int print_alone_files(ls_t *ls);
-
-/**
- * Print the file name with the correct modfiers.
- * Ex: 'foo bar'
- */
-void print_filename(struct file_s const *file, options_t options);
-
-static const char FT_TABLE[] = {
-    [S_IFBLK] = 'b',
-    [S_IFCHR] = 'c',
-    [S_IFDIR] = 'd',
-    [S_IFIFO] = 'i',
-    [S_IFLNK] = 'l',
-    [S_IFREG] = '-',
-    [S_IFSOCK] = 's',
-    [0] = '?',
-};
 
 #endif /* MY_LS */

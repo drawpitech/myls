@@ -11,7 +11,7 @@
     #include <criterion/criterion.h>
     #include <criterion/redirect.h>
 
-    #include "my_ls.h"
+    #include "../src/my_ls.h"
 
 static inline
 void assert_paths(struct paths_s *paths, struct paths_s *expected)

@@ -9,7 +9,7 @@
 #include <criterion/redirect.h>
 
 #include "my.h"
-#include "my_ls.h"
+#include "../src/my_ls.h"
 #include "tests.h"
 
 Test(params, basic)
