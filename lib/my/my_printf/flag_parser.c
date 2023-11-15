@@ -6,8 +6,8 @@
 */
 
 #include <stdarg.h>
-#include <stdlib.h>
 #include <stdbool.h>
+#include <stdlib.h>
 
 #include "my.h"
 #include "my_printf.h"
@@ -22,78 +22,79 @@ func_t *get_func(char c)
 }
 
 static
-int get_simple_flags(char **ptr, printf_args_t *arg)
+int get_simple_flags(char const *format, int *i, printf_args_t *arg)
 {
-    if (**ptr == '#') {
+    if (format[*i] == '#') {
         arg->flags.alternative_form = true;
-        *ptr += 1;
-        return get_simple_flags(ptr, arg);
+        *i += 1;
+        return get_simple_flags(format, i, arg);
     }
-    if (**ptr == ' ') {
+    if (format[*i] == ' ') {
         arg->flags.space = true;
-        *ptr += 1;
-        return get_simple_flags(ptr, arg);
+        *i += 1;
+        return get_simple_flags(format, i, arg);
     }
-    if (**ptr == '+') {
+    if (format[*i] == '+') {
         arg->flags.sign = true;
-        *ptr += 1;
-        return get_simple_flags(ptr, arg);
+        *i += 1;
+        return get_simple_flags(format, i, arg);
     }
-    if (**ptr == 'I' || **ptr == '\'') {
-        *ptr += 1;
-        return get_simple_flags(ptr, arg);
+    if (format[*i] == 'I' || format[*i] == '\'') {
+        *i += 1;
+        return get_simple_flags(format, i, arg);
     }
     return 0;
 }
 
 static
-void get_flags(char **ptr, printf_args_t *arg)
+void get_flags(char const *format, int *i, printf_args_t *arg)
 {
     arg->flags = (struct flags_s){ 0 };
-    get_simple_flags(ptr, arg);
-    if (IS_NUM(**ptr) || **ptr == '-') {
-        arg->flags.padding = my_getnbr(*ptr);
+    get_simple_flags(format, i, arg);
+    if (IS_NUM(format[*i]) || format[*i] == '-') {
+        arg->flags.padding = my_getnbr(format + *i);
         arg->flags.padded = true;
-        *ptr += (
-            my_nbr_len_base(arg->flags.padding, BASE_DEC)
-            + (**ptr == '-' && arg->flags.padding == 0)
+        *i += (
+            (int)my_nbr_len_base(arg->flags.padding, BASE_DEC)
+            + (format[*i] == '-' && arg->flags.padding == 0)
         );
     }
 }
 
 static
-bool get_precision(char **ptr, printf_args_t *arg)
+bool get_precision(char const *format, int *i, printf_args_t *arg)
 {
+    static const int default_precision = 6;
     int tmp;
 
-    arg->precision = 6;
-    if (**ptr != '.')
+    arg->precision = default_precision;
+    if (format[*i] != '.')
         return true;
-    tmp = my_getnbr(*ptr + 1);
-    if (tmp <= 0 && (*ptr)[1] == '-')
+    tmp = my_getnbr(format + *i + 1);
+    if (tmp <= 0 && format[*i + 1] == '-')
         return false;
-    (*ptr)++;
+    *i += 1;
     arg->precision = tmp;
-    *ptr += (
-        my_nbr_len_base(tmp, BASE_DEC)
-        + (**ptr == '-' && tmp == 0)
+    *i += (
+        (int)my_nbr_len_base(tmp, BASE_DEC)
+        + (format[*i] == '-' && tmp == 0)
     );
     return true;
 }
 
-int may_you_show_this_formatting(char **ptr, printf_args_t *arg)
+int may_you_show_with_fmt(char const *format, int *i, printf_args_t *arg)
 {
     func_t *func = NULL;
-    char *start = *ptr;
+    int start = *i;
 
-    (*ptr)++;
-    get_flags(ptr, arg);
-    if (!get_precision(ptr, arg))
-        return my_putstr("%.0");
-    func = get_func(**ptr);
+    *i += 1;
+    get_flags(format, i, arg);
+    if (!get_precision(format, i, arg))
+        return (int)my_putstr("%.0");
+    func = get_func(format[*i]);
     if (func != NULL)
         return func(arg);
     my_putchar('%');
-    *ptr = start;
+    *i = start;
     return 1;
 }

@@ -34,7 +34,7 @@ typedef struct {
 } format_t;
 
 int my_printf(const char *restrict format, ...);
-int may_you_show_this_formatting(char **ptr, printf_args_t *arg);
+int may_you_show_with_fmt(char const *format, int *i, printf_args_t *arg);
 int left_pad(printf_args_t *arg, int written);
 int right_pad(printf_args_t *arg, int written);
 int printf_int(printf_args_t *);
