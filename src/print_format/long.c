@@ -67,7 +67,7 @@ void put_perms(struct file_s const *file)
     static char buf[PERMS_SIZE + 2];
     mode_t mode = file->stat.st_mode;
 
-    buf[0] = FT_TABLE[mode & S_IFMT];
+    buf[0] = FT_TABLE[mode & S_IFMT].c;
     for (int i = 0; i < PERMS_SIZE; i += 3) {
         buf[i + 1] = perms[(ptrdiff_t)(1 * !!(mode & (S_IRUSR >> i)))];
         buf[i + 2] = perms[(ptrdiff_t)(2 * !!(mode & (S_IWUSR >> i)))];
@@ -131,7 +131,7 @@ void put_file(
     my_printf("%s ", file->group->gr_name);
     put_size(max_size, file);
     put_date(file, options);
-    print_filename(file, options);
+    print_filename(dir, file, options);
     put_link(dir, file);
     my_putchar('\n');
 }

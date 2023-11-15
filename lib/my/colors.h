@@ -34,13 +34,13 @@ enum {
 static inline __attribute__((__used__))
 void put_color(char color, char style, char bg)
 {
-    static char buf[] = "\x1b[0;30m";
+    static char buf[] = "\x1b[0;30;00m";
 
-    if (bg != 0)
-        put_color(C_BG(bg), 0, 0);
     buf[2] = CHR(style);
     buf[4] = CHR(color / 10);
     buf[5] = CHR(color % 10);
+    buf[7] = CHR(C_BG(bg) / 10);
+    buf[8] = CHR(C_BG(bg) % 10);
     my_putstr(buf);
 }
 

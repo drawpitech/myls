@@ -76,37 +76,18 @@ void print_classify(mode_t mode)
     }
 }
 
-static
-bool print_color(mode_t mode)
-{
-    switch (mode & S_IFMT) {
-        case S_IFDIR:
-            if (mode & S_ISVTX)
-                put_color(C_BLK, C_BOLD, C_GRN);
-            else
-                put_color(C_BLU, C_BOLD, 0);
-            return true;
-        case S_IFCHR:
-            put_color(C_YEL, C_BOLD, C_BLK);
-            return true;
-        case S_IFLNK:
-            put_color(C_CYN, C_BOLD, 0);
-            return true;
-        case S_IFREG:
-            if (mode & S_IXUSR)
-                put_color(C_GRN, C_BOLD, 0);
-            return (mode & S_IXUSR);
-    }
-    return false;
-}
-
-void print_filename(struct file_s const *file, options_t options)
+void print_filename(
+    struct directory_s const *dir,
+    struct file_s const *file,
+    options_t options)
 {
     bool need_quotes = (my_strstr(file->filename, " ") != NULL);
     bool need_color = (options & OPT_WTH_COLOR);
 
     if (need_color)
-        need_color = print_color(file->stat.st_mode);
+        need_color = (FT_TABLE[file->stat.st_mode & S_IFMT].func != NULL)
+            ? FT_TABLE[file->stat.st_mode & S_IFMT].func(dir, file)
+            : false;
     if (!need_quotes)
         my_printf("%s", file->filename);
     else
