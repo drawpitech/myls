@@ -11,12 +11,15 @@
 
 void my_putchar(char c)
 {
-    write(1, &c, 1);
+    write(STDOUT_FILENO, &c, 1);
 }
 
-int my_putnchar(char c, int n)
+size_t my_putnchar(char c, size_t n)
 {
-    for (int i = 0; i < n; i++)
-        my_putchar(c);
+    char buf[n + 1];
+
+    for (size_t i = 0; i < n; i++)
+        buf[i] = c;
+    my_putstr(buf);
     return n;
 }

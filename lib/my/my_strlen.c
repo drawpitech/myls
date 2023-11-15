@@ -5,13 +5,16 @@
 ** my_strlen
 */
 
-int my_strlen(char const *str)
-{
-    int res = 0;
+#include <stdlib.h>
 
-    if (!str)
+#include "my.h"
+
+size_t my_strlen(char const *str)
+{
+    size_t len = 0;
+
+    if (str == NULL)
         return 0;
-    while (str[res])
-        res++;
-    return res;
+    for (; str[len]; len++);
+    return len;
 }

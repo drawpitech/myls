@@ -6,25 +6,20 @@
 */
 
 #include <stdlib.h>
+#include <unistd.h>
 
 #include "my.h"
 
-int my_putstr(char const *str)
+size_t my_putstr(char const *str)
 {
-    unsigned int i = 0;
-
     if (str == NULL)
         return my_putstr("(null)");
-    for (; str[i]; i++)
-        my_putchar(str[i]);
-    return i;
+    return write(STDOUT_FILENO, str, my_strlen(str));
 }
 
-int my_putnstr(char const *str, unsigned int n)
+size_t my_putnstr(char const *str, size_t n)
 {
     if (str == NULL)
         return my_putstr("(null)");
-    for (unsigned int i = 0; i < n; i++)
-        my_putchar(str[i]);
-    return n;
+    return write(STDOUT_FILENO, str, n);
 }

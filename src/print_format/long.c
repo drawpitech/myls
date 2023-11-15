@@ -19,7 +19,7 @@
 #include "my_ls.h"
 
 static
-void get_max_size(struct directory_s *dir, int arr[4])
+void get_max_size(struct directory_s *dir, size_t arr[4])
 {
     struct file_s *file;
 
@@ -95,7 +95,7 @@ void put_link(struct directory_s *dir, struct file_s *file)
 }
 
 static
-void put_size(int max_size[4], struct file_s *file)
+void put_size(size_t max_size[4], struct file_s *file)
 {
     if (!S_ISCHR(file->stat.st_mode)) {
         my_putnchar(' ', max_size[3] - my_u64_len(file->stat.st_size));
@@ -111,7 +111,7 @@ void put_size(int max_size[4], struct file_s *file)
 
 static
 void put_file(
-    int max_size[4],
+    size_t max_size[4],
     struct directory_s *dir,
     struct file_s *file,
     options_t options
@@ -137,7 +137,7 @@ void put_file(
 
 void ls_output_long(struct directory_s *dir, bool total, options_t options)
 {
-    int max_size[4] = {0};
+    size_t max_size[4] = {0};
 
     if (dir == NULL || dir->files == NULL)
         return;
