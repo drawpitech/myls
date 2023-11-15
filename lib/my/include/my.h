@@ -33,6 +33,7 @@
     #define BASE_HEX_MAJ "0123456789ABCDEF"
 
     #define ERR_RETURN (84)
+    #define BOOL(arg) (!!(arg))
 
 typedef int (compar_func_t)(void *, void *);
 

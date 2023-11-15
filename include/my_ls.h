@@ -16,6 +16,8 @@
     #include <stdlib.h>
     #include <sys/stat.h>
 
+    #define PERMS_SIZE (9)
+
 typedef uint16_t options_t;
 
     #define OPT_ALL         (1 << 0)

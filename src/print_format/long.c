@@ -7,6 +7,7 @@
 
 #include <grp.h>
 #include <pwd.h>
+#include <stddef.h>
 #include <stdint.h>
 #include <stdlib.h>
 #include <sys/stat.h>
@@ -60,22 +61,18 @@ void put_date(struct file_s *file, options_t options)
 static
 void put_perms(struct file_s *file)
 {
+    static char const perms[] = "-rwx";
+    static char buf[PERMS_SIZE];
     mode_t mode = file->stat.st_mode;
 
-    my_putchar(FT_TABLE[mode & S_IFMT]);
-    my_putchar((mode & S_IRUSR) ? 'r' : '-');
-    my_putchar((mode & S_IWUSR) ? 'w' : '-');
-    my_putchar((mode & S_IXUSR) ? 'x' : '-');
-    my_putchar((mode & S_IRGRP) ? 'r' : '-');
-    my_putchar((mode & S_IWGRP) ? 'w' : '-');
-    my_putchar((mode & S_IXGRP) ? 'x' : '-');
-    my_putchar((mode & S_IROTH) ? 'r' : '-');
-    my_putchar((mode & S_IWOTH) ? 'w' : '-');
+    for (int i = 0; i < PERMS_SIZE; i += 3) {
+        buf[i + 0] = perms[(ptrdiff_t)(1 * !!(mode & (S_IRUSR >> i)))];
+        buf[i + 1] = perms[(ptrdiff_t)(2 * !!(mode & (S_IWUSR >> i)))];
+        buf[i + 2] = perms[(ptrdiff_t)(3 * !!(mode & (S_IXUSR >> i)))];
+    }
     if (mode & S_ISVTX)
-        my_putchar('t');
-    else
-        my_putchar((mode & S_IXOTH) ? 'x' : '-');
-    my_putchar(' ');
+        buf[PERMS_SIZE - 1] = 't';
+    my_putnstr(buf, PERMS_SIZE);
 }
 
 static
