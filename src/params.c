@@ -21,23 +21,19 @@ int set_flag(ls_t *ls, char c)
             return RET_VALID;
         }
     }
-    return return_ls_error("invalid option\n");
+    clear_ls(ls);
+    exit(return_ls_error("invalid option\n"));
 }
 
 static
-void get_smol_option(ls_t *ls, char *str)
+void get_option(ls_t *ls, char const *str)
 {
-    for (; *str; str++) {
-        if (set_flag(ls, *str) == RET_ERROR) {
-            clear_ls(ls);
-            exit(RET_ERROR);
-        }
+    if (*str != '-') {
+        for (; *str; str++)
+            set_flag(ls, *str);
+        return;
     }
-}
-
-static
-void get_big_option(ls_t *ls, char *str)
-{
+    str += 1;
     for (uint32_t i = 0; OPTIONS[i].bit_mask != 0; i++) {
         if (OPTIONS[i].word != NULL && my_strcmp(OPTIONS[i].word, str) == 0) {
             ls->options |= OPTIONS[i].bit_mask;
@@ -54,12 +50,8 @@ void add_param(char *param, ls_t *ls)
 
     if (param == NULL || param[0] == '\0')
         exit(return_ls_error("invalid option\n"));
-    if (my_strncmp(param, "--", 2) == 0) {
-        get_big_option(ls, param + 2);
-        return;
-    }
     if (param[0] == '-') {
-        get_smol_option(ls, param + 1);
+        get_option(ls, param + 1);
         return;
     }
     if (stat(param, &file_stat) == -1 || !S_ISDIR(file_stat.st_mode)) {
