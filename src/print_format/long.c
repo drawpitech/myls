@@ -62,18 +62,19 @@ static
 void put_perms(struct file_s const *file)
 {
     static char const perms[] = "-rwx";
-    static char buf[PERMS_SIZE + 1];
+    static char buf[PERMS_SIZE + 2];
     mode_t mode = file->stat.st_mode;
 
-    for (int i = 0; i < PERMS_SIZE; i += 3) {
+    buf[0] = FT_TABLE[mode & S_IFMT];
+    for (int i = 1; i < PERMS_SIZE + 1; i += 3) {
         buf[i + 0] = perms[(ptrdiff_t)(1 * !!(mode & (S_IRUSR >> i)))];
         buf[i + 1] = perms[(ptrdiff_t)(2 * !!(mode & (S_IWUSR >> i)))];
         buf[i + 2] = perms[(ptrdiff_t)(3 * !!(mode & (S_IXUSR >> i)))];
     }
     if (mode & S_ISVTX)
-        buf[PERMS_SIZE - 1] = 't';
-    buf[PERMS_SIZE] = ' ';
-    my_putnstr(buf, PERMS_SIZE + 1);
+        buf[PERMS_SIZE] = 't';
+    buf[PERMS_SIZE + 1] = ' ';
+    my_putnstr(buf, PERMS_SIZE + 2);
 }
 
 static
