@@ -31,7 +31,7 @@ int my_strcmp_cases(char *str1, char *str2)
     my_strcpy(filename1, get_ptr(str1));
     my_strcpy(filename2, get_ptr(str2));
     if (filename1[0] == '\0' && filename2[0] == '\0')
-        return my_strlen(str1) - my_strlen(str2);
+        return (int)my_strlen(str1) - (int)my_strlen(str2);
     my_strlowcase(filename1);
     my_strlowcase(filename2);
     return my_strcmp(filename1, filename2);
