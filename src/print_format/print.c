@@ -11,6 +11,7 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 
+#include "colors.h"
 #include "my.h"
 #include "my_ls.h"
 
@@ -78,17 +79,20 @@ bool print_color(mode_t mode)
 {
     switch (mode & S_IFMT) {
         case S_IFDIR:
-            my_printf("%s", "\x1b[1;34m");
+            if (mode & S_ISVTX)
+                put_color(C_BLK, C_BOLD, C_GRN);
+            else
+                put_color(C_BLU, C_BOLD, 0);
             return true;
         case S_IFCHR:
-            my_printf("%s%s", "\x1b[40m", "\x1b[1;33m");
+            put_color(C_YEL, C_BOLD, C_BLK);
             return true;
         case S_IFLNK:
-            my_printf("%s", "\x1b[1;36m");
+            put_color(C_CYN, C_BOLD, 0);
             return true;
         case S_IFREG:
             if (mode & S_IXUSR)
-                my_printf("%s", "\x1b[1;32m");
+                put_color(C_GRN, C_BOLD, 0);
             return (mode & S_IXUSR);
     }
     return false;
@@ -110,7 +114,7 @@ void print_filename(struct file_s const *file, options_t options)
     if (need_quotes)
         my_putchar('\'');
     if (need_color)
-        my_putstr("\x1b[0m");
+        my_putstr(C_RESET);
 }
 
 int print_dir(ls_t *ls, bool show_path, bool line_jmp, struct directory_s *dir)

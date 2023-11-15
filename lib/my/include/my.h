@@ -33,6 +33,7 @@
     #define BASE_HEX_MAJ "0123456789ABCDEF"
 
     #define BOOL(arg) (!!(arg))
+    #define CHR(n) ((n) + '0')
 
 enum {
     RET_VALID = 0,
