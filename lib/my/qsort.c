@@ -13,31 +13,29 @@
 #include "my.h"
 
 static
-uint8_t *get_pivot(
-    uint8_t *ptr, size_t size,
-    size_t nmemb, compar_func_t *compar
-)
+size_t get_pivot(uint8_t *ptr, size_t size, size_t nmemb, compar_func_t *cmp)
 {
-    uint8_t *pivot = ptr + (size * nmemb);
+    uint8_t *pivot = ptr + (size - 1) * nmemb;
+    size_t i = 0;
 
     for (uint8_t *j = ptr; j <= pivot - nmemb; j += nmemb) {
-        if (!compar(j, pivot)) {
+        if (!cmp(j, pivot)) {
             swap(ptr, j, nmemb);
-            ptr += nmemb;
+            i += 1;
         }
     }
-    swap(ptr, pivot, nmemb);
-    return ptr;
+    swap(ptr + (i * nmemb), pivot, nmemb);
+    return i;
 }
 
 void my_qsort(void *arr, size_t size, size_t nmemb, compar_func_t *compar)
 {
     uint8_t *ptr = arr;
-    uint8_t *pi;
+    size_t pi;
 
     if (ptr >= ptr + (size * nmemb))
         return;
     pi = get_pivot(ptr, size, nmemb, compar);
-    my_qsort(arr, (pi - ptr) / nmemb - 1, nmemb, compar);
-    my_qsort(pi + nmemb, size - ((pi - ptr) / nmemb + 1), nmemb, compar);
+    my_qsort(arr, pi - 1, nmemb, compar);
+    my_qsort(ptr + (pi + 1) * nmemb, size - (pi + 1), nmemb, compar);
 }
