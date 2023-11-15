@@ -34,7 +34,7 @@
 
     #define ERR_RETURN (84)
 
-typedef bool (compar_func_t)(void *, void *);
+typedef int (compar_func_t)(void *, void *);
 
 char **my_str_to_word_array(char const *str);
 char *concat_params(int argc, char **argv);
@@ -102,5 +102,6 @@ void *my_memcpy(void *restrict dest, const void *restrict src, size_t n);
 void *my_calloc(size_t nmemb, size_t size);
 void *my_realloc(void *ptr, size_t old, size_t size);
 void *my_reallocarray(void *ptr, size_t nmemb, size_t old, size_t size);
+void my_qsort(void *arr, size_t nmemb, size_t size, compar_func_t *compar);
 
 #endif /* LIBMY */

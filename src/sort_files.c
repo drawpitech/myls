@@ -23,20 +23,22 @@ char *get_ptr(char *filename)
 }
 
 static
-bool my_strcmp_cases(char *str1, char *str2)
+int my_strcmp_cases(char *str1, char *str2)
 {
     static char filename1[PATH_MAX];
     static char filename2[PATH_MAX];
 
-    my_strcpy(filename1, str1);
-    my_strcpy(filename2, str2);
+    my_strcpy(filename1, get_ptr(str1));
+    my_strcpy(filename2, get_ptr(str2));
+    if (filename1[0] == '\0' && filename2[0] == '\0')
+        return my_strlen(str1) - my_strlen(str2);
     my_strlowcase(filename1);
     my_strlowcase(filename2);
-    return (my_strcmp(get_ptr(filename1), get_ptr(filename2)) > 0);
+    return my_strcmp(filename1, filename2);
 }
 
 static
-bool compare_filenames(void *left, void *right)
+int compare_filenames(void *left, void *right)
 {
     return my_strcmp_cases(
         ((struct file_s *)left)->filename,
@@ -45,16 +47,16 @@ bool compare_filenames(void *left, void *right)
 }
 
 static
-bool compare_dates(struct timespec *left, struct timespec *right)
+int compare_dates(struct timespec *left, struct timespec *right)
 {
-    return (
-        (left->tv_sec < right->tv_sec) ||
-        ((left->tv_sec == right->tv_sec) && (left->tv_nsec < right->tv_nsec))
+    return (int)((right->tv_sec != left->tv_sec)
+        ? (right->tv_sec - left->tv_sec)
+        : (right->tv_nsec - left->tv_nsec)
     );
 }
 
 static
-bool compare_mtim(void *left, void *right)
+int compare_mtim(void *left, void *right)
 {
     return compare_dates(
         &((struct file_s *)left)->stat.st_mtim,
@@ -63,7 +65,7 @@ bool compare_mtim(void *left, void *right)
 }
 
 static
-bool compare_atim(void *left, void *right)
+int compare_atim(void *left, void *right)
 {
     return compare_dates(
         &((struct file_s *)left)->stat.st_atim,
@@ -93,8 +95,8 @@ void sort_files(struct directory_s *dir, options_t options)
         return;
     func = select_sort(options);
     if (func != NULL)
-        bubble_sort(
-            dir->n_files, dir->files,
+        my_qsort(
+            dir->files, dir->n_files,
             sizeof(struct file_s), func
         );
     if (options & OPT_REVERSE)
@@ -102,7 +104,7 @@ void sort_files(struct directory_s *dir, options_t options)
 }
 
 static
-bool compare_paths(void *left, void *right)
+int compare_paths(void *left, void *right)
 {
     return (my_strcmp_cases(*(char **)left, *(char **)right));
 }
@@ -111,7 +113,7 @@ void sort_paths(struct paths_s *paths)
 {
     if (paths == NULL)
         return;
-    bubble_sort(
-        paths->n, paths->paths,
+    my_qsort(
+        paths->paths, paths->n,
         sizeof(char *), &compare_paths);
 }
