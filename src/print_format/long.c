@@ -49,7 +49,7 @@ void put_total(struct directory_s const *dir)
 static
 void put_date(struct file_s const *file, options_t options)
 {
-    struct timespec timestamp = (options & OPT_ACCESS_TIME)
+    struct timespec timestamp = (options & OPT_ACCS_TIME)
         ? file->stat.st_atim
         : file->stat.st_mtim;
     char *time = ctime(&timestamp.tv_sec);
@@ -120,7 +120,7 @@ void put_file(
     put_perms(file);
     my_putnchar(' ', max_size[0] - my_u64_len(file->stat.st_nlink));
     my_printf("%u ", file->stat.st_nlink);
-    if ((options & OPT_LONG_NO_OWN) != OPT_LONG_NO_OWN) {
+    if ((options & OPT_LONG_NOWN) != OPT_LONG_NOWN) {
         my_putnchar(' ', max_size[1] - my_strlen(file->passwd->pw_name));
         my_printf("%s ", file->passwd->pw_name);
     }

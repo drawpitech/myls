@@ -21,17 +21,17 @@
 typedef uint16_t options_t;
 
 enum {
-    OPT_ALL = (1 << 0),
-    OPT_DIRECTORY = (1 << 1),
-    OPT_LONG_FORMAT = (1 << 2),
-    OPT_RECURSIVE = (1 << 3),
-    OPT_REVERSE = (1 << 4),
-    OPT_TIME_SORT = (1 << 5),
-    OPT_ACCESS_TIME = (1 << 6),
-    OPT_CLASSIFY = (1 << 7),
-    OPT_DIR_ORDER = ((1 << 8) | OPT_ALL),
-    OPT_LONG_NO_OWN = ((1 << 9) | OPT_LONG_FORMAT),
-    OPT_COLOR = (1 << 10),
+    OPT_ALL_FILES = 1 << 0,
+    OPT_DIRECTORY = 1 << 1,
+    OPT_LONG_FORM = 1 << 2,
+    OPT_RECURSIVE = 1 << 3,
+    OPT_REV_ORDER = 1 << 4,
+    OPT_TIME_SORT = 1 << 5,
+    OPT_ACCS_TIME = 1 << 6,
+    OPT_CLASS_CHR = 1 << 7,
+    OPT_DIR_ORDER = 1 << 8 | OPT_ALL_FILES,
+    OPT_LONG_NOWN = 1 << 9 | OPT_LONG_FORM,
+    OPT_WTH_COLOR = 1 << 10,
 };
 
 static const struct {
@@ -39,17 +39,17 @@ static const struct {
     char *word;
     options_t bit_mask;
 } OPTIONS[sizeof(options_t) * 8] = {
-    { 'a', "all", OPT_ALL },
+    { 'a', "all", OPT_ALL_FILES },
     { 'd', "directory", OPT_DIRECTORY },
-    { 'l', NULL, OPT_LONG_FORMAT },
+    { 'l', NULL, OPT_LONG_FORM },
     { 'R', "recursive", OPT_RECURSIVE },
-    { 'r', "reverse", OPT_REVERSE },
+    { 'r', "reverse", OPT_REV_ORDER },
     { 't', NULL, OPT_TIME_SORT },
-    { 'u', NULL, OPT_ACCESS_TIME },
-    { 'F', "classify", OPT_CLASSIFY },
+    { 'u', NULL, OPT_ACCS_TIME },
+    { 'F', "classify", OPT_CLASS_CHR },
     { 'f', NULL, OPT_DIR_ORDER },
-    { 'g', NULL, OPT_LONG_NO_OWN },
-    { '\0', "color", OPT_COLOR },
+    { 'g', NULL, OPT_LONG_NOWN },
+    { '\0', "color", OPT_WTH_COLOR },
     { '\0', NULL, 0 },
 };
 

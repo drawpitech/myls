@@ -78,8 +78,8 @@ compar_func_t *select_sort(options_t options)
 {
     if ((options & OPT_DIR_ORDER) == OPT_DIR_ORDER)
         return NULL;
-    if (options & OPT_ACCESS_TIME
-        && (options & OPT_TIME_SORT || !(options & OPT_LONG_FORMAT))
+    if (options & OPT_ACCS_TIME
+        && (options & OPT_TIME_SORT || !(options & OPT_LONG_FORM))
     )
         return &compare_atim;
     if (options & OPT_TIME_SORT)
@@ -99,7 +99,7 @@ void sort_files(struct directory_s *dir, options_t options)
             dir->files, dir->n_files,
             sizeof(struct file_s), func
         );
-    if (options & OPT_REVERSE)
+    if (options & OPT_REV_ORDER)
         reverse_arr(dir->n_files, dir->files, sizeof(struct file_s));
 }
 

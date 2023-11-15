@@ -8,11 +8,11 @@
 #include <limits.h>
 #include <stdbool.h>
 #include <stdlib.h>
+#include <sys/stat.h>
 #include <sys/types.h>
 
 #include "my.h"
 #include "my_ls.h"
-#include "sys/stat.h"
 
 static
 void recursive_print(ls_t *ls, struct directory_s *dir)
@@ -42,7 +42,7 @@ void print_files(
 )
 {
     sort_files(dir, ls->options);
-    if (ls->options & OPT_LONG_FORMAT)
+    if (ls->options & OPT_LONG_FORM)
         ls_output_long(dir, same_dir, ls->options);
     else
         ls_output_normal(dir, ls->options);
@@ -97,7 +97,7 @@ bool print_color(mode_t mode)
 void print_filename(struct file_s const *file, options_t options)
 {
     bool need_quotes = (my_strstr(file->filename, " ") != NULL);
-    bool need_color = (options & OPT_COLOR);
+    bool need_color = (options & OPT_WTH_COLOR);
 
     if (need_color)
         need_color = print_color(file->stat.st_mode);
@@ -105,7 +105,7 @@ void print_filename(struct file_s const *file, options_t options)
         my_printf("%s", file->filename);
     else
         my_printf("'%s", file->filename);
-    if (options & OPT_CLASSIFY)
+    if (options & OPT_CLASS_CHR)
         print_classify(file->stat.st_mode);
     if (need_quotes)
         my_putchar('\'');

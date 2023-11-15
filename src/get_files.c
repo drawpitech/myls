@@ -60,7 +60,7 @@ int get_files_in_dir(struct directory_s *dir, options_t options)
     do {
         dirent = readdir(dir->dirp);
         if (dirent == NULL ||
-            (!(options & OPT_ALL) && my_str_startswith(dirent->d_name, ".")))
+        (!(options & OPT_ALL_FILES) && my_str_startswith(dirent->d_name, ".")))
             continue;
         if ((dir->n_files + 1 >= dir->allocated)
             && (resize_dir(dir) == ERR_RETURN))
