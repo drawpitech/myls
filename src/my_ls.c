@@ -22,13 +22,13 @@ int return_ls_error(char const *str)
         return_err(str);
         return_err("\n");
     }
-    return ERR_RETURN;
+    return RET_ERROR;
 }
 
 static
 int print_ls(ls_t *ls)
 {
-    int ret = 0;
+    int ret = RET_VALID;
     bool has_af = (ls->alone_files.n != 0);
 
     if (!has_af && (ls->paths.n == 1 || ls->options & OPT_DIRECTORY)) {
@@ -49,7 +49,7 @@ int my_ls(int argc, char *const *argv)
     char *paths[uargc];
     char *alone_files[uargc];
     ls_t ls = { 0 };
-    int ret = 0;
+    int ret = RET_VALID;
 
     if (argc < 1 || argv == NULL)
         return return_ls_error("invalid args");

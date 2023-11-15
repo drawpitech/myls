@@ -115,7 +115,7 @@ void print_filename(struct file_s const *file, options_t options)
 
 int print_dir(ls_t *ls, bool show_path, bool line_jmp, struct directory_s *dir)
 {
-    int ret = 0;
+    int ret = RET_VALID;
 
     if (ls == NULL || dir == NULL)
         return return_ls_error("null ptr");
@@ -128,7 +128,7 @@ int print_dir(ls_t *ls, bool show_path, bool line_jmp, struct directory_s *dir)
 
 int print_alone_files(ls_t *ls)
 {
-    int ret = 0;
+    int ret = RET_VALID;
     struct directory_s *dir;
 
     if (ls == NULL)

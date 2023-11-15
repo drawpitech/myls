@@ -18,7 +18,7 @@ int set_flag(ls_t *ls, char c)
     for (uint32_t i = 0; OPTIONS[i].bit_mask != 0; i++) {
         if (OPTIONS[i].c == c) {
             ls->options |= OPTIONS[i].bit_mask;
-            return 0;
+            return RET_VALID;
         }
     }
     return return_ls_error("invalid option\n");
@@ -28,9 +28,9 @@ static
 void get_smol_option(ls_t *ls, char *str)
 {
     for (; *str; str++) {
-        if (set_flag(ls, *str) == ERR_RETURN) {
+        if (set_flag(ls, *str) == RET_ERROR) {
             clear_ls(ls);
-            exit(ERR_RETURN);
+            exit(RET_ERROR);
         }
     }
 }

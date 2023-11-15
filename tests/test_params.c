@@ -122,7 +122,7 @@ Test(params, args_with_paths)
     assert_ls(&ls, &expect);
 }
 
-Test(params, invalid_flag, .exit_code=ERR_RETURN, .init=cr_redirect_stderr)
+Test(params, invalid_flag, .exit_code=RET_ERROR, .init=cr_redirect_stderr)
 {
     uint32_t argc = 2;
     char *argv[] = { "./my_ls", "-z" };
@@ -160,7 +160,7 @@ Test(params, invalid_option)
     get_params(&ls, argc, argv);
 }
 
-Test(params, null_in_arr, .exit_code=ERR_RETURN, .init=cr_redirect_stderr)
+Test(params, null_in_arr, .exit_code=RET_ERROR, .init=cr_redirect_stderr)
 {
     uint32_t argc = 2;
     char *argv[] = { "./my_ls", NULL };

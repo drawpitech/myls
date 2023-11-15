@@ -32,8 +32,12 @@
     #define BASE_HEX_MIN "0123456789abcdef"
     #define BASE_HEX_MAJ "0123456789ABCDEF"
 
-    #define ERR_RETURN (84)
     #define BOOL(arg) (!!(arg))
+
+enum {
+    RET_VALID = 0,
+    RET_ERROR = 84,
+};
 
 typedef int (compar_func_t)(void *, void *);
 
