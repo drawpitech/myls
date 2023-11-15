@@ -25,7 +25,7 @@ int set_file(char const *dir_path, char const *file_path, struct file_s *file)
         return RET_ERROR;
     if (lstat(fullpath, &file->stat) == -1) {
         file->valid = false;
-        return return_ls_error("no such file of directory");
+        return return_ls_error("no such file or directory");
     }
     file->valid = true;
     file->passwd = getpwuid(file->stat.st_uid);
