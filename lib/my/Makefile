@@ -13,7 +13,7 @@ CFLAGS += -Wstrict-prototypes
 CFLAGS += -Waggregate-return -Wcast-qual
 CFLAGS += -Wunreachable-code
 CFLAGS += -U_FORTIFY_SOURCE
-CFLAGS += -I./include
+CFLAGS += -I./
 
 # ↓ Binaries
 NAME := libmy.a
@@ -118,7 +118,7 @@ $(NAME): $(HEADER) $(OBJ)
 	@ $(AR) rc $@ $(OBJ) || $(DIE)
 	@ cp $@ ..
 	@ mkdir -p ../../include
-	@ cp include/*.h ../../include/
+	@ cp my.h ../../include/
 
 # ↓ Cleaning
 clean:
@@ -126,7 +126,7 @@ clean:
 
 fclean: clean
 	@ $(RM) $(NAME) ../$(NAME)
-	@ $(RM) ../../include/my.h ../../include/my_printf.h
+	@ $(RM) ../../include/my.h
 
 .PHONY: clean fclean
 

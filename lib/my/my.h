@@ -12,8 +12,6 @@
     #include <stdint.h>
     #include <stdlib.h>
 
-    #include "my_printf.h"
-
     #define IS_LOWERCASE(c) ((c) >= 'a' && (c) <= 'z')
     #define IS_UPPERCASE(c) ((c) >= 'A' && (c) <= 'Z')
     #define IS_ALPHA(c) (IS_LOWERCASE(c) || IS_UPPERCASE(c))
@@ -108,5 +106,6 @@ void *my_calloc(size_t nmemb, size_t size);
 void *my_realloc(void *ptr, size_t old, size_t size);
 void *my_reallocarray(void *ptr, size_t nmemb, size_t nmemb_old, size_t size);
 void my_qsort(void *arr, size_t nmemb, size_t size, compar_func_t *compar);
+int my_printf(const char *restrict format, ...);
 
 #endif /* LIBMY */

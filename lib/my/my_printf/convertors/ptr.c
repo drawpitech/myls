@@ -8,7 +8,7 @@
 #include <stdarg.h>
 
 #include "my.h"
-#include "my_printf.h"
+#include "../my_printf.h"
 
 int printf_pointer(printf_args_t *arg)
 {

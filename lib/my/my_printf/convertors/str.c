@@ -9,7 +9,7 @@
 #include <stdlib.h>
 
 #include "my.h"
-#include "my_printf.h"
+#include "../my_printf.h"
 
 int printf_str(printf_args_t *arg)
 {

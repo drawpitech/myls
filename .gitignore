@@ -10,7 +10,6 @@ prof
 *.a
 *.o
 include/my.h
-include/my_printf.h
 
 # Editors junk
 *~

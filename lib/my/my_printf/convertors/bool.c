@@ -9,7 +9,7 @@
 #include <stdbool.h>
 
 #include "my.h"
-#include "my_printf.h"
+#include "../my_printf.h"
 
 static
 int printf_bool_helper(printf_args_t *arg, char *str_true, char *str_false)
