@@ -31,39 +31,44 @@ int my_strcmp_cases(char const *left, char const *right)
 }
 
 static
-int compare_filenames(void *left, void *right)
+int compare_filenames(void const *left, void const *right)
 {
     return my_strcmp_cases(
-        ((struct file_s *)left)->filename,
-        ((struct file_s *)right)->filename
+        ((struct file_s const *)left)->filename,
+        ((struct file_s const *)right)->filename
     );
 }
 
 static
-int compare_dates(struct timespec *left, struct timespec *right)
+int compare_dates(
+    struct timespec const *left_time,
+    struct timespec const *right_time)
 {
-    return (int)((right->tv_sec != left->tv_sec)
-        ? (right->tv_sec - left->tv_sec)
-        : (right->tv_nsec - left->tv_nsec)
-    );
+    long diff = (int)(right_time->tv_sec - left_time->tv_sec);
+
+    return (int)(diff ? diff : right_time->tv_nsec - left_time->tv_nsec);
 }
 
 static
-int compare_mtim(void *left, void *right)
+int compare_mtim(void const *left, void const *right)
 {
-    return compare_dates(
-        &((struct file_s *)left)->stat.st_mtim,
-        &((struct file_s *)right)->stat.st_mtim
+    int diff = compare_dates(
+        &((struct file_s const *)left)->stat.st_mtim,
+        &((struct file_s const *)right)->stat.st_mtim
     );
+
+    return diff ? diff : compare_filenames(left, right);
 }
 
 static
-int compare_atim(void *left, void *right)
+int compare_atim(void const *left, void const *right)
 {
-    return compare_dates(
-        &((struct file_s *)left)->stat.st_atim,
-        &((struct file_s *)right)->stat.st_atim
+    int diff = compare_dates(
+        &((struct file_s const *)left)->stat.st_atim,
+        &((struct file_s const *)right)->stat.st_atim
     );
+
+    return diff ? diff : compare_filenames(left, right);
 }
 
 static
@@ -97,9 +102,9 @@ void sort_files(struct directory_s *dir, options_t options)
 }
 
 static
-int compare_paths(void *left, void *right)
+int compare_paths(void const *left, void const *right)
 {
-    return (my_strcmp_cases(*(char **)left, *(char **)right));
+    return (my_strcmp_cases(*(char *const *)left, *(char *const *)right));
 }
 
 void sort_paths(struct paths_s *paths)

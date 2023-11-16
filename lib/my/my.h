@@ -41,7 +41,7 @@ enum {
     RET_ERROR = 84,
 };
 
-typedef int (compar_func_t)(void *, void *);
+typedef int (compar_func_t)(void const *, void const *);
 
 char **my_str_to_word_array(char const *str);
 char *concat_params(int argc, char **argv);
