@@ -39,4 +39,17 @@ void redirect_all_stdout(void)
     cr_redirect_stderr();
 }
 
+static inline
+char *get_ls(char const *command)
+{
+    static char buf[16384];
+    char *ptr = buf;
+    FILE *ls = popen(command, "r");
+
+    while (fgets(ptr, 256, ls) != 0)
+        ptr += strlen(ptr);
+    pclose(ls);
+    return buf;
+}
+
 #endif /* TEST_LS */

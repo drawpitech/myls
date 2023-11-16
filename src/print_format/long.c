@@ -142,7 +142,7 @@ void ls_output_long(
 {
     size_t max_size[4] = {0};
 
-    if (dir == NULL || dir->files == NULL)
+    if (dir == NULL || (dir->files == NULL && dir->n_files > 0))
         return;
     if (total)
         put_total(dir);

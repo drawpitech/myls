@@ -43,6 +43,7 @@ TEST_SRC += test_sort_paths.c
 TEST_SRC += test_params.c
 TEST_SRC += test_clear.c
 TEST_SRC += test_my_ls_normal.c
+TEST_SRC += test_my_ls_long.c
 
 SRC += main.c
 
