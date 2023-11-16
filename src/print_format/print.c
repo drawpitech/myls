@@ -81,11 +81,8 @@ bool print_color(
     struct directory_s const *dir,
     struct file_s const *file)
 {
-    static bool has_printed = false;
-
-    if (!has_printed)
+    if (my_strcmp(file->filename, ".") == 0)
         my_putstr("\x1b[0m");
-    has_printed = true;
     return (FT_TABLE[file->stat.st_mode & S_IFMT].func != NULL)
         ? FT_TABLE[file->stat.st_mode & S_IFMT].func(dir, file)
         : false;

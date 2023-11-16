@@ -68,3 +68,12 @@ Test(my_ls_long, more, .init=cr_redirect_stdout)
     cr_assert_eq(my_ls(argc, argv), RET_VALID);
     cr_assert_stdout_eq_str(get_ls("env ls -l tests/examples"));
 }
+
+Test(my_ls_long, color, .init=cr_redirect_stdout)
+{
+    int argc = 3;
+    char *argv[] = {"./my_ls", "-la", "--color", NULL};
+
+    cr_assert_eq(my_ls(argc, argv), RET_VALID);
+    cr_assert_stdout_eq_str(get_ls("env ls -la --color"));
+}
