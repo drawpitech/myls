@@ -74,7 +74,7 @@ void put_perms(struct file_s const *file)
         buf[i + 3] = perms[(ptrdiff_t)(3 * !!(mode & (S_IXUSR >> i)))];
     }
     if (mode & S_ISVTX)
-        buf[PERMS_SIZE] = 't';
+        buf[PERMS_SIZE] = "tT"[buf[PERMS_SIZE] == '-'];
     buf[PERMS_SIZE + 1] = ' ';
     my_putnstr(buf, PERMS_SIZE + 2);
 }
