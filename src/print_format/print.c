@@ -76,6 +76,21 @@ void print_classify(mode_t mode)
     }
 }
 
+static
+bool print_color(
+    struct directory_s const *dir,
+    struct file_s const *file)
+{
+    static bool has_printed = false;
+
+    if (!has_printed)
+        my_putstr("\x1b[0m");
+    has_printed = true;
+    return (FT_TABLE[file->stat.st_mode & S_IFMT].func != NULL)
+        ? FT_TABLE[file->stat.st_mode & S_IFMT].func(dir, file)
+        : false;
+}
+
 void print_filename(
     struct directory_s const *dir,
     struct file_s const *file,
@@ -85,9 +100,7 @@ void print_filename(
     bool need_color = (options & OPT_WTH_COLOR);
 
     if (need_color)
-        need_color = (FT_TABLE[file->stat.st_mode & S_IFMT].func != NULL)
-            ? FT_TABLE[file->stat.st_mode & S_IFMT].func(dir, file)
-            : false;
+        need_color = print_color(dir, file);
     if (!need_quotes)
         my_printf("%s", file->filename);
     else
