@@ -16,26 +16,18 @@
 #include "my_ls.h"
 
 static
-char *get_ptr(char *filename)
+int my_strcmp_cases(char const *left, char const *right)
 {
-    while (*filename == '.')
-        filename++;
-    return filename;
-}
+    char const *ptr1 = left;
+    char const *ptr2 = right;
 
-static
-int my_strcmp_cases(char *str1, char *str2)
-{
-    static char filename1[PATH_MAX];
-    static char filename2[PATH_MAX];
-
-    my_strcpy(filename1, get_ptr(str1));
-    my_strcpy(filename2, get_ptr(str2));
-    if (filename1[0] == '\0' && filename2[0] == '\0')
-        return (int)my_strlen(str1) - (int)my_strlen(str2);
-    my_strlowcase(filename1);
-    my_strlowcase(filename2);
-    return my_strcmp(filename1, filename2);
+    for (; !IS_ALPHANUM(*ptr1) && *ptr1 != '\0'; ptr1++);
+    for (; !IS_ALPHANUM(*ptr2) && *ptr2 != '\0'; ptr2++);
+    if (*ptr1 == '\0' && *ptr2 == '\0')
+        return (int)my_strlen(left) - (int)my_strlen(right);
+    if (CH_LOW(*ptr1) != CH_LOW(*ptr2))
+        return CH_LOW(*ptr1) - CH_LOW(*ptr2);
+    return my_strcmp_cases(ptr1 + 1, ptr2 + 1);
 }
 
 static

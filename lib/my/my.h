@@ -19,6 +19,9 @@
     #define IS_ALPHANUM(c) (IS_NUM(c) || IS_ALPHA(c))
     #define IS_PRINTABLE(c) ((c) >= ' ' && (c) <= '~')
 
+    #define CH_LOW(c) (IS_UPPERCASE(c) ? ((c) + 32) : (c))
+    #define CH_UPP(c) (IS_LOWERCASE(c) ? ((c) - 32) : (c))
+
     #define MIN(x, y) (((x) < (y)) ? (x) : (y))
     #define MAX(x, y) (((x) > (y)) ? (x) : (y))
     #define ABS(n) (((n) > 0) ? (n) : -(n))
