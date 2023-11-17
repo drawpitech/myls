@@ -105,8 +105,8 @@ void put_size(size_t const max_size[4], struct file_s const *file)
     }
     my_printf(
         "%u, %u ",
-        (uintmax_t)minor(file->stat.st_dev),
-        (uintmax_t)major(file->stat.st_dev)
+        (uintmax_t)minor(file->stat.st_rdev),
+        (uintmax_t)major(file->stat.st_rdev)
     );
 }
 
